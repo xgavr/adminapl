@@ -109,7 +109,10 @@ class BillManager
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->billSettingsWithInn();
         
+        $idoc->setDescription($this->_filedata2array(null, null, $idoc->getTmpfile()));                    
+        
         foreach ($billSettings as $billSetting){
+            
             $idocData = $idoc->idocToPtu($billSetting->toArray());
             if (!empty($idocData['inn'])){
                 $legals = $this->entityManager->getRepository(Legal::class)
@@ -159,7 +162,7 @@ class BillManager
         $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
         $idoc->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
         
-        if (!$supplier){
+        if (!$supplier){            
             $this->setSupplierByDescriptionInn($idoc);
         }
 
@@ -384,14 +387,11 @@ class BillManager
     
     /**
      * Преобразовать xls в array
-     * @param Supplier $supplier
-     * @param string $filename
+     * 
      * @param string $filepath
-     * @param string $sender
-     * @param string $subject
      * 
      */
-    protected function _xls2array($supplier, $filename, $filepath, $sender, $subject)
+    protected function _xls2array($filepath)
     {        
         setlocale(LC_ALL,'ru_RU.UTF-8');
         ini_set('memory_limit', '512M');
@@ -439,15 +439,15 @@ class BillManager
                     }
                     $result[] = $resultRow;                              
                 }              
-                $this->addIdoc($supplier, [
-                    'status' => Idoc::STATUS_ACTIVE,
-                    'name' => $filename,
-                    'description' => Encoder::encode($result),
-                    'docKey' => null,
-                    'sender' => $sender,
-                    'subject' => $subject,
-                    'tmpfile' => $filepath,
-                ]);                
+//                $this->addIdoc($supplier, [
+//                    'status' => Idoc::STATUS_ACTIVE,
+//                    'name' => $filename,
+//                    'description' => Encoder::encode($result),
+//                    'docKey' => null,
+//                    'sender' => $sender,
+//                    'subject' => $subject,
+//                    'tmpfile' => $filepath,
+//                ]);                
             }                
             unset($spreadsheet);
 //            exit;
@@ -457,14 +457,10 @@ class BillManager
         
     /**
      * Преобразовать html в array
-     * @param Supplier $supplier
-     * @param string $filename
+     * 
      * @param string $content
-     * @param string $sender
-     * @param string $subject
-     * @param string $filepath
      */
-    protected function _html2array($supplier, $filename, $content, $sender, $subject, $filepath)
+    protected function _html2array($content)
     {
         libxml_use_internal_errors(true);
         ini_set('memory_limit', '512M');
@@ -492,17 +488,7 @@ class BillManager
                     $result[] = $row;
                 }
             }
-            
-//            var_dump($result); exit;
-            $this->addIdoc($supplier, [
-                'status' => Idoc::STATUS_ACTIVE,
-                'name' => $filename,
-                'description' => Encoder::encode($result),
-                'docKey' => null,
-                'sender' => $sender,
-                'subject' => $subject,
-                'tmpfile' => $filepath,
-            ]);                
+                           
         }    
                                     
         return;        
@@ -510,15 +496,12 @@ class BillManager
 
     /**
      * Преобразовать csv в array
-     * @param Supplier $supplier
-     * @param string $filename
+     * 
      * @param string $filepath
-     * @param string $sender
-     * @param string $subject
      * @return array
      */
     
-    protected function _csv2array($supplier, $filename, $filepath, $sender, $subject)
+    protected function _csv2array($filepath)
     {
         ini_set('memory_limit', '512M');
         $result = [];
@@ -551,30 +534,27 @@ class BillManager
             }                                
         }                
         
-        $this->addIdoc($supplier, [
-            'status' => Idoc::STATUS_ACTIVE,
-            'name' => $filename,
-            'description' => Encoder::encode($result),
-            'docKey' => null,
-            'sender' => $sender,
-            'subject' => $subject,
-            'tmpfile' => $filepath,
-        ]);                
+//        $this->addIdoc($supplier, [
+//            'status' => Idoc::STATUS_ACTIVE,
+//            'name' => $filename,
+//            'description' => Encoder::encode($result),
+//            'docKey' => null,
+//            'sender' => $sender,
+//            'subject' => $subject,
+//            'tmpfile' => $filepath,
+//        ]);                
         
         return $result;
     }
     
     /**
      * Преобразовать xml в array
-     * @param Supplier $supplier
-     * @param string $filename
+     * 
      * @param string $filepath
-     * @param string $sender
-     * @param string $subject
      * @return array
      */
     
-    protected function _xml2array($supplier, $filename, $filepath, $sender, $subject)
+    protected function _xml2array($filepath)
     {
         ini_set('memory_limit', '512M');
         $result = [];
@@ -679,15 +659,15 @@ class BillManager
             
         }                
         
-        $this->addIdoc($supplier, [
-            'status' => Idoc::STATUS_ACTIVE,
-            'name' => $filename,
-            'description' => Encoder::encode($result),
-            'docKey' => null,
-            'sender' => $sender,
-            'subject' => $subject,
-            'tmpfile' => $filepath,
-        ]);                
+//        $this->addIdoc($supplier, [
+//            'status' => Idoc::STATUS_ACTIVE,
+//            'name' => $filename,
+//            'description' => Encoder::encode($result),
+//            'docKey' => null,
+//            'sender' => $sender,
+//            'subject' => $subject,
+//            'tmpfile' => $filepath,
+//        ]);                
         
         return $result;
     }    
@@ -697,11 +677,9 @@ class BillManager
      * @param Supplier $supplier
      * @param string $filename
      * @param string $filepath
-     * @param string $sender
-     * @param string $subject
      * @return array
      */
-    protected function _filedata2array($supplier, $filename, $filepath, $sender, $subject)
+    protected function _filedata2array($supplier, $filename, $filepath)
     {
         $result = [];
         $pathinfo = pathinfo($filename);
@@ -711,25 +689,26 @@ class BillManager
             if($supplier->getId() == 65) { //микадо злбчее
     //            // contains HTML
                 $content = file_get_contents($filepath);
-                return $this->_html2array($supplier, $filename, $content, $sender, $subject, $filepath);
+                return $this->_html2array($content);
             }       
         }    
         if (!empty($pathinfo['extension'])){
             
             if (in_array(strtolower($pathinfo['extension']), ['xls', 'xlsx'])){
-                return $this->_xls2array($supplier, $filename, $filepath, $sender, $subject);            
+                $result = $this->_xls2array($filepath);            
             }
             
             if (in_array(strtolower($pathinfo['extension']), ['xml'])){
-                return $this->_xml2array($supplier, $filename, $filepath, $sender, $subject);            
+                $result = $this->_xml2array($filepath);            
             }
             
             if (in_array(strtolower($pathinfo['extension']), ['txt', 'csv'])){
-                return $this->_csv2array($supplier, $filename, $filepath, $sender, $subject);            
+                $result = $this->_csv2array($filepath);            
             } else {
-                return $this->_xls2array($supplier, $filename, $filepath, $sender, $subject);                                
+                $result = $this->_xls2array($filepath);                                
             }       
         }
+        
         return $result;
     }    
     
@@ -801,7 +780,19 @@ class BillManager
                     if ($validator->isValid($fileInfo->getPathname()) && strtolower($pathinfo['extension']) != 'xlsx'){                    
                         $this->_decompressAttachment($supplier, $fileInfo->getFilename(), $fileInfo->getPathname(), $sender, $subject);
                     } else {
-                        $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname(), $sender, $subject);
+                        
+                        $result = $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
+                        
+                        $this->addIdoc($supplier, [
+                            'status' => Idoc::STATUS_ACTIVE,
+                            'name' => $fileInfo->getFilename(),
+                            'description' => Encoder::encode($result),
+                            'docKey' => null,
+                            'sender' => $sender,
+                            'subject' => $subject,
+                            'tmpfile' => $fileInfo->getPathname(),
+                        ]);                
+        
                     }    
                 }
                 if ($fileInfo->isDir()){
@@ -861,7 +852,18 @@ class BillManager
             if ($validator->isValid($attachment['temp_file']) && strtolower($pathinfo['extension']) != 'xlsx'){
                 $this->_decompressAttachment($supplier, $attachment['filename'], $attachment['temp_file'], $mail['fromEmail'], $mail['subject']);
             } else {
-                $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file'], $mail['fromEmail'], $mail['subject']);
+                
+                $result = $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file']);
+                
+                $this->addIdoc($supplier, [
+                    'status' => Idoc::STATUS_ACTIVE,
+                    'name' => $attachment['filename'],
+                    'description' => Encoder::encode($result),
+                    'docKey' => null,
+                    'sender' => $mail['fromEmail'],
+                    'subject' => $mail['subject'],
+                    'tmpfile' => $attachment['temp_file'],
+                ]);                
             }    
             if (file_exists($attachment['temp_file'])){
                 unlink($attachment['temp_file']);
