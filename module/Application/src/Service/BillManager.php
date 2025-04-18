@@ -104,7 +104,7 @@ class BillManager
      * Найти поставщика по ИНН в описании
      * @param Idoc $idoc
      */
-    private function supplierByDescriptionInn($idoc)
+    private function setSupplierByDescriptionInn($idoc)
     {
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->billSettingsWithInn();
@@ -116,6 +116,7 @@ class BillManager
                         ->findBy(['inn' => $idocData['inn']]);
                 foreach ($legals as $legal){
                     if ($legal->getSupplier()){
+                        $idoc->setSupplier($legal->getSupplier());
                         return $legal->getSupplier();
                     }
                 }
@@ -158,8 +159,13 @@ class BillManager
         $idoc->setSubject(empty($data['subject']) ? null:$data['subject']);
         $idoc->setTmpfile(empty($data['tmpfile']) ? null:$data['tmpfile']);
         
+        if (!$supplier){
+            $this->setSupplierByDescriptionInn($idoc);
+        }
+
         $this->entityManager->persist($idoc);
         $this->entityManager->flush();
+        
         
         if ($supplier && !empty($data['sender'])){
             $this->postManager->addEmailToContact($supplier->getLegalContact(), $data['sender']);
