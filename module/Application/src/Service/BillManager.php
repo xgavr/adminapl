@@ -758,16 +758,18 @@ class BillManager
                         
                         $result = $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
                         
-                        foreach ($result['sheet'] as $row){
-                            $this->addIdoc($supplier, [
-                                'status' => Idoc::STATUS_ACTIVE,
-                                'name' => $fileInfo->getFilename(),
-                                'description' => Encoder::encode($row),
-                                'docKey' => null,
-                                'sender' => $sender,
-                                'subject' => $subject,
-                                'tmpfile' => $fileInfo->getPathname(),
-                            ]);                
+                        if (!empty($result['sheet'])){
+                            foreach ($result['sheet'] as $row){
+                                $this->addIdoc($supplier, [
+                                    'status' => Idoc::STATUS_ACTIVE,
+                                    'name' => $fileInfo->getFilename(),
+                                    'description' => Encoder::encode($row),
+                                    'docKey' => null,
+                                    'sender' => $sender,
+                                    'subject' => $subject,
+                                    'tmpfile' => $fileInfo->getPathname(),
+                                ]);                
+                            }    
                         }    
                     }    
                 }
@@ -831,16 +833,18 @@ class BillManager
                 
                 $result = $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file']);
                 
-                foreach ($result['sheet'] as $row){
-                    $this->addIdoc($supplier, [
-                        'status' => Idoc::STATUS_ACTIVE,
-                        'name' => $attachment['filename'],
-                        'description' => Encoder::encode($row),
-                        'docKey' => null,
-                        'sender' => $mail['fromEmail'],
-                        'subject' => $mail['subject'],
-                        'tmpfile' => $attachment['temp_file'],
-                    ]);                
+                if (!empty($result['sheet'])){
+                    foreach ($result['sheet'] as $row){
+                        $this->addIdoc($supplier, [
+                            'status' => Idoc::STATUS_ACTIVE,
+                            'name' => $attachment['filename'],
+                            'description' => Encoder::encode($row),
+                            'docKey' => null,
+                            'sender' => $mail['fromEmail'],
+                            'subject' => $mail['subject'],
+                            'tmpfile' => $attachment['temp_file'],
+                        ]);                
+                    }    
                 }    
             }    
             if (file_exists($attachment['temp_file'])){
