@@ -109,7 +109,8 @@ class BillManager
         $billSettings = $this->entityManager->getRepository(BillSetting::class)
                 ->billSettingsWithInn();
         
-        $idoc->setDescription(Encoder::encode($this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile())));                    
+        $filedata = $this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile());
+        $idoc->setDescription(Encoder::encode($filedata['sheet'][0]));                    
         
         foreach ($billSettings as $billSetting){
             
@@ -415,8 +416,9 @@ class BillManager
             }    
 
             $sheets = $spreadsheet->getAllSheets();
+            $result = [];
             foreach ($sheets as $sheet) { // PHPExcel_Worksheet
-                $result = [];
+                $sheetData = [];
                 foreach ($sheet->getRowIterator() as $row) { 
                     $cellIterator = $row->getCellIterator();
                     $resultRow = [];
@@ -437,17 +439,9 @@ class BillManager
                         }                        
                         $resultRow[] = str_replace('#NULL!', '', $value);
                     }
-                    $result[] = $resultRow;                              
-                }              
-//                $this->addIdoc($supplier, [
-//                    'status' => Idoc::STATUS_ACTIVE,
-//                    'name' => $filename,
-//                    'description' => Encoder::encode($result),
-//                    'docKey' => null,
-//                    'sender' => $sender,
-//                    'subject' => $subject,
-//                    'tmpfile' => $filepath,
-//                ]);                
+                    $sheetData[] = $resultRow;                              
+                }     
+                $result['sheet'][] = $sheetData[];
             }                
             unset($spreadsheet);
 //            exit;
@@ -493,7 +487,7 @@ class BillManager
                            
         }    
                                     
-        return $result;        
+        return ['sheet' => $result];        
     }
 
     /**
@@ -534,19 +528,9 @@ class BillManager
                     
                 fclose($lines);
             }                                
-        }                
+        }                                
         
-//        $this->addIdoc($supplier, [
-//            'status' => Idoc::STATUS_ACTIVE,
-//            'name' => $filename,
-//            'description' => Encoder::encode($result),
-//            'docKey' => null,
-//            'sender' => $sender,
-//            'subject' => $subject,
-//            'tmpfile' => $filepath,
-//        ]);                
-        
-        return $result;
+        return ['sheet' => $result];
     }
     
     /**
@@ -659,19 +643,9 @@ class BillManager
                 '',
             ];
             
-        }                
+        }                               
         
-//        $this->addIdoc($supplier, [
-//            'status' => Idoc::STATUS_ACTIVE,
-//            'name' => $filename,
-//            'description' => Encoder::encode($result),
-//            'docKey' => null,
-//            'sender' => $sender,
-//            'subject' => $subject,
-//            'tmpfile' => $filepath,
-//        ]);                
-        
-        return $result;
+        return ['sheet' => $result];
     }    
 
     /**
@@ -783,16 +757,17 @@ class BillManager
                         
                         $result = $this->_filedata2array($supplier, $fileInfo->getFilename(), $fileInfo->getPathname());
                         
-                        $this->addIdoc($supplier, [
-                            'status' => Idoc::STATUS_ACTIVE,
-                            'name' => $fileInfo->getFilename(),
-                            'description' => Encoder::encode($result),
-                            'docKey' => null,
-                            'sender' => $sender,
-                            'subject' => $subject,
-                            'tmpfile' => $fileInfo->getPathname(),
-                        ]);                
-        
+                        foreach ($result['sheet'] as $row){
+                            $this->addIdoc($supplier, [
+                                'status' => Idoc::STATUS_ACTIVE,
+                                'name' => $fileInfo->getFilename(),
+                                'description' => Encoder::encode($row),
+                                'docKey' => null,
+                                'sender' => $sender,
+                                'subject' => $subject,
+                                'tmpfile' => $fileInfo->getPathname(),
+                            ]);                
+                        }    
                     }    
                 }
                 if ($fileInfo->isDir()){
@@ -855,15 +830,17 @@ class BillManager
                 
                 $result = $this->_filedata2array($supplier, $attachment['filename'], $attachment['temp_file']);
                 
-                $this->addIdoc($supplier, [
-                    'status' => Idoc::STATUS_ACTIVE,
-                    'name' => $attachment['filename'],
-                    'description' => Encoder::encode($result),
-                    'docKey' => null,
-                    'sender' => $mail['fromEmail'],
-                    'subject' => $mail['subject'],
-                    'tmpfile' => $attachment['temp_file'],
-                ]);                
+                foreach ($result['sheet'] as $row){
+                    $this->addIdoc($supplier, [
+                        'status' => Idoc::STATUS_ACTIVE,
+                        'name' => $attachment['filename'],
+                        'description' => Encoder::encode($row),
+                        'docKey' => null,
+                        'sender' => $mail['fromEmail'],
+                        'subject' => $mail['subject'],
+                        'tmpfile' => $attachment['temp_file'],
+                    ]);                
+                }    
             }    
             if (file_exists($attachment['temp_file'])){
                 unlink($attachment['temp_file']);
