@@ -110,6 +110,7 @@ class BillManager
                 ->billSettingsWithInn();
         
         $filedata = $this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile());
+//        var_dump($filedata['sheet']); exit;
         $idoc->setDescription(Encoder::encode($filedata['sheet'][0]));                    
         
         foreach ($billSettings as $billSetting){
@@ -416,7 +417,7 @@ class BillManager
             }    
 
             $sheets = $spreadsheet->getAllSheets();
-            $result = [];
+            $result['sheet'] = [];
             foreach ($sheets as $sheet) { // PHPExcel_Worksheet
                 $sheetData = [];
                 foreach ($sheet->getRowIterator() as $row) { 
@@ -441,7 +442,7 @@ class BillManager
                     }
                     $sheetData[] = $resultRow;                              
                 }     
-                $result['sheet'][] = $sheetData[];
+                $result['sheet'][] = $sheetData;
             }                
             unset($spreadsheet);
 //            exit;
@@ -487,7 +488,7 @@ class BillManager
                            
         }    
                                     
-        return ['sheet' => $result];        
+        return ['sheet' => [$result]];        
     }
 
     /**
@@ -530,7 +531,7 @@ class BillManager
             }                                
         }                                
         
-        return ['sheet' => $result];
+        return ['sheet' => [$result]];
     }
     
     /**
@@ -645,7 +646,7 @@ class BillManager
             
         }                               
         
-        return ['sheet' => $result];
+        return ['sheet' => [$result]];
     }    
 
     /**
