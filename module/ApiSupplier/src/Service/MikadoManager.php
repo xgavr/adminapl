@@ -159,7 +159,7 @@ class MikadoManager {
         $client->setOptions(['timeout' => 30]);
         
         $client->setParameterGet([
-            'Date_From' => date('Y-m-d', strtotime("-1 day")),
+            'Date_From' => date('Y-m-d', strtotime("-3 day")),
             'Date_To' => date('Y-m-d'),
             'nClientID' => $supplierApi->getLogin(),
             'Password' => $supplierApi->getPassword()
@@ -304,7 +304,7 @@ class MikadoManager {
                     'supplier' => $supplierApi->getSupplier()->getId(),
                     'docNo' => $cDelivery['DelNumber'], 
                     'docDate' => date('Y-m-d', strtotime($cDelivery['DelDate'])),
-                    'status' => Ptu::STATUS_ACTIVE,
+                    //'status' => Ptu::STATUS_ACTIVE,
                 ]);
             
             if ($ptu){
