@@ -482,6 +482,39 @@ return [
                 'field_type' => 'integer',
                 'description' => 'Наше юр лицо',
             ],
+            6 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'rs',
+                'field_type' => 'string',
+                'description' => 'Расчетный счет',
+            ],
+            7 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\GreaterThan::class,
+                        'options' => [
+                            'min' => '0',
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToFloat::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'amount',
+                'field_type' => 'float',
+                'description' => 'Сумма оплаты',
+            ],
         ],
         'Api\\V1\\Rest\\ApiCommentToApl\\Validator' => [
             0 => [
