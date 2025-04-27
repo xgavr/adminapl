@@ -249,7 +249,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                         'kind' => Contract::KIND_SUPPLIER,
                         'pay' => Contract::PAY_CASHLESS,
                         'companyId' => $params['company'],
-                    ])->getResult();
+                    ])->getResult(2);
             
             foreach ($supplierBalances as $row){
 //                $row = $cashDoc->toExport();
