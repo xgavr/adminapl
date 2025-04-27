@@ -297,6 +297,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     public function patch($id, $data)
     {
+                var_dump($data);
         if (is_object($data)){
             if ($data->docType == 'MarketSaleReport'){
                 $report = $this->entityManager->getRepository(MarketSaleReport::class)
@@ -401,7 +402,6 @@ class ApiAccountComitentResource extends AbstractResourceListener
                         ->find($id);
                 $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                         ->findOneBy(['rs' => $data->rs]);
-                var_dump($data);
                 if ($supplier && $bankAccount && $data->amount > 0){
 
                     $this->paymentManager->suppliersPayment([
