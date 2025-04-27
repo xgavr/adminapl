@@ -243,12 +243,14 @@ class ApiAccountComitentResource extends AbstractResourceListener
             }            
         }    
         if ($params['docType'] == 'supplierBalance'){
+            
             $supplierBalances = $this->entityManager->getRepository(Mutual::class)
                     ->contractBalances([
                         'kind' => Contract::KIND_SUPPLIER,
                         'pay' => Contract::PAY_CASHLESS,
                         'companyId' => $params['company'],
-                    ]);
+                    ])->getResult();
+            
             foreach ($supplierBalances as $row){
 //                $row = $cashDoc->toExport();
                 $result[] = $row;                
