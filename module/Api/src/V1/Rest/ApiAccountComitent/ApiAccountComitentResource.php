@@ -401,7 +401,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                         ->find($id);
                 $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                         ->findOneBy(['rs' => $data->rs]);
-                
+                var_dump($data);
                 if ($supplier && $bankAccount && $data->amount > 0){
 
                     $this->paymentManager->suppliersPayment([
