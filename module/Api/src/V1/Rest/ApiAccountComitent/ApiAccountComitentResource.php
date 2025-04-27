@@ -253,8 +253,18 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     ])->getResult(2);
             
             foreach ($supplierBalances as $row){
-//                $row = $cashDoc->toExport();
-                $result[] = $row;                
+                $out = [
+                    'companyId' => $row['company']['id'],
+                    'companyName' => $row['company']['name'],
+                    'legalId' => $row['legal']['id'],
+                    'legalName' => $row['legal']['name'],
+                    'supplierId' => $row['legal']['contacts'][0]['supplier']['id'],
+                    'supplierAplId' => $row['legal']['contacts'][0]['supplier']['aplId'],
+                    'supplierName' => $row['legal']['contacts'][0]['supplier']['name'],
+                    'act' => $row['act'],
+                    'balance' => $row['balance'],
+                ];
+                $result[] = $out;                
             }
         }    
         
