@@ -469,6 +469,19 @@ return [
                 'description' => 'Конец периода',
                 'field_type' => 'date',
             ],
+            5 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'company',
+                'field_type' => 'integer',
+                'description' => 'Наше юр лицо',
+            ],
         ],
         'Api\\V1\\Rest\\ApiCommentToApl\\Validator' => [
             0 => [
@@ -1255,6 +1268,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 1 => 'docId',
                 2 => 'startDate',
                 3 => 'endDate',
+                4 => 'company',
             ],
             'page_size' => 25,
             'page_size_param' => null,

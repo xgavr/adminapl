@@ -14,6 +14,10 @@ use Application\Entity\Order;
 use Bank\Entity\Statement;
 use Cash\Entity\CashDoc;
 use Company\Entity\Office;
+use Stock\Entity\Mutual;
+use Company\Entity\Contract;
+use Company\Entity\BankAccount;
+use Application\Entity\Supplier;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -36,11 +40,18 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     private $zpManager;
 
-    public function __construct($entityManager, $reportManager, $zpManager) 
+    /**
+     * Payment manager.
+     * @var \Bank\Service\PaymentManager
+     */
+    private $paymentManager;
+
+    public function __construct($entityManager, $reportManager, $zpManager, $paymentManager) 
     {
        $this->entityManager = $entityManager;       
        $this->reportManager = $reportManager;       
        $this->zpManager = $zpManager;       
+       $this->paymentManager = $paymentManager;       
     }
 
     /**
@@ -231,6 +242,27 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 }    
             }            
         }    
+        if ($params['docType'] == 'supplierBalance'){
+            $supplierBalances = $this->entityManager->getRepository(Mutual::class)
+                    ->contractBalances([
+                        'kind' => Contract::KIND_SUPPLIER,
+                        'pay' => Contract::PAY_CASHLESS,
+                        'companyId' => $params['company'],
+                    ]);
+            foreach ($supplierBalances as $row){
+//                $row = $cashDoc->toExport();
+                $result[] = $row;                
+            }
+        }    
+        
+        if ($params['docType'] == 'bankBalance'){
+            $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
+                    ->findBy(['legal' => $params['company'], 'accountType' => BankAccount::ACСOUNT_CHECKING]);
+            foreach ($bankAccounts as $bankAccount){
+                $result[$bankAccount->getRs()] = $this->entityManager->getRepository(Statement::class)
+                                    ->currentBalance($bankAccount->getRs());                
+            }    
+        }    
 
         return ['reports' => $result];
         
@@ -343,6 +375,25 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     $this->entityManager->persist($cashDoc);
                     $this->entityManager->flush();
                     return ['statusAccount' => $cashDoc->getStatusAccount()];
+                }
+            }
+            if ($data->docType == 'supplierPayment'){
+                $supplier = $this->entityManager->getRepository(Supplier::class)
+                        ->find($id);
+                $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                        ->findOneBy(['rs' => $data->rs]);
+                
+                if ($supplier && $bankAccount && !empty($data->amount)){
+
+                    $this->paymentManager->suppliersPayment([
+                        'bankAccount' => $bankAccount,
+                        'amount' => [
+                            'supplier' => $id,
+                            'amount' => $data->amount,
+                        ],
+                    ]);
+
+                    return ['supplierPayment' => 'ok'];
                 }
             }
         }
