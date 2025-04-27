@@ -750,7 +750,7 @@ class MutualRepository extends EntityRepository{
             }            
             if (!empty($params['companyId'])){
                 if (is_numeric($params['companyId'])){
-                    $notnull = false;
+//                    $notnull = false;
                     $queryBuilder
                         ->andWhere('c.company = :company')
                         ->setParameter('company', $params['companyId'])

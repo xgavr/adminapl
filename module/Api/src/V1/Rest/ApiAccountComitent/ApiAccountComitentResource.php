@@ -248,6 +248,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     ->contractBalances([
                         'kind' => Contract::KIND_SUPPLIER,
                         'pay' => Contract::PAY_CASHLESS,
+                        'priceListStatus' => Supplier::REMOVE_PRICE_LIST_ON,
                         'companyId' => $params['company'],
                     ])->getResult(2);
             
