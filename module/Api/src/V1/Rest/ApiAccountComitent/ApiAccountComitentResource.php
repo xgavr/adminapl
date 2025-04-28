@@ -66,7 +66,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
             $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                     ->findOneBy(['rs' => $data->rs]);
             $paymentData['bankAccount'] = $bankAccount;
-            $paymentData['amount'] = $data->payments->toArray();
+            $paymentData['amount'] = $data->payments;
 
 //                    var_dump($data);
             $this->paymentManager->suppliersPayment($paymentData);
