@@ -68,8 +68,8 @@ class ApiAccountComitentResource extends AbstractResourceListener
             $paymentData['bankAccount'] = $bankAccount;
             $paymentData['amount'] = $data->payments;
 
-                    var_dump($data);
-//            $this->paymentManager->suppliersPayment($data);
+//                    var_dump($data);
+            $this->paymentManager->suppliersPayment($data);
             return ['supplierPayment' => 'ok'];
         }
         return new ApiProblem(405, 'The POST method has not been defined');
