@@ -66,10 +66,10 @@ class ApiAccountComitentResource extends AbstractResourceListener
             $bankAccount = $this->entityManager->getRepository(BankAccount::class)
                     ->findOneBy(['rs' => $data->rs]);
             $paymentData['bankAccount'] = $bankAccount;
-            $paymentData['amount'] = $data->payments;
+            $paymentData['amount'] = $data->payments->toArray();
 
 //                    var_dump($data);
-            $this->paymentManager->suppliersPayment($data);
+            $this->paymentManager->suppliersPayment($paymentData);
             return ['supplierPayment' => 'ok'];
         }
         return new ApiProblem(405, 'The POST method has not been defined');
