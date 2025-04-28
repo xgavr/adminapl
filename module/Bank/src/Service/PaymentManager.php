@@ -55,7 +55,12 @@ class PaymentManager
      */
     public function currentUser()
     {
-        return $this->logManager->currentUser(); 
+        if ($this->logManager->currentUser()){
+            return $this->logManager->currentUser(); 
+        }
+        
+        return $this->entityManager->getRepository(User::class)
+                ->find(104 ); //TBot
     }
     
     /**
