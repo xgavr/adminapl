@@ -62,6 +62,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     public function create($data)
     {
+        if ($data->docType == 'supplierPayment'){
+            $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy($data->rs);
+            $paymentData['bankAccount'] = $bankAccount;
+            $paymentData['amount'] = $data->payments;
+
+                    var_dump($data);
+//            $this->paymentManager->suppliersPayment($data);
+            return ['supplierPayment' => 'ok'];
+        }
         return new ApiProblem(405, 'The POST method has not been defined');
     }
 
@@ -408,16 +418,6 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     public function patchList($data)
     {
-                    var_dump($data);
-        if ($data->docType == 'supplierPayment'){
-            $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                    ->findOneBy($data->rs);
-            $paymentData['bankAccount'] = $bankAccount;
-            $paymentData['amount'] = $data->payments;
-
-//            $this->paymentManager->suppliersPayment($data);
-            return ['supplierPayment' => 'ok'];
-        }
         return new ApiProblem(405, 'The PATCH method has not been defined for collections');
     }
 
