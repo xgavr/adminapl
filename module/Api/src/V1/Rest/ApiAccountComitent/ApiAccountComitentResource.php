@@ -64,7 +64,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
     {
         if ($data->docType == 'supplierPayment'){
             $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                    ->findOneBy($data->rs);
+                    ->findOneBy(['rs' => $data->rs]);
             $paymentData['bankAccount'] = $bankAccount;
             $paymentData['amount'] = $data->payments;
 
