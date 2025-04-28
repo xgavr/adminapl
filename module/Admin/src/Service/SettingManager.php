@@ -147,7 +147,7 @@ class SettingManager {
             return TRUE;
         }        
 
-        $lastMod = strtotime($proc->getLastMod()) + 3600*1;
+        $lastMod = strtotime($proc->getLastMod()) + 3590;
         if ($proc->getStatus() == Setting::STATUS_ACTIVE && time() > $lastMod){
             return TRUE;
         }                
