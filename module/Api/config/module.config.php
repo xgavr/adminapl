@@ -515,6 +515,37 @@ return [
                 'field_type' => 'float',
                 'description' => 'Сумма оплаты',
             ],
+            8 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\IsArray::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [],
+                'name' => 'payments',
+                'description' => 'Оплаты',
+                'field_type' => 'array',
+            ],
+            9 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'supplierId',
+                'field_type' => 'integer',
+                'description' => 'Id поставщика в adminapl',
+            ],
         ],
         'Api\\V1\\Rest\\ApiCommentToApl\\Validator' => [
             0 => [

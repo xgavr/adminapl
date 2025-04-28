@@ -396,24 +396,6 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     return ['statusAccount' => $cashDoc->getStatusAccount()];
                 }
             }
-            if ($data->docType == 'supplierPayment'){
-                $supplier = $this->entityManager->getRepository(Supplier::class)
-                        ->find($id);
-                $bankAccount = $this->entityManager->getRepository(BankAccount::class)
-                        ->findOneBy(['rs' => $data->rs]);
-                if ($supplier && $bankAccount && $data->amount > 0){
-
-                    $this->paymentManager->suppliersPayment([
-                        'bankAccount' => $bankAccount,
-                        'amount' => [
-                            'supplier' => $id,
-                            'amount' => $data->amount,
-                        ],
-                    ]);
-
-                    return ['supplierPayment' => 'ok'];
-                }
-            }
         }
         return new ApiProblem(404, 'Не верные данные');
     }
@@ -426,7 +408,16 @@ class ApiAccountComitentResource extends AbstractResourceListener
      */
     public function patchList($data)
     {
-        return new ApiProblem(405, 'The PATCH method has not been defined for collections');
+        if ($data->docType == 'supplierPayment'){
+            $bankAccount = $this->entityManager->getRepository(BankAccount::class)
+                    ->findOneBy($data->rs);
+            $paymentData['bankAccount'] = $bankAccount;
+            $paymentData['amount'] = $data->payments;
+            var_dump($data);
+//            $this->paymentManager->suppliersPayment($data);
+        }
+        return ['supplierPayment' => 'ok'];
+//        return new ApiProblem(405, 'The PATCH method has not been defined for collections');
     }
 
     /**
