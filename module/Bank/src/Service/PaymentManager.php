@@ -220,7 +220,7 @@ class PaymentManager
                             'counterpartyInn' => $detail['inn'],
                             'counterpartyKpp' => $detail['kpp'],
                             'counterpartyName' => $detail['name'],
-                            'paymentDate' => $data['paymentDate'],
+                            'paymentDate' => empty($data['paymentDate']) ? date('Y-m-d'):$data['paymentDate'],
                             'nds' => $detail['nds'],
                             'purpose' => $detail['purpose'].' '.Payment::getNdsList()[$detail['nds']].' '.Payment::nds($row['amount'], $detail['nds']),
                             'bankAccount' => $bankAccount,
