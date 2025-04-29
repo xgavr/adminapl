@@ -1598,6 +1598,7 @@ class Goods {
             'group' => $this->getGenericGroup()->toArray(),
             'tokenGroup' => ($this->getTokenGroup()) ? $this->getTokenGroup()->toArray():[],
             'info' => '',
+            'available' => $this->getAvailable(),
         ];
         
         return $result;
