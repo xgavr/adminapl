@@ -122,6 +122,16 @@ class GoodAplResource extends AbstractResourceListener
             }
         }
         
+        if (!empty($paramsArray['fasade'])){
+            $result = [];
+            $goods = $this->entityManager->getRepository(Goods::class)
+                    ->findForFasade();
+            foreach ($goods as $good){
+                $result[] = $good->toArray();
+            }
+            return $result;
+        }
+        
         return new ApiProblem(404, 'Ничего не нашлось :(');
 //        return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
@@ -169,6 +179,7 @@ class GoodAplResource extends AbstractResourceListener
      */
     public function update($id, $data)
     {
+        
         return new ApiProblem(405, 'The PUT method has not been defined for individual resources');
     }
 }

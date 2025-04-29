@@ -2733,4 +2733,27 @@ class GoodsRepository extends EntityRepository
         
         return;
     }
+    
+    /**
+     * Запрос для фасада
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function findForFasade($params = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('g')
+                ->from(Goods::class, 'g')
+                ->where('g.fasadeEx = :fasadeEx')
+                ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
+                ->setMaxResults(10)
+                ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery()->getResult();
+    }     
 }

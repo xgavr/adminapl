@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\ScaleTreshold;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
+use Application\Entity\Producer;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -686,7 +687,7 @@ class Goods {
 
     /*
      * Возвращает связанный producer.
-     * @return \Application\Entity\Producer
+     * @return Producer
      */    
     public function getProducer() 
     {
@@ -695,7 +696,7 @@ class Goods {
     
     /**
      * Задает связанный producer.
-     * @param \Application\Entity\Producer $producer
+     * @param Producer $producer
      */    
     public function setProducer($producer) 
     {
@@ -1590,11 +1591,13 @@ class Goods {
             'id' => $this->getId(),
             'code' => $this->getCode(),
             'name' => $this->getName(),
+            'price' => $this->getPrice(),
             'nameShort' => $this->getNameShort(),
             'nameInput' => $this->getInputName(),
             'producer' => $this->getProducer()->toArray(),
             'group' => $this->getGenericGroup()->toArray(),
             'tokenGroup' => ($this->getTokenGroup()) ? $this->getTokenGroup()->toArray():[],
+            'info' => '',
         ];
         
         return $result;
