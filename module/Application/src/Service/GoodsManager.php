@@ -1222,6 +1222,7 @@ class GoodsManager
             'goodAplId' => $good->getAplId(),
             'article' => $good->getCode(),
             'producer' => $good->getProducer()->getName(),
+            'brand' => $good->getProducer()->toArray(),
             'g5' => [
                 'bestname' => $good->getName(),
                 'shortname' => $good->getNameShort(),
