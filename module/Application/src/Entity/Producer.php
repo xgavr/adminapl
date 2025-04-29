@@ -269,6 +269,7 @@ class Producer {
             'aplId' => $this->getAplId(),
             'id' => $this->getId(),
             'name' => $this->getName(),
+            'description' => $this->getName(),
         ];
         
         return $result;

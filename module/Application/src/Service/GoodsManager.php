@@ -1230,6 +1230,8 @@ class GoodsManager
             'sups' => array_values($sups),
             'prices' => $prices,
             'inStore' => $inStore,
+            'description' => '',
+            'info' => '',
         ];
         
         return $result;
