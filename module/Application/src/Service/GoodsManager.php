@@ -1228,6 +1228,7 @@ class GoodsManager
                 'shortname' => $good->getNameShort(),
             ],
             'sups' => array_values($sups),
+            'price' => $good->getPrice(),
             'prices' => $prices,
             'inStore' => $inStore,
             'description' => '',
