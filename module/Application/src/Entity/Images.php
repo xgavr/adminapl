@@ -291,21 +291,18 @@ class Images {
         $good->addImage($this);
     }   
     
-    /**
-     * Возвращает связанный производитель.
-     * @return \Application\Entity\Producer
-     */
-//    public function getProducer() 
-//    {
-//        return $this->producer;
-//    }
-    
-    /**
-     * Задает связанный производитель.
-     * @param \Application\Entity\Producer $producer
-     */
-//    public function setProducer($producer) 
-//    {
-//        $this->producer = $producer;
-//    }    
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'aplId' => $this->getId(),
+            'name' => $this->getName(),
+            'path' => $this->getPath(),
+            'publicPath' => $this->getPublicPath(),
+            'similar' => $this->getSimilar(),
+            'status' => $this->getStatus(),
+            'transferPath' => $this->getTransferPath(),
+        ];
+    }
 }

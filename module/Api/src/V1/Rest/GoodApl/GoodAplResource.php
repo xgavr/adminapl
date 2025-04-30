@@ -127,7 +127,9 @@ class GoodAplResource extends AbstractResourceListener
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->findForFasade();
             foreach ($goods as $good){
-                $result[] = $good->toArray();
+                $data = $good->toArray();
+                $data['images'] = $good->getImagesAsArray();
+                $result[] = $data;
             }
             return $result;
         }

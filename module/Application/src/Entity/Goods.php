@@ -8,6 +8,7 @@ use Application\Entity\ScaleTreshold;
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 use Application\Entity\Producer;
+use Application\Entity\Images;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -859,6 +860,19 @@ class Goods {
     }
     
     /**
+     * 
+     * @return array
+     */
+    public function getImagesAsArray() 
+    {
+        $result = [];
+        foreach ($this->images as $image){
+            $result[] = $image->toArray();
+        }    
+        return $result;
+    }
+    
+    /**
      * .
      * @return int
      */
@@ -869,7 +883,7 @@ class Goods {
     
     /**
      * Добавляет новою картинку к этому товару.
-     * @param $image
+     * @param Images $image
      */
     public function addImage($image) 
     {
