@@ -2484,7 +2484,8 @@ class NameManager
 //            var_dump($messages); exit;
 
             $result = $this->gigaManager->completions($messages, [
-                'model' => 'GigaChat-2',
+//                'model' => 'GigaChat-2',
+                'model' => 'GigaChat-2-Pro',
                 'temperature' => '1.5',
                 'xSessionIId' => md5($messages[0]['content']),
             ]);
