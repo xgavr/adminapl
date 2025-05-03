@@ -77,7 +77,7 @@ class GroupSiteManager
         }
         
         $this->entityManager->persist($groupSite);
-        $this->entityManager->flush($groupSite);
+        $this->entityManager->flush();
         
         $code = sprintf("%03d", $groupSite->getId());
         $fullName = $data['name'];
