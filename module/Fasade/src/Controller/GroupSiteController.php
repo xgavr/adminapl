@@ -202,4 +202,15 @@ class GroupSiteController extends AbstractActionController
            ['ok']
         );                   
     }
+    
+    public function updateGoodcountAction()
+    {
+        $this->entityManager->getRepository(GroupSite::class)
+                ->updateGroupSiteGoodCounts();
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                   
+    }
+    
 }

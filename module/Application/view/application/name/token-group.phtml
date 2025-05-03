@@ -319,14 +319,16 @@ $this->pageBreadcrumbs()->setItems([
     
     function groupSiteFormatter(value, row){
         var groupSiteName = 'Не назаначена';
+        var groupSiteClass = ' class="text-warning"';
         var groupSiteId = -1;
         
         if (row.groupSite){
             groupSiteName = row.groupSite.fullName;
+            groupSiteClass = '';
             groupSiteId = row.groupSite.id;
         }
         
-        var result =  '<p><a href="#" class="category-select"';
+        var result =  '<p'+groupSiteClass+'><a href="#" class="category-select"';
         result += ' data-id="'+row.id+'" data-name="'+row.name+'"';
         result += ' data-group-site="'+groupSiteId+'">';
         result +=   groupSiteName +'</a></p>'; 

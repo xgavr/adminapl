@@ -2221,7 +2221,7 @@ class GoodsRepository extends EntityRepository
         try{
             $inserted = $this->getEntityManager()->getConnection()->insert('good_group_site', ['good_id' => $good->getId(), 'group_site_id' => $groupSite->getId()]);
         } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
-            
+            $inserted = 0;            
         }    
         return $inserted;        
     }

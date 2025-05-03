@@ -104,4 +104,20 @@ class GroupSiteRepository extends EntityRepository{
         
         return;
     }
+    
+    /*
+     * Пересчитать количество товаров в категориях
+     */
+    public function updateGroupSiteGoodCounts()
+    {
+        $entityManager = $this->getEntityManager();
+        $categories = $entityManager->getRepository(GroupSite::class)
+                ->findAll();
+        
+        foreach ($categories as $category){
+            $this->updateGroupSiteGoodCount($category);
+        }
+        
+        return;
+    }
 }
