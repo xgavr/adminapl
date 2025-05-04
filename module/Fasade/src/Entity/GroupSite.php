@@ -337,6 +337,10 @@ class GroupSite
         return ($this->getSiteGroup()) ? $this->getSiteGroup()->getId():null;
     }
         
+    public function getSiteGroupAsArray() {
+        return ($this->getSiteGroup()) ? $this->getSiteGroup()->toArray():null;
+    }
+        
     /**
      * 
      * @param GroupSite $siteGroup
@@ -390,7 +394,7 @@ class GroupSite
             'slug' => $this->getSlug(),
             'sort' => $this->getSort(),
             'status' => $this->getStatus(),
-            'groupSite' => $this->getSiteGroupId(),
+            'groupSite' => $this->getSiteGroupAsArray(),
         ];
         
         return $result;

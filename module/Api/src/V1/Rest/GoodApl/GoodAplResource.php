@@ -7,6 +7,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
+use Fasade\Entity\GroupSite;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -78,7 +79,7 @@ class GoodAplResource extends AbstractResourceListener
         }        
         return new ApiProblem(404, 'Товар с кодом '.$id.' не найден');        
     }
-
+    
     /**
      * Fetch all or a subset of resources
      *
