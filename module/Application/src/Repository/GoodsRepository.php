@@ -2750,7 +2750,8 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
-                ->setMaxResults(10)
+                ->andWhere()
+                ->setMaxResults(100)
                 ;
         
 //        var_dump($queryBuilder->getQuery()->getSQL());

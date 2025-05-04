@@ -129,6 +129,7 @@ class GoodAplResource extends AbstractResourceListener
             foreach ($goods as $good){
                 $data = $good->toArray();
                 $data['images'] = $good->getImagesAsArray();
+                $data['categories'] = $good->getCategoriesAsArray();
                 $result[] = $data;
             }
             return $result;

@@ -1561,6 +1561,20 @@ class Goods {
     {
         return $this->categories;
     }      
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getCategoriesAsArray() 
+    {
+        $result = [];
+        foreach ($this->categories as $groupSite){
+            $result[] = $groupSite->toArray();
+        }    
+        return $result;
+    }
+    
       
     /**
      * // Добавляет новую категорию к данному товару.
