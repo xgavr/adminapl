@@ -57,6 +57,7 @@ class GroupSiteManager
         $groupSite->setCode($data['code'] ?? 0);
         $groupSite->setDescription($data['description'] ?? null);
         $groupSite->setGoodCount($data['goodCount'] ?? 0);
+        $groupSite->setSaleCount($data['saleCount'] ?? 0);
         $groupSite->setImage($data['image'] ?? null);
         $groupSite->setLevel($data['level'] ?? 0);
         $groupSite->setName($data['name']);
@@ -110,6 +111,7 @@ class GroupSiteManager
         
         $groupSite->setDescription($data['description'] ?? null);
         $groupSite->setGoodCount($data['goodCount'] ?? 0);
+        $groupSite->setSaleCount($data['saleCount'] ?? 0);
         $groupSite->setImage($data['image'] ?? null);
         $groupSite->setLevel($data['level'] ?? 0);
         $groupSite->setName($data['name']);

@@ -11,6 +11,7 @@ namespace Fasade\Repository;
 use Doctrine\ORM\EntityRepository;
 use Fasade\Entity\GroupSite;
 use Application\Entity\TokenGroup;
+use Application\Entity\Goods;
 
 /**
  * Description of GroupSiteRepository
@@ -61,28 +62,33 @@ class GroupSiteRepository extends EntityRepository{
     public function updateGroupSiteGoodCount($groupSite)
     {
         $entityManager = $this->getEntityManager();
-        $result = 0;
+        $result = [
+            'saleCount' => 0,
+            'goodCount' => 0,
+        ];
         
         if ($groupSite->getHasChild() === GroupSite::HAS_NO_CHILD){
 
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('sum(tg.goodCount) as goodCount')
-                    ->from(TokenGroup::class, 'tg')
-                    ->where('tg.groupSite = :groupSite')
+            $queryBuilder->select('sum(g.retailCount) as saleCount, count(g.id) as goodCount')
+                    ->from(Goods::class, 'g')
+                    ->join('g.categories', 'c')
+                    ->where('c.id = :groupSite')
                     ->setParameter('groupSite', $groupSite->getId())
                     ->setMaxResults(1)
                     ;
             
             $row = $queryBuilder->getQuery()->getOneOrNullResult();
             if ($row){
-               $result = $row['goodCount']; 
+               $result['saleCount'] = empty($row['saleCount']) ? 0:$row['saleCount'];
+               $result['goodCount'] = empty($row['goodCount']) ? 0:$row['goodCount'];
             }
 
         } else {
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('sum(gs.goodCount) as goodCount')
+            $queryBuilder->select('sum(gs.goodCount) as goodCount, sum(gs.saleCount) as saleCount')
                     ->from(GroupSite::class, 'gs')
                     ->where('gs.siteGroup = :groupSite')
                     ->setParameter('groupSite', $groupSite->getId())
@@ -91,12 +97,14 @@ class GroupSiteRepository extends EntityRepository{
 
             $row = $queryBuilder->getQuery()->getOneOrNullResult();
             if ($row){
-               $result = $row['goodCount']; 
+               $result['saleCount'] = empty($row['saleCount']) ? 0:$row['saleCount'];
+               $result['goodCount'] = empty($row['goodCount']) ? 0:$row['goodCount'];
             }
 
         }   
         
-        $entityManager->getConnection()->update('group_site', ['good_count' => $result], ['id' => $groupSite->getId()]);            
+//        var_dump($result); exit;
+        $entityManager->getConnection()->update('group_site', ['good_count' => $result['goodCount'], 'sale_count' => $result['saleCount']], ['id' => $groupSite->getId()]);            
         
         if ($groupSite->getSiteGroup()){
             $this->updateGroupSiteGoodCount($groupSite->getSiteGroup());

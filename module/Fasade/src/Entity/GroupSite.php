@@ -88,6 +88,11 @@ class GroupSite
     protected $goodCount = 0;
     
     /**
+     * @ORM\Column(name="sale_count")   
+     */
+    protected $saleCount = 0;
+    
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -226,6 +231,14 @@ class GroupSite
     public function setGoodCount($goodCount) {
         $this->goodCount = $goodCount;
         return $this;
+    }
+
+    public function getSaleCount() {
+        return $this->saleCount;
+    }
+
+    public function setSaleCount($saleCount) {
+        $this->saleCount = $saleCount;
     }
 
     public function getStatus() {
@@ -388,6 +401,7 @@ class GroupSite
             'code' => $this->getCode(),
             'description' => $this->getDescription(),
             'goodCount' => $this->getGoodCount(),
+            'saleCount' => $this->getSaleCount(),
             'image' => $this->getImage(),
             'level' => $this->getLevel(),
             'name' => $this->getName(),
