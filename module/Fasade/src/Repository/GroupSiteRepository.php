@@ -110,7 +110,7 @@ class GroupSiteRepository extends EntityRepository{
      */
     public function updateGroupSiteGoodCounts()
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '512M');
         
         $entityManager = $this->getEntityManager();
         $categories = $entityManager->getRepository(GroupSite::class)
