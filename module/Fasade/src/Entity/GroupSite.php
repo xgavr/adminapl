@@ -193,7 +193,7 @@ class GroupSite
     }
     
     public function getSlug() {
-        return $this->slug;
+        return $this->slug ?? $this->name;
     }
 
     public function setSlug($slug) {
