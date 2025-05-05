@@ -405,7 +405,7 @@ class GroupSite
             'image' => $this->getImage(),
             'level' => $this->getLevel(),
             'name' => $this->getName(),
-            'slug' => $this->getSlug(),
+            'slug' => $this->getFullName(),
             'sort' => $this->getSort(),
             'status' => $this->getStatus(),
             'groupSite' => $this->getSiteGroupAsArray(),
