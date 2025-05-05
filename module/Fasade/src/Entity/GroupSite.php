@@ -408,6 +408,7 @@ class GroupSite
             'slug' => str_replace('/', '_', $this->getFullName()),
             'sort' => $this->getSort(),
             'status' => $this->getStatus(),
+            'hasChild' => $this->getHasChild(),
             'groupSite' => $this->getSiteGroupAsArray(),
         ];
         
