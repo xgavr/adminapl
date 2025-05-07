@@ -270,6 +270,8 @@ class Producer {
             'id' => $this->getId(),
             'name' => $this->getName(),
             'description' => $this->getName(),
+            'goodCount' => $this->getGoodCount(),
+            'movement' => $this->(),
         ];
         
         return $result;
