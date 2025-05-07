@@ -2752,6 +2752,7 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
                 ->andWhere()
                 ->setMaxResults(100)
+                ->orderBy('g.retailCount', 'desc')
                 ;
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
