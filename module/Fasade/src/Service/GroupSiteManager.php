@@ -128,14 +128,18 @@ class GroupSiteManager
             if (is_numeric($data['groupSite'])){
                 $data['groupSite'] = $this->entityManager->getRepository(GroupSite::class)
                         ->find($data['groupSite']);
-                $groupSite->setSiteGroup($data['groupSite'] ?? null);
-            }
-            $groupSite->setLevel($data['groupSite']->getLevel() + 1);
-            $code = $data['groupSite']->getCode().'-'.$code;
-            $fullName = $data['groupSite']->getFullName().'/'.$data['name'];
+                
+                if ($data['groupSite']){
+                    $groupSite->setSiteGroup($data['groupSite'] ?? null);
 
-            $data['groupSite']->setHasChild(GroupSite::HAS_CHILD);
-            $this->entityManager->persist($data['groupSite']);
+                    $groupSite->setLevel($data['groupSite']->getLevel() + 1);
+                    $code = $data['groupSite']->getCode().'-'.$code;
+                    $fullName = $data['groupSite']->getFullName().'/'.$data['name'];
+
+                    $data['groupSite']->setHasChild(GroupSite::HAS_CHILD);
+                    $this->entityManager->persist($data['groupSite']);
+                }    
+            }
         }
         
         $groupSite->setCode($code);
