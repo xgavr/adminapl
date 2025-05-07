@@ -125,6 +125,7 @@ class GroupSiteManager
         $code = sprintf("%03d", $groupSite->getId());
         $fullName = $data['name'];        
         if (!empty($data['groupSite'])){
+            
             if (is_numeric($data['groupSite'])){
                 $data['groupSite'] = $this->entityManager->getRepository(GroupSite::class)
                         ->find($data['groupSite']);

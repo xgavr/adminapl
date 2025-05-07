@@ -409,7 +409,8 @@ class GroupSite
             'sort' => $this->getSort(),
             'status' => $this->getStatus(),
             'hasChild' => $this->getHasChild(),
-            'groupSite' => $this->getSiteGroupAsArray(),
+            'groupSite' => $this->getSiteGroup(),
+            'groupSiteAsArray' => $this->getSiteGroupAsArray(),
         ];
         
         return $result;
