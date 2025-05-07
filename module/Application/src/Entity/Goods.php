@@ -1627,6 +1627,7 @@ class Goods {
             'tokenGroup' => ($this->getTokenGroup()) ? $this->getTokenGroup()->toArray():[],
             'info' => '',
             'available' => $this->getAvailable(),
+            'sale_count' => $this->getRetailCount(), 
         ];
         
         return $result;
