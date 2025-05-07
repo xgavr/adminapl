@@ -111,22 +111,25 @@ class BillManager
         
         $filedata = $this->_filedata2array(null, $idoc->getName(), $idoc->getTmpfile());
 //        var_dump($filedata['sheet']); exit;
-        $idoc->setDescription(Encoder::encode($filedata['sheet'][0]));                    
-        
-        foreach ($billSettings as $billSetting){
+        if (!empty($filedata['sheet'])){
             
-            $idocData = $idoc->idocToPtu($billSetting->toArray());
-            if (!empty($idocData['inn'])){
-                $legals = $this->entityManager->getRepository(Legal::class)
-                        ->findBy(['inn' => trim($idocData['inn'])]);
-                foreach ($legals as $legal){
-                    if ($legal->getSupplier()){
-                        $idoc->setSupplier($legal->getSupplier());
-                        return $legal->getSupplier();
+            $idoc->setDescription(Encoder::encode($filedata['sheet'][0]));                    
+
+            foreach ($billSettings as $billSetting){
+
+                $idocData = $idoc->idocToPtu($billSetting->toArray());
+                if (!empty($idocData['inn'])){
+                    $legals = $this->entityManager->getRepository(Legal::class)
+                            ->findBy(['inn' => trim($idocData['inn'])]);
+                    foreach ($legals as $legal){
+                        if ($legal->getSupplier()){
+                            $idoc->setSupplier($legal->getSupplier());
+                            return $legal->getSupplier();
+                        }
                     }
                 }
             }
-        }
+        }    
         
         return;
     }
