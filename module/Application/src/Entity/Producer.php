@@ -271,7 +271,7 @@ class Producer {
             'name' => $this->getName(),
             'description' => $this->getName(),
             'goodCount' => $this->getGoodCount(),
-//            'movement' => $this->getMovement(),
+            'movement' => $this->getMovement(),
         ];
         
         return $result;
