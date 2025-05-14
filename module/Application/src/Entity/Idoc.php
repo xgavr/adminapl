@@ -554,6 +554,7 @@ class Idoc {
     private function _readDocnumAndDate($row, $col, $idocData, $expec = 'num')
     {
        $str = $this->readText($row, $col, $idocData);
+       var_dump($str, $row, $col, $idocData);
        return $this->_docnumAndDate($str, $expec);
     }
 
