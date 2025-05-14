@@ -298,6 +298,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     ->companyCashBalances($params['company']);
             foreach ($cashBalances as $cashBalance){
                 $result[$cashBalance['aplId']] = [
+                    'aplId' => $cashBalance['aplId'],
                     'name' => $cashBalance['name'],
                     'amount' => $cashBalance['balance'],
                 ];                
