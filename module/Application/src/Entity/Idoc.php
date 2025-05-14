@@ -554,7 +554,6 @@ class Idoc {
     private function _readDocnumAndDate($row, $col, $idocData, $expec = 'num')
     {
        $str = $this->readText($row, $col, $idocData);
-       var_dump($str, $row, $col, $idocData);
        return $this->_docnumAndDate($str, $expec);
     }
 
@@ -610,7 +609,7 @@ class Idoc {
     public function idocToPtu($billSettingData)
     {
         $idocData = $this->getDescriptionAsArray($billSettingData['ruleCell'] == BillSetting::RULE_CELL_ALL);
-//        var_dump($idocData);
+        var_dump($idocData);
 //        var_dump($billSettingData);
         $result = [];
         if (!empty($billSettingData['docNumRow'])){
