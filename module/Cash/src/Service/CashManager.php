@@ -1351,23 +1351,27 @@ class CashManager {
                     ->findOneBy(['inn' => $statement->getСounterpartyInn()]);
         }
         if ($legal){
+            
+            $data['contact'] = $legal->getClientContact();
+            
             $order = $this->entityManager->getRepository(Order::class)
                     ->findOneBy(['legal' => $legal->getId()], ['id' => 'DESC']);
             if ($order){
                 $data['order'] = $order;
                 $data['contact'] = $order->getContact();
-                if ($statement->getAmount() > 0){
-                    $data['kind'] = CashDoc::KIND_IN_PAYMENT_CLIENT;
-                } else {
-                    $data['kind'] = CashDoc::KIND_OUT_RETURN_CLIENT;
-                }
+            }
+            
+            if ($statement->getAmount() > 0){
+                $data['kind'] = CashDoc::KIND_IN_PAYMENT_CLIENT;
+            } else {
+                $data['kind'] = CashDoc::KIND_OUT_RETURN_CLIENT;
+            }
 
-                if ($cashDoc){
-                    $this->updateCashDoc($cashDoc, $data);
-                } else {
-                    $cashDoc = $this->addCashDoc($data);
-                }                
-            }            
+            if ($cashDoc){
+                $this->updateCashDoc($cashDoc, $data);
+            } else {
+                $cashDoc = $this->addCashDoc($data);
+            }                
         }
 
         return $cashDoc;
