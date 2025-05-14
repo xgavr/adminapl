@@ -292,6 +292,19 @@ class ApiAccountComitentResource extends AbstractResourceListener
                                     ->currentBalance($bankAccount->getRs());                
             }    
         }    
+        
+        if ($params['docType'] == 'cashBalance'){
+            $bankAccounts = $this->entityManager->getRepository(BankAccount::class)
+                    ->findBy([
+                        'legal' => $params['company'], 
+                        'accountType' => BankAccount::ACСOUNT_CHECKING,
+                        'status' => BankAccount::STATUS_ACTIVE,
+                    ]);
+            foreach ($bankAccounts as $bankAccount){
+                $result[$bankAccount->getRs()] = $this->entityManager->getRepository(Statement::class)
+                                    ->currentBalance($bankAccount->getRs());                
+            }    
+        }    
 
         return ['reports' => $result];
         

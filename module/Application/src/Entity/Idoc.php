@@ -609,6 +609,7 @@ class Idoc {
     public function idocToPtu($billSettingData)
     {
         $idocData = $this->getDescriptionAsArray($billSettingData['ruleCell'] == BillSetting::RULE_CELL_ALL);
+        var_dump($idocData);
         $result = [];
         if (!empty($billSettingData['docNumRow'])){
             $result['doc_no'] = $this->_readDocnumAndDate($billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1, $idocData);
