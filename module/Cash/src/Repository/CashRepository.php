@@ -264,6 +264,37 @@ class CashRepository extends EntityRepository
 
         return $result;        
     }
+    
+    /**
+     * Остаток в кассах компании
+     * @param integer $companyId
+     * @param date $endDate
+     */
+    public function companyCashBalances($companyId, $endDate = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('round(sum(ct.amount), 2) as balance, c.name, c.aplId')
+            ->from(CashTransaction::class, 'ct')
+            ->join('ct.cash', 'c')
+            ->andWhere('ct.dateOper <= ?2')
+            ->setParameter('2', ($endDate) ? $endDate:date('Y-m-d H:i:s'))    
+            ->andWhere('ct.status = ?3')
+            ->setParameter('3', CashTransaction::STATUS_ACTIVE)    
+            ->andWhere('c.company = :company')
+            ->setParameter('company', $companyId)    
+            ->andWhere('c.restStatus = :restStatus')
+            ->setParameter('restStatus', Cash::REST_ACTIVE)  
+            ->groupBy('c.id')    
+            ->having('balance != 0')    
+                ;
+        
+        $result = $queryBuilder->getQuery()->getResult();
+
+        return $result;        
+    }
     /**
      * Запрос по кассовым документам
      * 
