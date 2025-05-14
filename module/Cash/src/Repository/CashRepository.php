@@ -283,7 +283,7 @@ class CashRepository extends EntityRepository
             ->setParameter('2', ($endDate) ? $endDate:date('Y-m-d H:i:s'))    
             ->andWhere('ct.status = ?3')
             ->setParameter('3', CashTransaction::STATUS_ACTIVE)    
-            ->andWhere('c.company = :company')
+            ->andWhere('ct.company = :company')
             ->setParameter('company', $companyId)    
             ->andWhere('c.restStatus = :restStatus')
             ->setParameter('restStatus', Cash::REST_ACTIVE)  
