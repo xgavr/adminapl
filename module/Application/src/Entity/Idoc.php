@@ -610,10 +610,11 @@ class Idoc {
     {
         $idocData = $this->getDescriptionAsArray($billSettingData['ruleCell'] == BillSetting::RULE_CELL_ALL);
 //        var_dump($idocData);
-        var_dump($billSettingData);
+//        var_dump($billSettingData);
         $result = [];
         if (!empty($billSettingData['docNumRow'])){
             $result['doc_no'] = $this->_readDocnumAndDate($billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1, $idocData);
+            var_dump($result['doc_no'], $billSettingData['docNumRow']-1, $billSettingData['docNumCol']-1);
         }    
         if (!empty($billSettingData['docDateRow'])){
             $result['doc_date'] = $this->_readDocnumAndDate($billSettingData['docDateRow']-1, $billSettingData['docDateCol']-1, $idocData, 'date');
