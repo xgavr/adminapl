@@ -263,8 +263,8 @@ class MikadoManager {
             
         if ($ptu){
             $dataPtu['apl_id'] = $ptu->getAplId();
-            $this->ptuManager->updatePtu($ptu, $dataPtu);
             $this->ptuManager->removePtuGood($ptu); 
+            $this->ptuManager->updatePtu($ptu, $dataPtu);
         } else {        
             $ptu = $this->ptuManager->addPtu($dataPtu);
         }    
