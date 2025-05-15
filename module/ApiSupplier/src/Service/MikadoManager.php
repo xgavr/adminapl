@@ -192,7 +192,7 @@ class MikadoManager {
     {
         if (!empty($tp['QTY']) && !empty($tp['Name'])&& !empty($tp['PriceRUR'])){
 
-            $good = $this->billManager->findGood($ptu->getStatus(), [
+            $good = $this->billManager->findGood($ptu->getSupplier(), [
                 'article' => $tp['ProducerCode'],
                 'producer' => $tp['producer'],
                 'good_name' => $tp['Name'],
