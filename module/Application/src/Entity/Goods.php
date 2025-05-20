@@ -417,6 +417,7 @@ class Goods {
    */
    private $foldBalances;
 
+
     /**
      * @ORM\ManyToMany(targetEntity="Fasade\Entity\GroupSite", inversedBy="goods")
      * @ORM\JoinTable(name="good_group_site",
@@ -1595,6 +1596,20 @@ class Goods {
         return $this->goodSuppliers;
     }    
     
+    /**
+     * Кратность, минимальное количество
+     * @return array
+     */
+    public function getLot()
+    {
+         $result = 1;
+         foreach ($this->goodSuppliers as $goodSupplier){
+             $result = max($result, $goodSupplier->getLot());
+         }
+         
+         return $result;
+    }    
+    
     public function getFoldBalances() {
         return $this->foldBalances;
     }
@@ -1671,7 +1686,8 @@ class Goods {
             'info' => '',
             'available' => $this->getAvailable(),
             'saleCount' => $this->getRetailCount(), 
-            'saleMonth' => $this->getSaleMonth(),            
+            'saleMonth' => $this->getSaleMonth(),  
+            'lot' => $this->getLot(),
         ];
         
         return $result;

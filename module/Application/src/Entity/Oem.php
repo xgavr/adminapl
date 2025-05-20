@@ -475,6 +475,7 @@ class Oem {
             'rating' => $this->getRating(),
             'returnCount' => $this->getReturnCount(),
             'status' => $this->getStatus(),
+            'source' => $this->getSource(),
             'transferBrand' => $this->getTransferBrandName(),
         ];
         
