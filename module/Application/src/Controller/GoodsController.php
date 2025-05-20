@@ -2056,5 +2056,14 @@ class GoodsController extends AbstractActionController
         return new JsonModel(
             $result
         );          
+    }   
+    
+    public function updateSaleMonthAction()
+    {
+
+        $this->goodsManager->updateSaleMonth();                    
+
+        
+        return new JsonModel(['ok']);          
     }    
 }

@@ -1287,4 +1287,34 @@ class GoodsManager
         
         return $result; 
     }
+    
+    /**
+     * Обновить продажи за последний месяц
+     */
+    public function updateSaleMonth()
+    {
+        ini_set('memory_limit', '4096M');
+        set_time_limit(3600);
+        
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('g.id as goodId')
+                ->from(Goods::class, 'g')
+                ->where('g.saleMonth > 0')
+                ;
+        
+        $goodsQuery = $qb->getQuery();
+        
+        $iterable = $goodsQuery->iterate();
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+//                var_dump($good); exit;
+                $this->entityManager->getRepository(Movement::class)
+                        ->goodMovementRetail($good['goodId'], true);
+                
+                $this->entityManager->detach($good);
+            }    
+        }
+            
+        return;        
+    }
 }
