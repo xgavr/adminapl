@@ -279,6 +279,11 @@ class Goods {
     protected $retailCount = 0;        
     
     /**
+     * @ORM\Column(name="sale_month")  
+     */
+    protected $saleMonth = 0;        
+    
+    /**
      * @ORM\Column(name="check_oem")  
      */
     protected $checkOem;        
@@ -849,6 +854,14 @@ class Goods {
     {
         $this->retailCount = $retailCount;
     }     
+
+    public function getSaleMonth() {
+        return $this->saleMonth;
+    }
+
+    public function setSaleMonth($saleMonth) {
+        $this->saleMonth = $saleMonth;
+    }
 
     /**
      * Возвращает картинки для этого товара.
@@ -1628,6 +1641,7 @@ class Goods {
             'info' => '',
             'available' => $this->getAvailable(),
             'saleCount' => $this->getRetailCount(), 
+            'saleMonth' => $this->getSaleMonth(),            
         ];
         
         return $result;

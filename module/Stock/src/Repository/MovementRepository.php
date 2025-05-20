@@ -250,7 +250,7 @@ class MovementRepository extends EntityRepository{
         $connection = $entityManager->getConnection();
 
         $qb = $entityManager->createQueryBuilder();
-        $qb->select('count(m.id) as mCount')
+        $qb->select('count(m.id) as rCount')
                 ->from(Movement::class, 'm')
                 ->join('m.good', 'g')
                 ->where('g.producer = ?1')
@@ -258,7 +258,20 @@ class MovementRepository extends EntityRepository{
                 ;
         
         $result = $qb->getQuery()->getOneOrNullResult();
-        $connection->update('producer', ['movement' => $result['mCount']],['id' => $producer->getId()]);
+        $rCount = $result['rCount'];
+        
+        $qb = $entityManager->createQueryBuilder();
+        $qb->select('sum(g.saleMonth) as mCount')
+                ->from(Goods::class, 'g')
+                ->where('g.producer = ?1')
+                ->setParameter('1', $producer->getId())
+                ;
+        
+        $result = $qb->getQuery()->getOneOrNullResult();
+        $mCount = $result['mCount'];
+        
+        
+        $connection->update('producer', ['movement' => $rCount, 'sale_month' => $mCount],['id' => $producer->getId()]);
         
         return $result['mCount'];
     }
@@ -409,9 +422,10 @@ class MovementRepository extends EntityRepository{
     /**
     * Количество продаж у товара
     * @param integer $goodId
+    * @param bool $lastMonth
     * @return integer
     */
-    public function goodMovementRetail($goodId)
+    public function goodMovementRetail($goodId, $lastMonth = false)
     {
         $entityManager = $this->getEntityManager();
 
@@ -427,12 +441,17 @@ class MovementRepository extends EntityRepository{
                 ->setParameter('4', Movement::STATUS_ACTIVE)
                 ;
         
+        if ($lastMonth){
+            $qb->andWhere('m.dateOper >= :startdate')
+                    ->setParameter('startdate', date('Y-m-d', strtotime('- 30 days')));
+        }
+        
         $result = $qb->getQuery()->getOneOrNullResult();
         //$connection->update('goods', ['movement' => -$result['rSum']],['id' => $good->getId()]);
         
         return intval($result['rSum']);
     }      
-    
+        
     /**
      * Удалить из резерва
      * @param string $docKey

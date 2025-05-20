@@ -93,6 +93,11 @@ class GroupSite
     protected $saleCount = 0;
     
     /**
+     * @ORM\Column(name="sale_month")  
+     */
+    protected $saleMonth = 0; 
+    
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        
@@ -239,6 +244,14 @@ class GroupSite
 
     public function setSaleCount($saleCount) {
         $this->saleCount = $saleCount;
+    }
+
+    public function getSaleMonth() {
+        return $this->saleMonth;
+    }
+
+    public function setSaleMonth($saleMonth) {
+        $this->saleMonth = $saleMonth;
     }
 
     public function getStatus() {
@@ -402,6 +415,7 @@ class GroupSite
             'description' => $this->getDescription(),
             'goodCount' => $this->getGoodCount(),
             'saleCount' => $this->getSaleCount(),
+            'saleMonth' => $this->getSaleMonth(),
             'image' => $this->getImage(),
             'level' => $this->getLevel(),
             'name' => $this->getName(),

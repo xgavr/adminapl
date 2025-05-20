@@ -390,8 +390,11 @@ class VtManager
             $rCount = $this->entityManager->getRepository(Movement::class)
                     ->goodMovementRetail($vtGood->getGood()->getId());
 
+            $mCount = $this->entityManager->getRepository(Movement::class)
+                    ->goodMovementRetail($vtGood->getGood()->getId(), true);
+
             $this->entityManager->getConnection()
-                    ->update('goods', ['retail_count' => -$rCount], ['id' => $vtGood->getGood()->getId()]);
+                    ->update('goods', ['retail_count' => -$rCount, 'sale_month' => -$mCount], ['id' => $vtGood->getGood()->getId()]);
             $this->entityManager->getRepository(Movement::class)
                     ->updateGoodBalance($vtGood->getGood()->getId());
             $this->entityManager->getRepository(ComitentBalance::class)

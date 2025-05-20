@@ -55,6 +55,11 @@ class Producer {
      * @ORM\Column(name="movement")   
      */
     protected $movement = 0;
+    
+    /**
+     * @ORM\Column(name="sale_month")  
+     */
+    protected $saleMonth = 0;     
 
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="producer") 
@@ -192,6 +197,14 @@ class Producer {
         $this->movement = $movement;
     }      
 
+    public function getSaleMonth() {
+        return $this->saleMonth;
+    }
+
+    public function setSaleMonth($saleMonth) {
+        $this->saleMonth = $saleMonth;
+    }
+
     /*
      * Возвращает связанный country.
      * @return \Company\Entity\Country
@@ -272,6 +285,7 @@ class Producer {
             'description' => $this->getName(),
             'goodCount' => $this->getGoodCount(),
             'movement' => $this->getMovement(),
+            'saleMonth' => $this->getSaleMonth(),
         ];
         
         return $result;

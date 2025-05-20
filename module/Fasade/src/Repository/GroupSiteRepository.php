@@ -71,7 +71,7 @@ class GroupSiteRepository extends EntityRepository{
 
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('sum(g.retailCount) as saleCount, count(g.id) as goodCount')
+            $queryBuilder->select('sum(g.retailCount) as saleCount, sum(g.saleMonth) as saleMonth, count(g.id) as goodCount')
                     ->from(Goods::class, 'g')
                     ->join('g.categories', 'c')
                     ->where('c.id = :groupSite')
@@ -83,6 +83,7 @@ class GroupSiteRepository extends EntityRepository{
             if ($row){
                $result['saleCount'] = empty($row['saleCount']) ? 0:$row['saleCount'];
                $result['goodCount'] = empty($row['goodCount']) ? 0:$row['goodCount'];
+               $result['saleMonth'] = empty($row['saleMonth']) ? 0:$row['saleMonth'];
             }
 
         } else {
@@ -99,12 +100,17 @@ class GroupSiteRepository extends EntityRepository{
             if ($row){
                $result['saleCount'] = empty($row['saleCount']) ? 0:$row['saleCount'];
                $result['goodCount'] = empty($row['goodCount']) ? 0:$row['goodCount'];
+               $result['saleMonth'] = empty($row['saleMonth']) ? 0:$row['saleMonth'];
             }
 
         }   
         
 //        var_dump($result); exit;
-        $entityManager->getConnection()->update('group_site', ['good_count' => $result['goodCount'], 'sale_count' => $result['saleCount']], ['id' => $groupSite->getId()]);            
+        $entityManager->getConnection()->update('group_site', [
+            'good_count' => $result['goodCount'], 
+            'sale_count' => $result['saleCount'],
+            'sale_month' => $result['saleMonth'],
+        ], ['id' => $groupSite->getId()]);            
         
         if ($groupSite->getSiteGroup()){
             $this->updateGroupSiteGoodCount($groupSite->getSiteGroup());
