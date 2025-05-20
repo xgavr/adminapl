@@ -1311,7 +1311,7 @@ class GoodsManager
                 $this->entityManager->getRepository(Movement::class)
                         ->goodMovementRetail($good['goodId'], true);
                 
-                $this->entityManager->detach($good);
+//                $this->entityManager->detach($good);
             }    
         }
             
