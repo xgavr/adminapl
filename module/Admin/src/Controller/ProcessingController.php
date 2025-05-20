@@ -1145,6 +1145,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getPriceSettings();
 
         if ($settings['assembly_producer'] == 1){
+            $this->goodsManager->updateSaleMonth();
             $this->producerManager->updateProducersGoodCount();
             $this->producerManager->updateProducersMovement();
         }    
