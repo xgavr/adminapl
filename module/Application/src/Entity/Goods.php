@@ -9,6 +9,7 @@ use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 use Application\Entity\Producer;
 use Application\Entity\Images;
+use Application\Entity\Oem;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -913,6 +914,20 @@ class Goods {
     }
     
     /**
+     * Возвращает номера для этого товара.
+     * @return array
+     */
+    public function getOemsAsArray() 
+    {
+        $result = [];
+        foreach ($this->oems as $oem){
+            $result[] = $oem->toArray();
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Добавляет новый номер к этому товару.
      * @param $oem
      */
@@ -1067,6 +1082,21 @@ class Goods {
     public function getAttributeValues() 
     {
         return $this->attributeValues;
+    }      
+    
+    // Возвращает аттрибуты для данного товара.
+    public function getAttributeValuesAsArray() 
+    {
+        $result = [];
+        foreach ($this->attributeValues as $attributeValue){
+            $result[] = [
+                'id' => $attributeValue->getAttribute()->getId(),
+                'name' => $attributeValue->getAttribute()->getName(),
+                'value' => $attributeValue->getAttributeValue()->getValue(),
+                'status' => $attributeValue->getAttribute()->getStatus()
+            ];
+        }
+        return $result;
     }      
     
     // Добавляет новую аттрибут к данному товару.

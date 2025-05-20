@@ -458,4 +458,27 @@ class Oem {
         $this->bids[] = $bid;
     }
     
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'aplId' => $this->getId(),
+            'id' => $this->getId(),
+            'brand' => $this->getBrandName(),
+            'intersectGoodId' => $this->getIntersectGoodId(),
+            'oe' => $this->getOe(),
+            'oeNumber' => $this->getOeNumber(),
+            'orderCount' => $this->getOrderCount(),
+            'rating' => $this->getRating(),
+            'returnCount' => $this->getReturnCount(),
+            'status' => $this->getStatus(),
+            'transferBrand' => $this->getTransferBrandName(),
+        ];
+        
+        return $result;
+    }        
+    
 }
