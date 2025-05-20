@@ -490,7 +490,7 @@ class OrderManager
                 ->goodMovementRetail($bid->getGood()->getId(), true);
         
         $this->entityManager->getConnection()
-                ->update('goods', ['retail_count' => -$rCount, 'sale_month' => -$mCount], ['id' => $bid->getGood()->getId()]);        
+                ->update('goods', ['retail_count' => $rCount, 'sale_month' => $mCount, 'fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $bid->getGood()->getId()]);        
         
         return $takeNoCount;
     }
