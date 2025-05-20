@@ -1308,10 +1308,11 @@ class GoodsManager
         foreach ($iterable as $row){
             foreach ($row as $good){
 //                var_dump($good); exit;
-                $this->entityManager->getRepository(Movement::class)
+                $mCount = $this->entityManager->getRepository(Movement::class)
                         ->goodMovementRetail($good['goodId'], true);
                 
-//                $this->entityManager->detach($good);
+                $this->entityManager->getConnection()
+                        ->update('goods', ['sale_month' => $mCount, 'fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $good['goodId']]);        
             }    
         }
             
