@@ -19,6 +19,7 @@ use Laminas\Json\Encoder;
 use Cash\Entity\CashDoc;
 use Application\Entity\Oem;
 use Application\Entity\Client;
+use Application\Entity\Goods;
 
 /**
  * This service is responsible for adding/editing ptu.
