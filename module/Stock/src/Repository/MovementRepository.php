@@ -449,7 +449,7 @@ class MovementRepository extends EntityRepository{
         $result = $qb->getQuery()->getOneOrNullResult();
         //$connection->update('goods', ['movement' => -$result['rSum']],['id' => $good->getId()]);
         
-        return intval($result['rSum']*$result['mSum']);
+        return -intval($result['mSum']);
     }      
         
     /**
