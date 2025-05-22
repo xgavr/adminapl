@@ -343,7 +343,7 @@ $form->prepare();
         $('#order').attr('required', false);
         $('#vt').attr('required', false);
         $('#legal').attr('required', false);
-        if ($("#kind").val() == <?= CashDoc::KIND_OUT_RETURN_CLIENT?>){
+        if ($("#kind").val() === '<?= CashDoc::KIND_OUT_RETURN_CLIENT?>'){
             $('#payment').show();
             $('#contracts').show();
             $('#phone').attr('required', true);
