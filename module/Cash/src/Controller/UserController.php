@@ -18,6 +18,7 @@ use Company\Entity\Office;
 use User\Entity\User;
 use Company\Entity\Legal;
 use Cash\Entity\UserTransaction;
+use Application\Entity\Order;
 
 
 class UserController extends AbstractActionController
