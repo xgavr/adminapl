@@ -89,7 +89,7 @@ class GroupSiteRepository extends EntityRepository{
         } else {
             $queryBuilder = $entityManager->createQueryBuilder();
 
-            $queryBuilder->select('sum(gs.goodCount) as goodCount, sum(gs.saleCount) as saleCount')
+            $queryBuilder->select('sum(gs.goodCount) as goodCount, sum(gs.saleCount) as saleCount, sum(gs.saleMonth) as saleMonth')
                     ->from(GroupSite::class, 'gs')
                     ->where('gs.siteGroup = :groupSite')
                     ->setParameter('groupSite', $groupSite->getId())
