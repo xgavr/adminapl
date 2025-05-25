@@ -412,6 +412,12 @@ class Goods {
    private $goodSuppliers;
 
    /**
+    * @ORM\OneToMany(targetEntity="Application\Entity\GoodRelated", mappedBy="good")
+    * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
+   */
+   private $goodRelations;
+
+   /**
     * @ORM\OneToMany(targetEntity="GoodMap\Entity\FoldBalance", mappedBy="good")
     * @ORM\JoinColumn(name="id", referencedColumnName="good_id")
    */
@@ -439,6 +445,7 @@ class Goods {
       $this->attributeValues = new ArrayCollection();
       $this->oems = new ArrayCollection();
       $this->foldBalances = new ArrayCollection();
+      $this->goodRelations = new ArrayCollection();
       $this->categories = new ArrayCollection();
     }
     
@@ -1612,6 +1619,10 @@ class Goods {
     
     public function getFoldBalances() {
         return $this->foldBalances;
+    }
+
+    public function getGoodRelations() {
+        return $this->goodRelations;
     }
 
     // Возвращает категории для данного товара.

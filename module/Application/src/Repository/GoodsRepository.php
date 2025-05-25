@@ -29,6 +29,7 @@ use Stock\Entity\ComitentBalance;
 use GoodMap\Filter\DecodeFoldCode;
 use Fasade\Entity\GroupSite;
 use Application\Entity\Bid;
+use Application\Entity\GoodRelated;
 
 /**
  * Description of GoodsRepository
@@ -2771,9 +2772,14 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('identity(g.id)')
-                ->from(Bid::class, 'b')
-                ->join('b.good')
+        $queryBuilder->select('identity(gr.goodRelated) as goodRelatedId, g.aplId as goodRelatedAplId, count(identity(gr.goodRelated)) as position')
+                ->from(GoodRelated::class, 'gr')
+                ->join('gr.goodRelated', 'g')
+                ->where('gr.good = :good')
+                ->setParameter('good', $good->getId())
+                ->groupBy('gr.good')
                 ;
+        
+        return $queryBuilder->getQuery()->getResult();
     }
 }

@@ -133,6 +133,10 @@ class GoodAplResource extends AbstractResourceListener
                 $data['categories'] = $good->getCategoriesAsArray();
                 $data['attributes'] = $good->getAttributeValuesAsArray();
                 $data['oems'] = $good->getOemsAsArray();
+                
+                $data['related'] = $this->entityManager->getRepository(Goods::class)
+                        ->relatedGoods($good);
+                
                 $result[] = $data;
             }
             return $result;
