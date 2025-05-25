@@ -2405,7 +2405,7 @@ class OrderManager
         
         foreach ($orders as $order){
             $this->updateGoodRelations($order);
-            $this->entityManager->getConnection()->update('orders', ['invoiceInfo' => ''], ['id' => $order->getId()]);
+            $this->entityManager->getConnection()->update('orders', ['invoice_info' => ''], ['id' => $order->getId()]);
             
             if (time() > $startTime + 1740){
                 return;
