@@ -2374,8 +2374,10 @@ class OrderManager
                             'good_id' => $bid->getGood()->getId(),
                             'good_related_id' => $relatedBid->getGood()->getId(),
                         ]);
-                    } catch (\Expeption $e){
-                        
+                    } catch (Throwable $e){
+                        continue;           
+                    } catch (\Throwable $e){
+                        continue;           
                     }            
                 }            
             }            
