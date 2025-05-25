@@ -2383,4 +2383,35 @@ class OrderManager
         
         return;
     }
+    
+    /**
+     * Обновить связанные товары во всех заказах
+     */
+    public function goodRelations()
+    {
+        ini_set('memory_limit', '512M');
+        set_time_limit(1800);
+        $startTime = time();
+        
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('o')
+                ->from(Order::class, 'o')
+                ->where('o.status = :status')
+                ->setParameter('status', Order::STATUS_SHIPPED)
+                ->andWhere('o.invoiceInfo is null')
+                ->setMaxResults(10000)                
+                ;
+        $orders = $qb->getQuery()->getResult();
+        
+        foreach ($orders as $order){
+            $this->updateGoodRelations($order);
+            $this->entityManager->getConnection()->update('orders', ['invoiceInfo' => ''], ['id' => $order->getId()]);
+            
+            if (time() > $startTime + 1740){
+                return;
+            }                    
+        }
+        
+        return;
+    }
 }
