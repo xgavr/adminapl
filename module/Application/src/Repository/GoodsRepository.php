@@ -2777,7 +2777,7 @@ class GoodsRepository extends EntityRepository
                 ->join('gr.goodRelated', 'g')
                 ->where('gr.good = :good')
                 ->setParameter('good', $good->getId())
-                ->groupBy('gr.good')
+                ->groupBy('gr.goodRelated')
                 ;
         
         return $queryBuilder->getQuery()->getResult();
