@@ -28,6 +28,7 @@ use Application\Entity\GoodToken;
 use Stock\Entity\ComitentBalance;
 use GoodMap\Filter\DecodeFoldCode;
 use Fasade\Entity\GroupSite;
+use Application\Entity\Bid;
 
 /**
  * Description of GoodsRepository
@@ -2757,5 +2758,22 @@ class GoodsRepository extends EntityRepository
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();
-    }     
+    }   
+    
+    /**
+     * Связанные товары
+     * @param Goods $good
+     * @return array
+     */
+    public function relatedGoods($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('identity(g.id)')
+                ->from(Bid::class, 'b')
+                ->join('b.good')
+                ;
+    }
 }

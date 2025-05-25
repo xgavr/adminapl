@@ -1350,6 +1350,8 @@ class OrderManager
         
         $this->clientManager->updateClentDates($order->getContact()->getClient());
         
+        $this->updateGoodRelations($order);
+        
         return;
     }
     
@@ -2346,6 +2348,37 @@ class OrderManager
             if ($register){
                 $this->updateOrderMovement($order, $register->getDocStamp());
             }    
+        }
+        
+        return;
+    }
+    
+    /**
+     * Обновить связанные товары
+     * @param Order $order
+     */
+    private function updateGoodRelations($order)
+    {
+        $this->entityManager->getConnection()->delete('good_relations', ['order_id' => $order->getId()]);
+        
+        if ($order->getBids()->count() < 2){
+            return;
+        }
+        
+        foreach ($order->getBids() as $bid){
+            foreach ($order->getBids() as $relatedBid){
+                if ($bid->getGood()->getId() != $relatedBid->getGood()->getId()){
+                    try{
+                        $this->entityManager->getConnection()->insert('good_relations', [
+                            'order_id' => $order->getId(),
+                            'good_id' => $bid->getGood()->getId(),
+                            'good_related_id' => $relatedBid->getGood()->getId(),
+                        ]);
+                    } catch (\Expeption $e){
+                        
+                    }            
+                }            
+            }            
         }
         
         return;
