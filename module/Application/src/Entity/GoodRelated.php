@@ -14,8 +14,8 @@ use Application\Entity\Goods;
 
 /**
  * Description of Producer
- * @ORM\Entity(repositoryClass="\Application\Repository\TokenRepository")
- * @ORM\Table(name="good_title")
+ * @ORM\Entity(repositoryClass="\Application\Repository\GoodsRepository")
+ * @ORM\Table(name="good_relations")
  * @author Daddy
  */
 class GoodRelated {
