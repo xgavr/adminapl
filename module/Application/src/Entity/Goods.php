@@ -1698,7 +1698,7 @@ class Goods {
             'id' => $this->getId(),
             'code' => $this->getCode(),
             'name' => $this->getName(),
-            'nameFasade' => $this->getNameProducerCode(),
+            'nameFasade' => $this->getNameFasade(),
             'price' => $this->getPrice(),
             'nameShort' => $this->getNameShort(),
             'nameInput' => $this->getInputName(),
