@@ -511,6 +511,16 @@ class Goods {
         }
         return $this->getName();
     }
+    
+    public function getNameFasade() 
+    {
+        if ($this->tokenGroup){
+            if (!empty($this->tokenGroup->getName())){
+                return $this->tokenGroup->getName().' '.$this->getProducer()->getName().' '.$this->code;
+            }    
+        }
+        return $this->getName();
+    }
 
     public function getTitleShort() 
     {
@@ -1688,6 +1698,7 @@ class Goods {
             'id' => $this->getId(),
             'code' => $this->getCode(),
             'name' => $this->getName(),
+            'nameFasade' => $this->getNameProducerCode(),
             'price' => $this->getPrice(),
             'nameShort' => $this->getNameShort(),
             'nameInput' => $this->getInputName(),

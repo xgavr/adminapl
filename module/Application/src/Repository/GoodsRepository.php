@@ -2752,7 +2752,7 @@ class GoodsRepository extends EntityRepository
                 ->from(Goods::class, 'g')
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
-                ->andWhere()
+                ->andWhere('g.tokenGroup is not null')
                 ->setMaxResults(100)
                 ->orderBy('g.retailCount', 'desc')
                 ;
