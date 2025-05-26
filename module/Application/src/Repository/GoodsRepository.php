@@ -2755,7 +2755,7 @@ class GoodsRepository extends EntityRepository
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
                 ->andWhere('g.tokenGroup is not null')
-                ->setMaxResults(100)
+                ->setMaxResults(1000)
                 ->orderBy('g.retailCount', 'desc')
                 ;
         
