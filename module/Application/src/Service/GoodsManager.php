@@ -1303,7 +1303,7 @@ class GoodsManager
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('g.id as goodId')
                 ->from(Goods::class, 'g')
-                ->where('g.saleMonth > 0')
+                ->where('g.saleMonth != 0')
                 ;
         
         $goodsQuery = $qb->getQuery();
