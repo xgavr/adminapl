@@ -1709,7 +1709,7 @@ class Goods {
             'available' => $this->getAvailable(),
             'saleCount' => $this->getRetailCount(), 
             'saleMonth' => $this->getSaleMonth(),  
-            'lot' => $this->getLot(),
+//            'lot' => $this->getLot(),
         ];
         
         return $result;

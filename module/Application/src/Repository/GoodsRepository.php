@@ -28,7 +28,6 @@ use Application\Entity\GoodToken;
 use Stock\Entity\ComitentBalance;
 use GoodMap\Filter\DecodeFoldCode;
 use Fasade\Entity\GroupSite;
-use Application\Entity\Bid;
 use Application\Entity\GoodRelated;
 
 /**
@@ -2785,5 +2784,29 @@ class GoodsRepository extends EntityRepository
                 ;
         
         return $queryBuilder->getQuery()->getResult();
+    }
+    
+    /**
+     * Получить минимальное количество 
+     * @param Goods $good
+     */
+    public function goodLot($good)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('max(gs.lot) as lot')
+                ->from(GoodSupplier::class, 'gs')
+                ->where('gs.good = :good')
+                ->setParameter('good', $good->getId())
+                ->setMaxResults(1)
+                ;
+        $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        
+        if (empty($result)){
+            return 1;
+        }
+        return max(1, $result['lot']);
     }
 }
