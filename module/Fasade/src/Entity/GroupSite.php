@@ -420,7 +420,7 @@ class GroupSite
             'level' => $this->getLevel(),
             'name' => $this->getName(),
             'fullName' => $this->getFullName(),
-            'slug' => str_replace('/', '_', $this->getFullName()),
+            'slug' => str_replace('/', '-', $this->getFullName()),
             'sort' => $this->getSort(),
             'status' => $this->getStatus(),
             'hasChild' => $this->getHasChild(),
