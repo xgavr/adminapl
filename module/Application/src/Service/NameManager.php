@@ -1385,8 +1385,12 @@ class NameManager
                         'status_oem' => Goods::OEM_FOR_UPDATE,                        
                         ]); 
             
-            $this->entityManager->getRepository(Goods::class)
-                    ->addGoodCategory($goodId, $tokenGroup->getGroupSite());            
+            if ($tokenGroup){
+                if ($tokenGroup->getGroupSite()){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->addGoodCategory($goodId, $tokenGroup->getGroupSite());            
+                }    
+            }    
         }    
         $this->entityManager->getRepository(Goods::class)
                 ->updateTokenGroupGoodArticleTitle($goodId, $updGroupId);
