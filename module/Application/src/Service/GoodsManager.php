@@ -166,7 +166,9 @@ class GoodsManager
     {
         $good->setName($name);
         $good->setStatusNameEx(Goods::NAME_EX_NEW);
-        $good->setFasadeEx(Goods::FASADE_EX_NEW);
+        if ($good->getName() != $name){
+            $good->setFasadeEx(Goods::FASADE_EX_NEW);
+        }    
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);        
     }
@@ -181,7 +183,9 @@ class GoodsManager
     {
         $good->setDescription($description);
         $good->setStatusNameEx(Goods::NAME_EX_NEW);
-        $good->setFasadeEx(Goods::FASADE_EX_NEW);
+        if ($good->getDescription() != $description){
+            $good->setFasadeEx(Goods::FASADE_EX_NEW);
+        }    
         $this->entityManager->persist($good);
         $this->entityManager->flush($good);        
     }

@@ -1384,6 +1384,9 @@ class NameManager
                         'status_group' => Goods::GROUP_FOR_UPDATE,
                         'status_oem' => Goods::OEM_FOR_UPDATE,                        
                         ]); 
+            
+            $this->entityManager->getRepository(Goods::class)
+                    ->addGoodCategory($goodId, $tokenGroup->getGroupSite());            
         }    
         $this->entityManager->getRepository(Goods::class)
                 ->updateTokenGroupGoodArticleTitle($goodId, $updGroupId);
@@ -1489,7 +1492,7 @@ class NameManager
                     ->findBy(['tokenGroup' => $tokenGroup->getId()]);
             foreach ($goods as $good){
                 $this->entityManager->getRepository(Goods::class)
-                        ->addGoodCategory($good, $groupSite);
+                        ->addGoodCategory($good->getId(), $groupSite);
             }
         }
         
@@ -2408,6 +2411,7 @@ class NameManager
             if ($good->getName() != $result['bestName'] && $result['bestName']){
                 $upd['name'] = $result['bestName'];
                 $upd['status_name_ex'] = Goods::NAME_EX_NEW;
+                $upd['fasade_ex'] = Goods::FASADE_EX_NEW;
             }    
 
             $this->entityManager->getRepository(Goods::class)

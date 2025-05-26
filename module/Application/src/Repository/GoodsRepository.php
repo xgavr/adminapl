@@ -2214,14 +2214,15 @@ class GoodsRepository extends EntityRepository
     /**
      * Добавление категории к товару
      * 
-     * @param Goods $good
+     * @param integer $goodId
      * @param GroupSite $groupSite
      * @return integer
      */
-    public function addGoodCategory($good, $groupSite)
+    public function addGoodCategory($goodId, $groupSite)
     {
+        
         try{
-            $inserted = $this->getEntityManager()->getConnection()->insert('good_group_site', ['good_id' => $good->getId(), 'group_site_id' => $groupSite->getId()]);
+            $inserted = $this->getEntityManager()->getConnection()->insert('good_group_site', ['good_id' => $goodId, 'group_site_id' => $groupSite->getId()]);
         } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e){
             $inserted = 0;            
         }    
@@ -2750,6 +2751,7 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
+                ->join('g.categories', 'c')
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
                 ->andWhere('g.tokenGroup is not null')

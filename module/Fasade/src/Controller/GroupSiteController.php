@@ -193,7 +193,7 @@ class GroupSiteController extends AbstractActionController
         
         if ($good && $groupSite){
             $this->entityManager->getRepository(Goods::class)
-                    ->addGoodCategory($good, $groupSite);
+                    ->addGoodCategory($good->getId(), $groupSite);
             $this->entityManager->getRepository(GroupSite::class)
                     ->updateGroupSiteGoodCount($groupSite);
         }
