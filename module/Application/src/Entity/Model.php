@@ -115,6 +115,15 @@ class Model {
      */
     protected $goodCount;
 
+    /**
+     * @ORM\Column(name="sale_count")  
+     */
+    protected $saleCount;
+
+    /**
+     * @ORM\Column(name="sale_month")  
+     */
+    protected $saleMonth;    
         
     /**
      * @ORM\ManyToOne(targetEntity="\Application\Entity\Make", inversedBy="models") 
@@ -287,7 +296,23 @@ class Model {
     {
         $this->goodCount = $goodCount;
     }         
-        
+      
+    public function getSaleCount() {
+        return $this->saleCount;
+    }
+
+    public function setSaleCount($saleCount) {
+        $this->saleCount = $saleCount;
+    }
+
+    public function getSaleMonth() {
+        return $this->saleMonth;
+    }
+
+    public function setSaleMonth($saleMonth) {
+        $this->saleMonth = $saleMonth;
+    }
+    
     /**
      * Returns status.
      * @return int     

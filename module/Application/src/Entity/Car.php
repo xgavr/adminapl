@@ -115,6 +115,16 @@ class Car {
     protected $goodCount;
 
     /**
+     * @ORM\Column(name="sale_count")  
+     */
+    protected $saleCount;
+
+    /**
+     * @ORM\Column(name="sale_month")  
+     */
+    protected $saleMonth;
+
+    /**
      * @ORM\ManyToOne(targetEntity="\Application\Entity\Model", inversedBy="model") 
      * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
      * 
@@ -397,6 +407,22 @@ class Car {
     public function getVehicleDetailsCar() 
     {
         return $this->vehicleDetailsCar;
+    }
+    
+    public function getSaleCount() {
+        return $this->saleCount;
+    }
+
+    public function setSaleCount($saleCount) {
+        $this->saleCount = $saleCount;
+    }
+
+    public function getSaleMonth() {
+        return $this->saleMonth;
+    }
+
+    public function setSaleMonth($saleMonth) {
+        $this->saleMonth = $saleMonth;
     }
     
     /**

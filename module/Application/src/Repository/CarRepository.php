@@ -250,7 +250,7 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('c.id, count(g.id) as goodCount')
+        $queryBuilder->select('c.id, count(g.id) as goodCount, sum(g.retailCount) as saleCount, sum(g.saleMonth) as saleMonth')
             ->from(Car::class, 'c')
             ->leftJoin('c.goods', 'g')  
             ->groupBy('c.id')
@@ -264,7 +264,12 @@ class CarRepository extends EntityRepository
                 default: $status = Car::STATUS_ACTIVE; break;
             }
             
-            $this->getEntityManager()->getConnection()->update('car', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $row['id']]);
+            $this->getEntityManager()->getConnection()->update('car', [
+                'status' => $status, 
+                'good_count' => $row['goodCount'],
+                'sale_count' => $row['saleCount'],
+                'sale_month' => $row['saleMonth'],
+            ], ['id' => $row['id']]);
         }      
         
         return;        
@@ -281,7 +286,7 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id, sum(c.goodCount) as goodCount')
+        $queryBuilder->select('m.id, sum(c.goodCount) as goodCount, sum(c.saleCount) as saleCount, sum(c.saleMonth) as saleMonth ')
             ->from(Model::class, 'm')
             ->join('m.cars', 'c')  
             ->groupBy('m.id')
@@ -294,7 +299,12 @@ class CarRepository extends EntityRepository
                 case 0: $result = true; $status = Model::STATUS_RETIRED; break;
                 default: $status = Model::STATUS_ACTIVE; break;
             }
-            $this->getEntityManager()->getConnection()->update('model', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $row['id']]);
+            $this->getEntityManager()->getConnection()->update('model', [
+                'status' => $status, 
+                'good_count' => $row['goodCount'],
+                'sale_count' => $row['saleCount'],
+                'sale_month' => $row['saleMonth'],
+            ], ['id' => $row['id']]);
         }      
         
         return;        
@@ -311,7 +321,7 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id, sum(mm.goodCount) as goodCount')
+        $queryBuilder->select('m.id, sum(mm.goodCount) as goodCount, sum(m.saleCount) as saleCount, sum(m.saleMonth) as saleMonth')
             ->from(Make::class, 'm')
             ->join('m.models', 'mm')  
             ->groupBy('m.id')    
@@ -324,7 +334,12 @@ class CarRepository extends EntityRepository
                 case 0: $result = true; $status = Model::STATUS_RETIRED; break;
                 default: $status = Model::STATUS_ACTIVE; break;
             }
-            $this->getEntityManager()->getConnection()->update('make', ['status' => $status, 'good_count' => $row['goodCount']], ['id' => $row['id']]);
+            $this->getEntityManager()->getConnection()->update('make', [
+                'status' => $status, 
+                'good_count' => $row['goodCount'],
+                'sale_count' => $row['saleCount'],
+                'sale_month' => $row['saleMonth'],
+            ], ['id' => $row['id']]);
         }      
         
         return;        

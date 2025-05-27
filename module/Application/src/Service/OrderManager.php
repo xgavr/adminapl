@@ -2365,6 +2365,10 @@ class OrderManager
             return;
         }
         
+        if ($order->getStatus() !== Order::STATUS_SHIPPED){
+            return;
+        }
+        
         foreach ($order->getBids() as $bid){
             foreach ($order->getBids() as $relatedBid){
                 if ($bid->getGood()->getId() != $relatedBid->getGood()->getId()){

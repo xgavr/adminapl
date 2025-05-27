@@ -91,6 +91,16 @@ class Make {
     protected $goodCount;
     
     /**
+     * @ORM\Column(name="sale_count")  
+     */
+    protected $saleCount;
+
+    /**
+     * @ORM\Column(name="sale_month")  
+     */
+    protected $saleMonth;
+    
+    /**
      * @ORM\OneToMany(targetEntity="\Application\Entity\Model", mappedBy="make")
      * @ORM\JoinColumn(name="id", referencedColumnName="make_id")
      */
@@ -218,6 +228,22 @@ class Make {
         $this->goodCount = $goodCount;
     }         
     
+    public function getSaleCount() {
+        return $this->saleCount;
+    }
+
+    public function setSaleCount($saleCount) {
+        $this->saleCount = $saleCount;
+    }
+    
+    public function getSaleMonth() {
+        return $this->saleMonth;
+    }
+
+    public function setSaleMonth($saleMonth) {
+        $this->saleMonth = $saleMonth;
+    }
+        
     /**
      * Returns status.
      * @return int     
