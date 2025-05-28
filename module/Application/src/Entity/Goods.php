@@ -1727,7 +1727,7 @@ class Goods {
     {
         $result[$groupSite->getId()] = $groupSite->toArray(); 
         if ($groupSite->getSiteGroup()){
-            $result = array_merge($result,  $this->categoryFlatArray($groupSite->getSiteGroup()));
+            $result = array_replace($result,  $this->categoryFlatArray($groupSite->getSiteGroup()));
         }
         
         return $result;
@@ -1741,7 +1741,7 @@ class Goods {
     {
         $result = [];
         foreach ($this->categories as $groupSite){
-            $result = array_merge($result, $this->categoryFlatArray($groupSite));
+            $result = array_replace($result, $this->categoryFlatArray($groupSite));
         }    
         return $result;
     }

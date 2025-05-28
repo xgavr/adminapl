@@ -149,10 +149,10 @@ class GoodAplResource extends AbstractResourceListener
                         ->goodLot($good);
                 
                 $result['products'][] = $data;
-                $result['categories'] = array_merge($result['categories'], $good->getCategoriesAsFlatArray());
-                $result['makes'] = array_merge($result['makes'], $good->getMakesAsArray());
-                $result['models'] = array_merge($result['models'], $good->getModelsAsArray());
-                $result['cars'] = array_merge($result['cars'], $good->getCarsAsArray());
+                $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
+                $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
+                $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
+                $result['cars'] = array_replace($result['cars'], $good->getCarsAsArray());
             }
             return ['data' => $result];
         }
