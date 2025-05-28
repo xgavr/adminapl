@@ -429,7 +429,7 @@ class Model {
             'saleCount' => $this->getSaleCount(),
             'saleMonth' => $this->getSaleMonth(),
             'status' => $this->getStatus(),
-            'make' => $this->getMake()->toArray(),
+            'makeId' => $this->getMake()->getId(),
         ];
         
         return $result;        

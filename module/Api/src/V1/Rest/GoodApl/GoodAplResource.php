@@ -125,8 +125,11 @@ class GoodAplResource extends AbstractResourceListener
         
         if (!empty($paramsArray['fasade'])){
             $result = [
-                'products' => [],
                 'categories' => [],
+                'makes' => [],
+                'models' => [],
+                'cars' => [],
+                'products' => [],
             ];
             $limit = empty($paramsArray['limit']) ? 1000:$paramsArray['limit'];
             $goods = $this->entityManager->getRepository(Goods::class)
@@ -135,9 +138,9 @@ class GoodAplResource extends AbstractResourceListener
                 $data = $good->toArray();
                 $data['images'] = $good->getImagesAsArray();
                 $data['categories'] = $good->getCategoryIdsAsArray();
-//                $data['cars'] = $good->getCarsAsArray();
+                $data['cars'] = $good->getCarIdsAsArray();
                 $data['attributes'] = $good->getAttributeValuesAsArray();
-//                $data['oems'] = $good->getOemsAsArray();
+                $data['oems'] = $good->getOemsAsArray();
                 
                 $data['related'] = $this->entityManager->getRepository(Goods::class)
                         ->relatedGoods($good);
@@ -147,6 +150,9 @@ class GoodAplResource extends AbstractResourceListener
                 
                 $result['products'][] = $data;
                 $result['categories'] = array_merge($result['categories'], $good->getCategoriesAsFlatArray());
+                $result['makes'] = array_merge($result['makes'], $good->getMakesAsArray());
+                $result['models'] = array_merge($result['models'], $good->getModelsAsArray());
+                $result['cars'] = array_merge($result['cars'], $good->getCarsAsArray());
             }
             return $result;
         }

@@ -1087,12 +1087,63 @@ class Goods {
      * 
      * @return array
      */
+    public function getCarIdsAsArray() 
+    {
+        $result = [];
+        foreach ($this->cars as $car){
+            if ($car->getGoodCount() > 0){
+                $result[] = $car->getId();
+            }    
+        }    
+        return $result;
+    }    
+    
+    /**
+     * 
+     * @return array
+     */
     public function getCarsAsArray() 
     {
         $result = [];
         foreach ($this->cars as $car){
             if ($car->getGoodCount() > 0){
-                $result[] = $car->toArray();
+                $result[$car->getId()] = $car->toArray();
+            }    
+        }    
+        return $result;
+    }    
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getModelsAsArray() 
+    {
+        $result = [];
+        foreach ($this->cars as $car){
+            if ($car->getGoodCount() > 0){
+                $key = $car->getModel()->getId();
+                if (!array_key_exists($key, $result)){
+                    $result[$key] = $car->getModel()->toArray();
+                }    
+            }    
+        }    
+        return $result;
+    }    
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getMakesAsArray() 
+    {
+        $result = [];
+        foreach ($this->cars as $car){
+            if ($car->getGoodCount() > 0){
+                $key = $car->getModel()->getMake()->getId();
+                if (!array_key_exists($key, $result)){
+                    $result[$key] = $car->getModel()->getMake()->toArray();
+                }    
             }    
         }    
         return $result;

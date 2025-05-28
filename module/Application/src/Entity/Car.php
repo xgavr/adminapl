@@ -466,7 +466,7 @@ class Car {
             'status' => $this->getStatus(),
             'transferFullName' => $this->getTransferFullName(),
             'transferName' => $this->getTransferName(),
-            'model' => $this->getModel()->toArray(),
+            'modelId' => $this->getModel()->getId(),
         ];
         
         return $result;
