@@ -1084,6 +1084,21 @@ class Goods {
         return $this->cars;
     }      
     
+    /**
+     * 
+     * @return array
+     */
+    public function getCarsAsArray() 
+    {
+        $result = [];
+        foreach ($this->cars as $car){
+            if ($car->getGoodCount() > 0){
+                $result[] = $car->toArray();
+            }    
+        }    
+        return $result;
+    }    
+    
     // Добавляет новую машину к данному товару.
     public function addCar($car) 
     {

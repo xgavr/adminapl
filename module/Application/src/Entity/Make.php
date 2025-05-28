@@ -306,4 +306,29 @@ class Make {
     {
         $this->models[] = $model;
     }
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'aplId' => $this->getAplId(),
+            'commerc' => $this->getCommerc(),
+            'displayName' => $this->getDisplayName(),
+            'fullName' => $this->getFullName(),
+            'goodCount' => $this->getGoodCount(),
+            'moto' => $this->getMoto(),
+            'name' => $this->getName(),
+            'nameRu' => $this->getNameRu(),
+            'passenger' => $this->getPasenger(),
+            'saleCount' => $this->getSaleCount(),
+            'saleMonth' => $this->getSaleMonth(),
+            'status' => $this->getStatus(),
+        ];
+        
+        return $result;        
+    }     
 }

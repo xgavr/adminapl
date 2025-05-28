@@ -131,6 +131,7 @@ class GoodAplResource extends AbstractResourceListener
                 $data = $good->toArray();
                 $data['images'] = $good->getImagesAsArray();
                 $data['categories'] = $good->getCategoriesAsArray();
+                $data['cars'] = $good->getCarsAsArray();
                 $data['attributes'] = $good->getAttributeValuesAsArray();
                 $data['oems'] = $good->getOemsAsArray();
                 

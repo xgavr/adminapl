@@ -405,4 +405,33 @@ class Model {
     {
         $this->models[] = $car;
     }
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'aplId' => $this->getAplId(),
+            'commerc' => $this->getCommerc(),
+            'from' => $this->getConstructionFrom(),
+            'to' => $this->getConstructionTo(),
+            'displayName' => $this->getDisplayName(),
+            'fullName' => $this->getFullName(),
+            'goodCount' => $this->getGoodCount(),
+            'interval' => $this->getInterval(),
+            'moto' => $this->getMoto(),
+            'name' => $this->getName(),
+            'nameRu' => $this->getNameRu(),
+            'passenger' => $this->getPasenger(),
+            'saleCount' => $this->getSaleCount(),
+            'saleMonth' => $this->getSaleMonth(),
+            'status' => $this->getStatus(),
+            'make' => $this->getMake()->toArray(),
+        ];
+        
+        return $result;        
+    }    
 }

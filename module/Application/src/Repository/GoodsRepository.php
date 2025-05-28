@@ -1072,6 +1072,10 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('3', $params['constructionTo'])
                         ;
             }
+            if (isset($params['withGoodCount'])){
+                $queryBuilder->andWhere('c.goodCount > 0')
+                        ;
+            }
             if (isset($params['limit'])){
                 $queryBuilder->setMaxResults($params['limit']);
             }

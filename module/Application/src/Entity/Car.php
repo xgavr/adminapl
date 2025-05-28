@@ -454,7 +454,7 @@ class Car {
     {
         $result = [
             'id' => $this->getId(),
-            'aplid' => $this->getAplId(),
+            'aplId' => $this->getAplId(),
             'commerc' => $this->getCommerc(),
             'fullName' => $this->getFullName(),
             'goodCount' => $this->getGoodCount(),
@@ -466,8 +466,7 @@ class Car {
             'status' => $this->getStatus(),
             'transferFullName' => $this->getTransferFullName(),
             'transferName' => $this->getTransferName(),
-            'transferName' => $this->getVehicleDetailsCar(),
-
+            'model' => $this->getModel()->toArray(),
         ];
         
         return $result;
