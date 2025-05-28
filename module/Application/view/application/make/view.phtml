@@ -54,9 +54,10 @@ $this->pageBreadcrumbs()->setItems([
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-show-toggle="true"
+            data-show-toggle="false"
             data-query-params="queryParams"
             data-response-handler="responseHandler"
+            data-classes = "table table-bordered table-hover table-condensed"
             >
             <thead>
                 <tr>
@@ -67,7 +68,9 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="fullName" data-formatter="fullNameFormatter">Выводимое</th>
                      <th data-field="nameRu" data-formatter="ruNameFormatter">RU</th>
                      <th data-field="interval" data-sortable="true">Период</th>             
-                     <th data-field="goodCount" data-sortable="true">Товаров</th>             
+                     <th data-field="goodCount" data-sortable="true" data-align="right">Товаров</th>           
+                     <th data-field="saleCount" data-sortable="true" data-align="right">Продаж</th>           
+                     <th data-field="saleMonth" data-sortable="true" data-align="right">За месяц</th>           
                  </tr>                
             </thead>
         </table>

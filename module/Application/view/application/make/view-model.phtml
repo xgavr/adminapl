@@ -84,12 +84,18 @@ $this->headScript()
                                 <?//= $car->getStatusAsString()?>
                             </small>
                         </td>
-                        <td>
+                        <td width="10">
                             <?= $car->getGoodCount()?>
+                        </td>
+                        <td width="10">
+                            <?= $car->getSaleCount()?>
+                        </td>
+                        <td width="10">
+                            <?= $car->getSaleMonth()?>
                         </td>
                     </tr>    
                     <tr>
-                        <td colspan="7">
+                        <td colspan="9">
                             <div>
                                 <small>
                                    <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
