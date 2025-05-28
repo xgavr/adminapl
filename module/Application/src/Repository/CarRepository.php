@@ -321,7 +321,7 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('m.id, sum(mm.goodCount) as goodCount, sum(m.saleCount) as saleCount, sum(m.saleMonth) as saleMonth')
+        $queryBuilder->select('m.id, sum(mm.goodCount) as goodCount, sum(mm.saleCount) as saleCount, sum(mm.saleMonth) as saleMonth')
             ->from(Make::class, 'm')
             ->join('m.models', 'mm')  
             ->groupBy('m.id')    

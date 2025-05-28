@@ -444,5 +444,32 @@ class Car {
     public function addGood($good) 
     {
         $this->goods[] = $good;        
+    }  
+    
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'aplid' => $this->getAplId(),
+            'commerc' => $this->getCommerc(),
+            'fullName' => $this->getFullName(),
+            'goodCount' => $this->getGoodCount(),
+            'moto' => $this->getMoto(),
+            'name' => $this->getName(),
+            'pasenger' => $this->getPasenger(),
+            'saleCount' => $this->getSaleCount(),
+            'saleMonth' => $this->getSaleMonth(),
+            'status' => $this->getStatus(),
+            'transferFullName' => $this->getTransferFullName(),
+            'transferName' => $this->getTransferName(),
+            'transferName' => $this->getVehicleDetailsCar(),
+
+        ];
+        
+        return $result;
     }     
 }
