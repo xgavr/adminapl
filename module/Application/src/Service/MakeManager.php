@@ -221,9 +221,13 @@ class MakeManager
      */
     public function fixModelFullName($model)
     {
-        $model->setFullName(preg_replace('/\s*\([^)]*\)\s*/', '', $model->getName()));
-        $this->entityManager->persist($model);
-        $this->entityManager->flush();
+//        $model->setFullName(preg_replace('/\s*\([^)]*\)\s*/', '', $model->getName()));
+//        $this->entityManager->persist($model);
+//        $this->entityManager->flush();
+        
+        $this->entityManager->getConnection()->update('model', [
+            'fullname' => trim(preg_replace('/\s*\([^)]*\)\s*/', '', preg_replace('/наклонная\s+задняя\s+часть/iu', 'хэтчбек', trim($model->getName())))),
+        ], ['id' => $model->getId()]);
     }
     
     /**
