@@ -124,7 +124,7 @@ class GoodAplResource extends AbstractResourceListener
         }
         
         if (!empty($paramsArray['fasade'])){
-            $result['data'] = [
+            $result = [
                 'categories' => [],
                 'makes' => [],
                 'models' => [],
@@ -154,7 +154,7 @@ class GoodAplResource extends AbstractResourceListener
                 $result['models'] = array_merge($result['models'], $good->getModelsAsArray());
                 $result['cars'] = array_merge($result['cars'], $good->getCarsAsArray());
             }
-            return $result;
+            return ['data' => $result];
         }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');
