@@ -1690,7 +1690,7 @@ class Goods {
     {
         $result = [];
         foreach ($this->categories as $groupSite){
-            array_merge($result, $this->categoryFlatArray($groupSite));
+            $result = array_merge($result, $this->categoryFlatArray($groupSite));
         }    
         return $result;
     }

@@ -146,7 +146,7 @@ class GoodAplResource extends AbstractResourceListener
                         ->goodLot($good);
                 
                 $result['products'][] = $data;
-                array_merge($result['categories'], $good->getCategoriesAsFlatArray());
+                $result['categories'] = array_merge($result['categories'], $good->getCategoriesAsFlatArray());
             }
             return $result;
         }
