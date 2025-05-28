@@ -424,7 +424,7 @@ class GroupSite
             'sort' => $this->getSort(),
             'status' => $this->getStatus(),
             'hasChild' => $this->getHasChild(),
-            'groupSiteId' => $this->getSiteGroup()->getId(),
+            'groupSiteId' => (!empty($this->getSiteGroup())) ? $this->getSiteGroup()->getId():null,
 //            'groupSiteAsArray' => $this->getSiteGroupAsArray(),
         ];
         
