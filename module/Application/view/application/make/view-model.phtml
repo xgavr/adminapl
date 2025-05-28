@@ -51,12 +51,12 @@ $this->headScript()
 
         <table class="table table-striped">
             <tr>
-                <td colspan="4">            
+                <td colspan="5">            
                     <?php if ($prev):?>
                         <a href="/make/view-model/<?= $prev[0]->getId()?>">&larr;<?= $prev[0]->getMake()->getName().' '.$prev[0]->getName()?></a>
                     <?php endif;?>            
                 </td>
-                <td colspan="3" align="right">
+                <td colspan="4" align="right">
                     <?php if ($next):?>
                         <a href="/make/view-model/<?= $next[0]->getId()?>"><?= $next[0]->getMake()->getName().' '.$next[0]->getName()?>&rarr;</a>
                     <?php endif;?>                            
@@ -95,7 +95,7 @@ $this->headScript()
                         </td>
                     </tr>    
                     <tr>
-                        <td colspan="7">
+                        <td colspan="9">
                             <div>
                                 <small>
                                    <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
