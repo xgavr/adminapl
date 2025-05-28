@@ -169,7 +169,7 @@ class Model {
     public function getTransferName() 
     {
         $filter = new \Admin\Filter\TransferName();
-        return $filter->filter($this->name);
+        return $filter->filter($this->fullName);
     }
 
     public function getFileName() 
