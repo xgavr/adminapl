@@ -2748,7 +2748,7 @@ class GoodsRepository extends EntityRepository
      */
     public function findForFasade($params = null)
     {
-        ini_set('memory_limit', '512M');
+        ini_set('memory_limit', '1024M');
       
         $entityManager = $this->getEntityManager();
 
