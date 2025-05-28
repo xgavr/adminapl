@@ -167,6 +167,8 @@ class MakeManager
         $transferFilter = new TransferName();
         foreach ($data as $row){
             
+            $model->setNameRu($model->getFullName());
+            
             if (!empty($row['name'])){
                 $nameEn = $transferFilter->filter($row['name']);
 
