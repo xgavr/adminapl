@@ -562,7 +562,7 @@ class MakeController extends AbstractActionController
         ]);                  
     }
     
-    public function fixModelFellNamesAction()
+    public function fixModelFullNamesAction()
     {
         $this->makeManager->fixModelFullNames();
 
