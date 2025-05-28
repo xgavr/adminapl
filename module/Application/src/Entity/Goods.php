@@ -5,11 +5,10 @@ namespace Application\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Application\Entity\ScaleTreshold;
-use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
 use Application\Entity\Producer;
 use Application\Entity\Images;
-use Application\Entity\Oem;
+use Fasade\Entity\GroupSite;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -1665,6 +1664,46 @@ class Goods {
         $result = [];
         foreach ($this->categories as $groupSite){
             $result[] = $groupSite->toArray();
+        }    
+        return $result;
+    }
+    
+    /**
+     * 
+     * @param GroupSite $groupSite
+     */
+    private function categoryFlatArray($groupSite)
+    {
+        $result[$groupSite->getId()] = $groupSite->toArray(); 
+        if ($groupSite->getSiteGroup()){
+            $result = array_merge($result,  $this->categoryFlatArray($groupSite->getSiteGroup()));
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getCategoriesAsFlatArray() 
+    {
+        $result = [];
+        foreach ($this->categories as $groupSite){
+            array_merge($result, $this->categoryFlatArray($groupSite));
+        }    
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getCategoryIdsAsArray() 
+    {
+        $result = [];
+        foreach ($this->categories as $groupSite){
+            $result[] = $groupSite->getId();
         }    
         return $result;
     }

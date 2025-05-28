@@ -131,10 +131,10 @@ class GoodAplResource extends AbstractResourceListener
             foreach ($goods as $good){
                 $data = $good->toArray();
                 $data['images'] = $good->getImagesAsArray();
-                $data['categories'] = $good->getCategoriesAsArray();
-                $data['cars'] = $good->getCarsAsArray();
+                $data['categories'] = $good->getCategoryIdsAsArray();
+//                $data['cars'] = $good->getCarsAsArray();
                 $data['attributes'] = $good->getAttributeValuesAsArray();
-                $data['oems'] = $good->getOemsAsArray();
+//                $data['oems'] = $good->getOemsAsArray();
                 
                 $data['related'] = $this->entityManager->getRepository(Goods::class)
                         ->relatedGoods($good);
@@ -142,7 +142,8 @@ class GoodAplResource extends AbstractResourceListener
                 $data['lot'] = $this->entityManager->getRepository(Goods::class)
                         ->goodLot($good);
                 
-                $result[] = $data;
+                $result['products'][] = $data;
+                array_merge($result['categories'], $good->getCategoriesAsFlatArray());
             }
             return $result;
         }
