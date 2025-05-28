@@ -561,5 +561,14 @@ class MakeController extends AbstractActionController
             'result' => 'ok',
         ]);                  
     }
+    
+    public function fixModelFellNamesAction()
+    {
+        $this->makeManager->fixModelFullNames();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }    
 
 }

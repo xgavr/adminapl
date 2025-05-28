@@ -213,4 +213,28 @@ class MakeManager
         
         return;
     }
+    
+    
+    /**
+     * Поправить имя модели
+     * @param Model $model
+     */
+    public function fixModelFullName($model)
+    {
+        $model->setFullName(preg_replace('/\s*\([^)]*\)\s*/', '', $model->getName()));
+        $this->entityManager->persist($model);
+        $this->entityManager->flush();
+    }
+    
+    /**
+     * Исправить наименования всех моделей
+     */
+    public function fixModelFullNames() 
+    {
+        $models = $this->entityManager->getRepository(Model::class)
+                ->findAll();
+        foreach ($models as $model){
+            $this->fixModelFullName($model);
+        }
+    }
 }
