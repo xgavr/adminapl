@@ -167,8 +167,6 @@ class MakeManager
         $transferFilter = new TransferName();
         foreach ($data as $row){
             
-            $model->setNameRu($model->getFullName());
-            
             if (!empty($row['name'])){
                 $nameEn = $transferFilter->filter($row['name']);
 
@@ -226,9 +224,10 @@ class MakeManager
 //        $model->setFullName(preg_replace('/\s*\([^)]*\)\s*/', '', $model->getName()));
 //        $this->entityManager->persist($model);
 //        $this->entityManager->flush();
-        
+        $newName =  trim(preg_replace('/\s*\([^)]*\)\s*/', '', preg_replace('/наклонная\s+задняя\s+часть/iu', 'хэтчбек', trim($model->getName()))));
         $this->entityManager->getConnection()->update('model', [
-            'fullname' => trim(preg_replace('/\s*\([^)]*\)\s*/', '', preg_replace('/наклонная\s+задняя\s+часть/iu', 'хэтчбек', trim($model->getName())))),
+            'fullname' => $newName,
+            'name_ru' => $newName,
         ], ['id' => $model->getId()]);
     }
     
