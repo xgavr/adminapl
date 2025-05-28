@@ -2760,9 +2760,14 @@ class GoodsRepository extends EntityRepository
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
                 ->andWhere('g.tokenGroup is not null')
-                ->setMaxResults(1000)
+//                ->setMaxResults(1000)
                 ->orderBy('g.retailCount', 'desc')
                 ;
+        if (!empty($params['limit'])){
+            if (is_numeric($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+        }
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery()->getResult();

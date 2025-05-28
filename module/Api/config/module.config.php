@@ -1275,6 +1275,24 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'Fasade flag',
                 'field_type' => 'integer',
             ],
+            3 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'limit',
+                'description' => 'Количество записей',
+                'field_type' => 'integer',
+            ],
         ],
     ],
     'api-tools-rest' => [
@@ -1324,6 +1342,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 0 => 'article',
                 1 => 'producer',
                 2 => 'fasade',
+                3 => 'limit',
             ],
             'page_size' => 25,
             'page_size_param' => null,
