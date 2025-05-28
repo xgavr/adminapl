@@ -124,7 +124,10 @@ class GoodAplResource extends AbstractResourceListener
         }
         
         if (!empty($paramsArray['fasade'])){
-            $result = [];
+            $result = [
+                'products' => [],
+                'categories' => [],
+            ];
             $limit = empty($paramsArray['limit']) ? 1000:$paramsArray['limit'];
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->findForFasade(['limit' => $limit]);
