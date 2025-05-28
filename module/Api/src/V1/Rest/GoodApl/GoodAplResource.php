@@ -124,7 +124,7 @@ class GoodAplResource extends AbstractResourceListener
         }
         
         if (!empty($paramsArray['fasade'])){
-            $result = [
+            $result['data'] = [
                 'categories' => [],
                 'makes' => [],
                 'models' => [],
