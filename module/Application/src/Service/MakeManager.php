@@ -262,6 +262,8 @@ class MakeManager
      */
     public function fixCarFullNames() 
     {
+        ini_set('memory_limit', '512M');
+        
         $cars = $this->entityManager->getRepository(Car::class)
                 ->findAll();
         foreach ($cars as $car){
