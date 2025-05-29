@@ -13,6 +13,7 @@ use Application\Entity\Model;
 use Laminas\Json\Decoder;
 use Laminas\Json\Json;
 use Admin\Filter\TransferName;
+use Application\Entity\Car;
 
 /**
  * Description of MakeService
@@ -242,4 +243,29 @@ class MakeManager
             $this->fixModelFullName($model);
         }
     }
+    
+    /**
+     * Поправить имя модели
+     * @param Car $car
+     */
+    public function fixCarFullName($car)
+    {
+
+        $newName =  $car->getModel()->getMake()->getName(). ' ' . $car->getModel()->getFullName() . ' ' . $car->getName();
+        $this->entityManager->getConnection()->update('model', [
+            'fullname' => $newName,
+        ], ['id' => $car->getId()]);
+    }
+    
+    /**
+     * Исправить наименования всех машин
+     */
+    public function fixCarFullNames() 
+    {
+        $cars = $this->entityManager->getRepository(Car::class)
+                ->findAll();
+        foreach ($cars as $car){
+            $this->fixCarFullName($car);
+        }
+    }    
 }

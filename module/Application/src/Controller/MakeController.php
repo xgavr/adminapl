@@ -571,4 +571,13 @@ class MakeController extends AbstractActionController
         ]);                  
     }    
 
+    public function fixCarFullNamesAction()
+    {
+        $this->makeManager->fixCarFullNames();
+
+        return new JsonModel([
+            'result' => 'ok',
+        ]);                  
+    }    
+
 }
