@@ -252,7 +252,7 @@ class MakeManager
     {
 
         $newName =  $car->getModel()->getMake()->getName(). ' ' . $car->getModel()->getFullName() . ' ' . $car->getName();
-        $this->entityManager->getConnection()->update('model', [
+        $this->entityManager->getConnection()->update('car', [
             'fullname' => $newName,
         ], ['id' => $car->getId()]);
     }
