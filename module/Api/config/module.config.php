@@ -1231,7 +1231,7 @@ STATUS_CANCELED  = -10; // Отменен.',
         ],
         'Api\\V1\\Rest\\GoodApl\\Validator' => [
             0 => [
-                'required' => true,
+                'required' => false,
                 'validators' => [],
                 'filters' => [
                     0 => [
