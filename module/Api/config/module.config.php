@@ -1337,6 +1337,7 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_http_methods' => [
                 0 => 'GET',
                 1 => 'POST',
+                2 => 'PATCH',
             ],
             'collection_query_whitelist' => [
                 0 => 'article',
