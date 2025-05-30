@@ -182,8 +182,8 @@ class GoodAplResource extends AbstractResourceListener
     public function patchList($data)
     {
         if (is_object($data)){
-            if(!empty($data->fasade)){
-                foreach ($data->fasade as $key => $goodAplId){
+            if($data->fasade == 1){
+                foreach ($data->ids as $key => $goodAplId){
     //                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['apl_id' => $goodAplId]);
                 } 
                 return new ApiProblem(200, 'Успешно обновлено!');
