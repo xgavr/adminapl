@@ -185,7 +185,7 @@ class GoodAplResource extends AbstractResourceListener
             foreach ($data as $row){
                 if (!empty($row['fasade_loaded'])){
                     foreach($row['fasade_loaded'] as $goodId){
-    //                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['id' => $goodId]);                        
+                        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_FULL_LOADED], ['id' => $goodId]);                        
                     } 
                     return 'Успешно обновлено!';
                 }

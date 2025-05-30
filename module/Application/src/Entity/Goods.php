@@ -74,6 +74,7 @@ class Goods {
     
     const FASADE_EX_NEW            = 1; // не передано
     const FASADE_EX_TRANSFERRED    = 2; // передано.
+    const FASADE_EX_FULL_LOADED    = 9; // передано.
     
     const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
     
