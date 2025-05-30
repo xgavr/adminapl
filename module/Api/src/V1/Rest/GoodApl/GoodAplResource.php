@@ -181,10 +181,11 @@ class GoodAplResource extends AbstractResourceListener
      */
     public function patchList($data)
     {
-//        var_dump($data); exit;
-        if (!empty($data['fasade'])){
-            foreach ($data['fasade'] as $key => $goodAplId){
-                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['apl_id' => $goodAplId]);
+        if (is_object($data)){
+            if(!empty($data->fasade)){
+                foreach ($data->fasade as $key => $goodAplId){
+    //                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['apl_id' => $goodAplId]);
+                }                
             }
         }
         return new ApiProblem(405, 'The PATCH method has not been defined for collections');
