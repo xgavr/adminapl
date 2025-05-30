@@ -188,7 +188,7 @@ class GoodAplResource extends AbstractResourceListener
                 } 
                 return ['message' => 'Данные успешно обновлены!'];
             }
-            new ApiProblem(204, 'Нет данных для обновления');
+            return new ApiProblem(204, 'Нет данных для обновления');
         }
         return new ApiProblem(405, 'The PATCH method has not been defined for collections');
     }
