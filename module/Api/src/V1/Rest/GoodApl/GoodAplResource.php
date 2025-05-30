@@ -183,7 +183,7 @@ class GoodAplResource extends AbstractResourceListener
     {
         if (is_object($data)){
             foreach ($data as $row){
-                var_dump($row->fasade);
+                var_dump($row['fasade']);
                 if ($row == 'fasade'){
 //                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['id' => $goodId]); 
                 }
