@@ -183,8 +183,8 @@ class GoodAplResource extends AbstractResourceListener
     {
         if (is_object($data)){
             foreach ($data as $row){
-                if (!empty($row['fasade'])){
-                    foreach($row['fasade'] as $goodId){
+                if (!empty($row['fasade_loaded_products'])){
+                    foreach($row['fasade_loaded_products'] as $goodId){
     //                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['id' => $goodId]);                        
                     } 
                     return new ApiProblem(200, 'Успешно обновлено!');
