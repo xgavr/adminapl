@@ -187,7 +187,7 @@ class GoodAplResource extends AbstractResourceListener
                     foreach($row['fasade_loaded'] as $goodId){
     //                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_TRANSFERRED], ['id' => $goodId]);                        
                     } 
-                    return new ApiProblem(200, 'Успешно обновлено!');
+                    return 'Успешно обновлено!';
                 }
             } 
             return new ApiProblem(204, 'Нет данных для обновления!');
