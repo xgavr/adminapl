@@ -1293,6 +1293,18 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'Количество записей',
                 'field_type' => 'integer',
             ],
+            4 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\IsArray::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [],
+                'name' => 'fasade_loaded',
+                'field_type' => 'array',
+            ],
         ],
     ],
     'api-tools-rest' => [
