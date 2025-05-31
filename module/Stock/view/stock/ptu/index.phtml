@@ -358,7 +358,7 @@
                   return row.status === <?= Ptu::STATUS_ACTIVE?>;
                 },
                 isEnabled: function(row) {
-                    return row.docDate > '<?= $allowDate?>' || row.status != <?= Ptu::STATUS_ACTIVE?>;
+                    return row.docDate > '<?= $allowDate?>' || row.status !== <?= Ptu::STATUS_ACTIVE?>;
                 }                
             },
             repostEx: {

@@ -322,7 +322,7 @@ class PtuController extends AbstractActionController
                     'comment' => $ptu->getComment(),
                     'status' => $ptu->getStatus(),
                 ];
-                $notDisabled = $ptu->getDocDate() > $this->ptuManager->getAllowDate();
+                $notDisabled = $ptu->getDocDate() > $this->ptuManager->getAllowDate() || $copy;
             }    
             $form->setData($data);
         }
