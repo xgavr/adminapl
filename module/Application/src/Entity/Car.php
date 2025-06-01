@@ -197,6 +197,14 @@ class Car {
         return $this->fullName;
     }
 
+    public function getFasadeName() 
+    {
+        if ($this->getModel()->getYearFrom()){
+            return $this->getModel()->getDispalyMakeName() . ' c ' . $this->getModel()->getYearFrom() . ' года';
+        }
+        return $this->getModel()->getDispalyMakeName();    
+    }
+
     public function getTransferFullName() 
     {
         $filter = new \Admin\Filter\TransferName();
@@ -455,17 +463,12 @@ class Car {
         $result = [
             'id' => $this->getId(),
             'aplId' => $this->getAplId(),
-            'commerc' => $this->getCommerc(),
-            'fullName' => $this->getFullName(),
-            'goodCount' => $this->getGoodCount(),
-            'moto' => $this->getMoto(),
             'name' => $this->getName(),
-            'pasenger' => $this->getPasenger(),
+            'fullName' => $this->getFasadeName(),
+            'goodCount' => $this->getGoodCount(),
             'saleCount' => $this->getSaleCount(),
             'saleMonth' => $this->getSaleMonth(),
             'status' => $this->getStatus(),
-            'transferFullName' => $this->getTransferFullName(),
-            'transferName' => $this->getTransferName(),
             'modelId' => $this->getModel()->getId(),
         ];
         

@@ -281,6 +281,11 @@ class Model {
     {
         return $this->constructionFrom;
     }
+    
+    public function getYearFrom() 
+    {
+        return (int) substr($this->constructionFrom, 0, 4);
+    }
 
     public function setConstructionFrom($constructionFrom) 
     {
@@ -291,6 +296,11 @@ class Model {
     {
         return $this->constructionTo;
     }
+    
+    public function getYearTo() 
+    {
+        return (int) substr($this->constructionTo, 0, 4);
+    }    
 
     public function setConstructionTo($constructionTo) 
     {
@@ -439,8 +449,8 @@ class Model {
             'saleMonth' => $this->getSaleMonth(),
             'status' => $this->getStatus(),
             'makeId' => $this->getMake()->getId(),
-            'yearFrom' => (int) substr($this->getConstructionFrom(), 0, 4), // Если формат YYYYMM
-            'yearTo' => (int) substr($this->getConstructionTo(), 0, 4),     // Если формат YYYYMM       
+            'yearFrom' => $this->getYearFrom(), // Если формат YYYYMM
+            'yearTo' => $this->getYearTo(),     // Если формат YYYYMM       
         ];
         
         return $result;        
