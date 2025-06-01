@@ -468,7 +468,7 @@ class Oem {
             'aplId' => $this->getId(),
             'id' => $this->getId(),
             'brand' => $this->getBrandName(),
-            'intersectGoodId' => $this->getIntersectGoodId(),
+//            'intersectGoodId' => $this->getIntersectGoodId(),
             'oe' => $this->getOe(),
             'oeNumber' => $this->getOeNumber(),
             'orderCount' => $this->getOrderCount(),
@@ -476,7 +476,7 @@ class Oem {
             'returnCount' => $this->getReturnCount(),
             'status' => $this->getStatus(),
             'source' => $this->getSource(),
-            'transferBrand' => $this->getTransferBrandName(),
+//            'transferBrand' => $this->getTransferBrandName(),
         ];
         
         return $result;
