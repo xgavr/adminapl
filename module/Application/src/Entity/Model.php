@@ -195,6 +195,16 @@ class Model {
         return $this->getTransferName();
     }
     
+    public function getDispalyMakeName() 
+    {
+        return ($this->getNameRu() ?? $this->getName()). ' ' . $this->getDisplayName();
+    }
+    
+    public function getDispalyMakeNameRu() 
+    {
+        return $this->make->getNa(). ' ' . $this->getNameRu();
+    }        
+    
     public function setFullName($fullName) 
     {
         $this->fullName = $fullName;
@@ -420,6 +430,8 @@ class Model {
             'to' => $this->getConstructionTo(),
             'displayName' => $this->getDisplayName(),
             'fullName' => $this->getFullName(),
+            'fullMakeName' => $this->getDispalyMakeName(),
+            'fullMakeNameRu' => $this->getDispalyMakeNameRu(),
             'goodCount' => $this->getGoodCount(),
             'interval' => $this->getInterval(),
             'moto' => $this->getMoto(),
@@ -430,6 +442,8 @@ class Model {
             'saleMonth' => $this->getSaleMonth(),
             'status' => $this->getStatus(),
             'makeId' => $this->getMake()->getId(),
+            'yearFrom' => (int) substr($this->getConstructionFrom(), 0, 4), // Если формат YYYYMM
+            'yearTo' => (int) substr($this->getConstructionTo(), 0, 4),     // Если формат YYYYMM       
         ];
         
         return $result;        
