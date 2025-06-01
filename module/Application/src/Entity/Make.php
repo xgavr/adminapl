@@ -317,7 +317,7 @@ class Make {
             'id' => $this->getId(),
             'aplId' => $this->getAplId(),
             'displayName' => $this->getDisplayName(),
-            'fullName' => empty($this->getFullName()) ? $this->getDisplayName():$this->getFullName(),
+            'fullName' => $this->getFullName(),
             'goodCount' => $this->getGoodCount(),
             'name' => $this->getName(),
             'nameRu' => $this->getNameRu() ?? $this->getName(),
