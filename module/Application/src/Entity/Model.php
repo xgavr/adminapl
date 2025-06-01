@@ -197,7 +197,7 @@ class Model {
     
     public function getDispalyMakeName() 
     {
-        return ($this->getNameRu() ?? $this->getName()). ' ' . $this->getDisplayName();
+        return $this->getMake()->getDisplayName(). ' ' . $this->getDisplayName();
     }
     
     public function getDispalyMakeNameRu() 
