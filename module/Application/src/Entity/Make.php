@@ -142,7 +142,11 @@ class Make {
     }     
 
     public function getNameRu() {
-        return $this->nameRu;
+        if ($this->nameRu){
+            return $this->nameRu;
+        }    
+        
+        return $this->name;
     }
 
     public function setNameRu($nameRu) {
@@ -320,7 +324,7 @@ class Make {
             'fullName' => $this->getFullName(),
             'goodCount' => $this->getGoodCount(),
             'name' => $this->getName(),
-            'nameRu' => $this->getNameRu() ?? $this->getName(),
+            'nameRu' => $this->getNameRu(),
             'saleCount' => $this->getSaleCount(),
             'saleMonth' => $this->getSaleMonth(),
             'status' => $this->getStatus(),

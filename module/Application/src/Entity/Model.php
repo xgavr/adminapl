@@ -202,7 +202,7 @@ class Model {
     
     public function getDispalyMakeNameRu() 
     {
-        return $this->make->getName(). ' ' . $this->getNameRu();
+        return $this->getMake()->getNameRu(). ' ' . $this->getNameRu();
     }        
     
     public function setFullName($fullName) 
