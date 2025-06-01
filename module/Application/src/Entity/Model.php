@@ -432,7 +432,7 @@ class Model {
             'fullMakeName' => $this->getDispalyMakeName(),
             'fullMakeNameRu' => $this->getDispalyMakeNameRu(),
             'goodCount' => $this->getGoodCount(),
-            'interval' => $this->getInterval(),
+            'constructionInterval' => $this->getInterval(),
             'name' => $this->getName(),
             'nameRu' => $this->getNameRu(),
             'saleCount' => $this->getSaleCount(),
