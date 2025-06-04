@@ -2793,9 +2793,10 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder->select('identity(o.good) as admin_apl_id')
                 ->addSelect('o.id')
+                ->addSelect('o.id as aplId')
                 ->addSelect('o.oe')
                 ->addSelect('o.oeNumber')
-                ->addSelect('o.brandName')
+                ->addSelect('o.brandName as brand')
                 ->addSelect('o.status')
                 ->addSelect('o.source')
                 ->addSelect('o.rating')
