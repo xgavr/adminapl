@@ -217,7 +217,7 @@ class GoodAplResource extends AbstractResourceListener
             
             $i = 0;
             foreach ($data[0]['fasade_loaded'] as $goodId){
-//                var_dump($nextFasade, $goodId); exit;
+                var_dump($nextFasade, $goodId); exit;
                 $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $goodId]);                        
                 $i++;
             } 
