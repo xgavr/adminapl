@@ -145,7 +145,7 @@ class GoodAplResource extends AbstractResourceListener
                     return $result;
                 case Goods::FASADE_EX_IMG:
                     $result = $this->entityManager->getRepository(Goods::class)
-                        ->oemForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                        ->imgForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
             }
             
