@@ -132,13 +132,13 @@ class GoodAplResource extends AbstractResourceListener
                 'products' => [],
             ];
             $limit = $paramsArray['limit'] ?? 1000;
-            $fasade = (int) $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
+            $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
             
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
             
             foreach ($goods as $good){
-                switch ($fasade){
+                switch ((int) $fasade){
                     case Goods::FASADE_EX_NEW:
                         $data = $good->toArray();
                         $data['categories'] = $good->getCategoryIdsAsArray();
