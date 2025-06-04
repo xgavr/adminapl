@@ -131,28 +131,39 @@ class GoodAplResource extends AbstractResourceListener
                 'cars' => [],
                 'products' => [],
             ];
-            $limit = empty($paramsArray['limit']) ? 1000:$paramsArray['limit'];
+            $limit = $paramsArray['limit'] ?? 1000;
+            $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
+            
             $goods = $this->entityManager->getRepository(Goods::class)
-                    ->findForFasade(['limit' => $limit]);
+                    ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
+            
             foreach ($goods as $good){
-                $data = $good->toArray();
-                $data['images'] = $good->getImagesAsArray();
-                $data['categories'] = $good->getCategoryIdsAsArray();
-                $data['cars'] = $good->getCarIdsAsArray();
-                $data['attributes'] = $good->getAttributeValuesAsArray();
-                $data['oems'] = $good->getOemsAsArray();
+                switch ($fasade){
+                    case Goods::FASADE_EX_NEW:
+                        $data = $good->toArray();
+                        $data['categories'] = $good->getCategoryIdsAsArray();
+                        $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
+                        $data['attributes'] = $good->getAttributeValuesAsArray();
+                        $result['products'][] = $data;
+                        $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
+                        break;
+                    case Goods::FASADE_EX_OEM:
+                        $data['oems'] = $good->getOemsAsArray(); break;
+                    case Goods::FASADE_EX_IMG:
+                        $data['images'] = $good->getImagesAsArray(); break;
+                    case Goods::FASADE_EX_CAR:
+                        $data['cars'] = $good->getCarIdsAsArray();               
+                        $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
+                        $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
+                        $result['cars'] = array_replace($result['cars'], $good->getCarsAsArray());
+                        break;
+                    case Goods::FASADE_EX_RLT:
+                        $data['related'] = $this->entityManager->getRepository(Goods::class)
+                            ->relatedGoods($good);
+                        break;
+                }
                 
-                $data['related'] = $this->entityManager->getRepository(Goods::class)
-                        ->relatedGoods($good);
                 
-                $data['lot'] = $this->entityManager->getRepository(Goods::class)
-                        ->goodLot($good);
-                
-                $result['products'][] = $data;
-                $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
-                $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
-                $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
-                $result['cars'] = array_replace($result['cars'], $good->getCarsAsArray());
             }
             return ['data' => $result];
         }
@@ -182,10 +193,13 @@ class GoodAplResource extends AbstractResourceListener
     public function patchList($data)
     {
         if (is_object($data)){
+            
+            $fasade = $data['fasade'] ?? Goods::FASADE_EX_FULL_LOADED;
+            
             foreach ($data as $row){
                 if (!empty($row['fasade_loaded'])){
                     foreach($row['fasade_loaded'] as $goodId){
-                        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_FULL_LOADED], ['id' => $goodId]);                        
+                        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $fasade], ['id' => $goodId]);                        
                     } 
                     return 'Успешно обновлено!';
                 }

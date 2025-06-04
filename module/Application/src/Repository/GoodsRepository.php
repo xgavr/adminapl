@@ -2753,15 +2753,16 @@ class GoodsRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $fasade = $params['limit'] ?? Goods::FASADE_EX_NEW;
 
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
                 ->join('g.categories', 'c')
                 ->where('g.fasadeEx = :fasadeEx')
-                ->setParameter('fasadeEx', Goods::FASADE_EX_NEW)
+                ->setParameter('fasadeEx', $fasade)
                 ->andWhere('g.tokenGroup is not null')
                 ->andWhere('g.aplId > 0')
-//                ->setMaxResults(1000)
                 ->orderBy('g.retailCount', 'desc')
                 ;
         if (!empty($params['limit'])){

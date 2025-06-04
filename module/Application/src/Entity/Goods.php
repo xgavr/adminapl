@@ -73,8 +73,11 @@ class Goods {
     const NAME_EX_TRANSFERRED    = 2; // передано.
     
     const FASADE_EX_NEW            = 1; // не передано
-    const FASADE_EX_TRANSFERRED    = 2; // передано.
-    const FASADE_EX_FULL_LOADED    = 9; // передано.
+    const FASADE_EX_OEM            = 2; // oem.
+    const FASADE_EX_IMG            = 3; // images.
+    const FASADE_EX_CAR            = 4; // cars.
+    const FASADE_EX_RLT            = 5; // related.
+    const FASADE_EX_FULL_LOADED    = 9; // все передано.
     
     const DEFAULT_GROUP_APL_ID    = -1; //группа апл по умолчнию 
     
@@ -1806,6 +1809,7 @@ class Goods {
             'name' => $this->getName(),
             'nameFasade' => $this->getNameFasade(),
             'price' => $this->getPrice(),
+            'opts' => $this->getOpts(),
             'nameShort' => $this->getNameShort(),
             'nameInput' => $this->getInputName(),
             'producer' => $this->getProducer()->toArray(),
