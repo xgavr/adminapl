@@ -206,7 +206,7 @@ class GoodAplResource extends AbstractResourceListener
     {
         if (is_object($data)){
             
-            switch ($data['fasade']){
+            switch ($data->fasade){
                 case Goods::FASADE_EX_NEW: $nextFasade = Goods::FASADE_EX_OEM; break;
                 case Goods::FASADE_EX_OEM: $nextFasade = Goods::FASADE_EX_IMG; break;
                 case Goods::FASADE_EX_IMG: $nextFasade = Goods::FASADE_EX_CAR; break;
@@ -215,7 +215,7 @@ class GoodAplResource extends AbstractResourceListener
                     $nextFasade = Goods::FASADE_EX_FULL_LOADED;
             }
             
-            foreach ($data as $row){
+            foreach ($data->fasade_loaded as $row){
                 if (!empty($row['fasade_loaded'])){
                     foreach($row['fasade_loaded'] as $goodId){
                         $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $goodId]);                        
