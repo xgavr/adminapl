@@ -143,6 +143,10 @@ class GoodAplResource extends AbstractResourceListener
                     $result = $this->entityManager->getRepository(Goods::class)
                         ->oemForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
+                case Goods::FASADE_EX_IMG:
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->oemForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    return $result;
             }
             
             $goods = $this->entityManager->getRepository(Goods::class)
@@ -158,14 +162,6 @@ class GoodAplResource extends AbstractResourceListener
                         
                         $result['products'][$good->getId()] = $data;
                         $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
-                        break;
-                    case Goods::FASADE_EX_OEM:
-//                        $data['oems'] = $good->getOemsAsArray();
-//                        $result['oems'][$good->getId()] = $data;
-                        break;
-                    case Goods::FASADE_EX_IMG:
-                        $data['images'] = $good->getImagesAsArray();
-                        $result['images'][$good->getId()] = $data;
                         break;
                     case Goods::FASADE_EX_CAR:
                         $data['cars'] = $good->getCarIdsAsArray();       

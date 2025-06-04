@@ -29,6 +29,7 @@ use Stock\Entity\ComitentBalance;
 use GoodMap\Filter\DecodeFoldCode;
 use Fasade\Entity\GroupSite;
 use Application\Entity\GoodRelated;
+use Application\Entity\Images;
 
 /**
  * Description of GoodsRepository
@@ -2810,6 +2811,45 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('o.returnCount')
                     ->from(Oem::class, 'o')
                     ->andWhere($queryBuilder->expr()->in('o.good', $goodIds))
+                  ;
+
+    //        var_dump($queryBuilder->getQuery()->getSQL());
+            return $queryBuilder->getQuery()->getResult(2);
+        }
+        
+        return [];
+    } 
+    
+    /**
+     * Запрос для фасада
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function imgForFasade($params = null)
+    {
+        ini_set('memory_limit', '1024M');
+      
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $goods = $this->findForFasade($params);
+        
+        $goodIds = [];
+        foreach ($goods as $good){
+            $goodIds[] = $good->getId();
+        }
+
+        if (count($goodIds)){
+            $queryBuilder->select('identity(o.good) as admin_apl_id')
+                    ->addSelect('i.id')
+                    ->addSelect('i.path')
+                    ->addSelect('o.name')
+                    ->addSelect('o.similar')
+                    ->addSelect('o.status')
+                    ->from(Images::class, 'i')
+                    ->andWhere($queryBuilder->expr()->in('i.good', $goodIds))
                   ;
 
     //        var_dump($queryBuilder->getQuery()->getSQL());
