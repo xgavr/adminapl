@@ -1295,12 +1295,7 @@ STATUS_CANCELED  = -10; // Отменен.',
             ],
             4 => [
                 'required' => false,
-                'validators' => [
-                    0 => [
-                        'name' => \Laminas\Validator\IsArray::class,
-                        'options' => [],
-                    ],
-                ],
+                'validators' => [],
                 'filters' => [],
                 'name' => 'fasade_loaded',
                 'field_type' => 'array',
