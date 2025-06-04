@@ -2791,7 +2791,16 @@ class GoodsRepository extends EntityRepository
         
         $fasade = $params['fasade'] ?? Goods::FASADE_EX_NEW;
 
-        $queryBuilder->select('o')
+        $queryBuilder->select('identity(o.good) as admin_apl_id')
+                ->addSelect('o.id')
+                ->addSelect('o.oe')
+                ->addSelect('o.oeNumber')
+                ->addSelect('o.brandName')
+                ->addSelect('o.status')
+                ->addSelect('o.source')
+                ->addSelect('o.rating')
+                ->addSelect('o.orderCount')
+                ->addSelect('o.returnCount')
                 ->from(Oem::class, 'o')
                 ->join('o.good', 'g')
                 ->where('g.fasadeEx = :fasadeEx')
