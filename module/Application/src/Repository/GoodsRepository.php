@@ -2882,6 +2882,37 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Связанные товары для фасада
+     * @param array $params
+     * @return array
+     */
+    public function relatedForFasade($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $goods = $this->findForFasade($params);
+        
+        $goodIds = [];
+        foreach ($goods as $good){
+            $goodIds[] = $good->getId();
+        }
+                
+        $queryBuilder->select('identity(gr.good) as admin_apl_id, identity(gr.goodRelated) as goodRelatedId, g.aplId as goodRelatedAplId, count(identity(gr.goodRelated)) as position')
+                ->from(GoodRelated::class, 'gr')
+                ->join('gr.goodRelated', 'g')
+                ->groupBy('gr.good')
+                ->addGroupBy('gr.goodRelated')
+                ->andWhere($queryBuilder->expr()->in('gr.good', $goodIds))
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    
+    
+    /**
      * Получить минимальное количество 
      * @param Goods $good
      */

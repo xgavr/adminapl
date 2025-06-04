@@ -7,7 +7,7 @@ use Application\Filter\ProducerName;
 use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
-use Fasade\Entity\GroupSite;
+use Application\Entity\GoodRelated;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -147,6 +147,10 @@ class GoodAplResource extends AbstractResourceListener
                     $result = $this->entityManager->getRepository(Goods::class)
                         ->imgForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
+                case Goods::FASADE_EX_RLT:
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->relatedForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    return $result;
             }
             
             $goods = $this->entityManager->getRepository(Goods::class)
@@ -170,11 +174,6 @@ class GoodAplResource extends AbstractResourceListener
                         $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
                         $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
                         $result['cars'] = array_replace($result['cars'], $good->getCarsAsArray());
-                        break;
-                    case Goods::FASADE_EX_RLT:
-                        $data['related'] = $this->entityManager->getRepository(Goods::class)
-                            ->relatedGoods($good);
-                        $result['related'][$good->getId()] = $data;
                         break;
                 }
                 
@@ -231,7 +230,9 @@ class GoodAplResource extends AbstractResourceListener
                                 $nextFasade = Goods::FASADE_EX_CAR; break;
                             }    
                         case Goods::FASADE_EX_CAR: 
-                            if ($good->getGoodRelations()->count()){
+                            $goodRelatedCount = $this->entityManager->getRepository(GoodRelated::class)
+                                ->count(['good' => $good->getId()]);
+                            if ($goodRelatedCount){
                                 $nextFasade = Goods::FASADE_EX_RLT; break;
                             }    
                         default:
