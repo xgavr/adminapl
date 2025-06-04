@@ -82,8 +82,14 @@ class OtManager
     public function updateOtMovement($ot)
     {
         
-        $docStamp = $this->entityManager->getRepository(Register::class)
-                ->otRegister($ot);
+        if ($ot->getDocDate() >= $this->getAllowDate()){
+            $docStamp = $this->entityManager->getRepository(Register::class)
+                    ->otRegister($ot);
+        } else {
+            $register = $this->entityManager->getRepository(Register::class)
+                                ->findOneBy(['docKey' => $ot->getLogKey()]);
+            $docStamp = $register->getDocStamp();            
+        }    
 
         $this->entityManager->getRepository(Movement::class)
                 ->removeDocMovements($ot->getLogKey());
