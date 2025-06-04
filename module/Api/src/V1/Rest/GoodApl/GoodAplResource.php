@@ -205,7 +205,7 @@ class GoodAplResource extends AbstractResourceListener
     public function patchList($data)
     {
         if (is_object($data)){
-            var_dump($data['fasade'], $data['fasade_loaded']); exit;
+            var_dump($data[0]['fasade'], $data[0]['fasade_loaded']); exit;
             switch ($data->fasade){
                 case Goods::FASADE_EX_NEW: $nextFasade = Goods::FASADE_EX_OEM; break;
                 case Goods::FASADE_EX_OEM: $nextFasade = Goods::FASADE_EX_IMG; break;
