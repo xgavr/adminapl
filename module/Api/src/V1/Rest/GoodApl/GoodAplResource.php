@@ -132,7 +132,7 @@ class GoodAplResource extends AbstractResourceListener
                 'products' => [],
             ];
             $limit = $paramsArray['limit'] ?? 1000;
-            $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
+            $fasade = (int) $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
             
             $goods = $this->entityManager->getRepository(Goods::class)
                     ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
@@ -144,6 +144,7 @@ class GoodAplResource extends AbstractResourceListener
                         $data['categories'] = $good->getCategoryIdsAsArray();
                         $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
                         $data['attributes'] = $good->getAttributeValuesAsArray();
+                        
                         $result['products'][] = $data;
                         $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
                         break;
@@ -152,7 +153,8 @@ class GoodAplResource extends AbstractResourceListener
                     case Goods::FASADE_EX_IMG:
                         $data['images'] = $good->getImagesAsArray(); break;
                     case Goods::FASADE_EX_CAR:
-                        $data['cars'] = $good->getCarIdsAsArray();               
+                        $data['cars'] = $good->getCarIdsAsArray();       
+                        
                         $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
                         $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
                         $result['cars'] = array_replace($result['cars'], $good->getCarsAsArray());
