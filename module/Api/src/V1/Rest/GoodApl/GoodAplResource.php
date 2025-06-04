@@ -138,7 +138,7 @@ class GoodAplResource extends AbstractResourceListener
                     ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
             
             foreach ($goods as $good){
-                switch ((int) $fasade){
+                switch ($fasade){
                     case Goods::FASADE_EX_NEW:
                         $data = $good->toArray();
                         $data['categories'] = $good->getCategoryIdsAsArray();

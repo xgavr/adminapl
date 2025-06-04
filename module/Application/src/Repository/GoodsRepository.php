@@ -2754,7 +2754,7 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $fasade = $params['limit'] ?? Goods::FASADE_EX_NEW;
+        $fasade = $params['fasade'] ?? Goods::FASADE_EX_NEW;
 
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
