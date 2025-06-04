@@ -209,19 +209,37 @@ class GoodAplResource extends AbstractResourceListener
     {
         if (is_object($data)){
 //            var_dump($data[0]['fasade'], $data[0]['fasade_loaded']); exit;
-            switch ($data[0]['fasade']){
-                case Goods::FASADE_EX_NEW: $nextFasade = Goods::FASADE_EX_OEM; break;
-                case Goods::FASADE_EX_OEM: $nextFasade = Goods::FASADE_EX_IMG; break;
-                case Goods::FASADE_EX_IMG: $nextFasade = Goods::FASADE_EX_CAR; break;
-                case Goods::FASADE_EX_CAR: $nextFasade = Goods::FASADE_EX_RLT; break;
-                default:
-                    $nextFasade = Goods::FASADE_EX_FULL_LOADED;
-            }
             
             $i = 0;
             foreach ($data[0]['fasade_loaded'] as $goodId){
-//                var_dump($nextFasade, $goodId); exit;
-                $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $goodId]);                        
+                
+                $good = $this->entityManager->getRepository(Goods::class)
+                        ->find($goodId);
+                
+                if ($good){
+                    switch ($data[0]['fasade']){
+                        case Goods::FASADE_EX_NEW: 
+                            if ($good->getOems()->count()){
+                                $nextFasade = Goods::FASADE_EX_OEM; break;
+                            }    
+                        case Goods::FASADE_EX_OEM: 
+                            if ($good->getImageCount()){
+                                $nextFasade = Goods::FASADE_EX_IMG; break;
+                            }    
+                        case Goods::FASADE_EX_IMG:
+                            if ($good->getCarCount()){
+                                $nextFasade = Goods::FASADE_EX_CAR; break;
+                            }    
+                        case Goods::FASADE_EX_CAR: 
+                            if ($good->getGoodRelations()->count()){
+                                $nextFasade = Goods::FASADE_EX_RLT; break;
+                            }    
+                        default:
+                            $nextFasade = Goods::FASADE_EX_FULL_LOADED;
+                    }
+    //                var_dump($nextFasade, $goodId); exit;
+                    $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $good->getId()]);                        
+                }    
                 $i++;
             } 
             
