@@ -2789,33 +2789,34 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $fasade = $params['fasade'] ?? Goods::FASADE_EX_NEW;
-
-        $queryBuilder->select('identity(o.good) as admin_apl_id')
-                ->addSelect('o.id')
-                ->addSelect('o.id as aplId')
-                ->addSelect('o.oe')
-                ->addSelect('o.oeNumber')
-                ->addSelect('o.brandName as brand')
-                ->addSelect('o.status')
-                ->addSelect('o.source')
-                ->addSelect('o.rating')
-                ->addSelect('o.orderCount')
-                ->addSelect('o.returnCount')
-                ->from(Oem::class, 'o')
-                ->join('o.good', 'g')
-                ->where('g.fasadeEx = :fasadeEx')
-                ->setParameter('fasadeEx', $fasade)
-                ;
+        $goods = $this->findForFasade($params);
         
-        if (!empty($params['limit'])){
-            if (is_numeric($params['limit'])){
-                $queryBuilder->setMaxResults($params['limit']);
-            }
+        $goodIds = [];
+        foreach ($goods as $good){
+            $goodIds[] = $good->getId();
+        }
+
+        if (count($goodIds)){
+            $queryBuilder->select('identity(o.good) as admin_apl_id')
+                    ->addSelect('o.id')
+                    ->addSelect('o.id as aplId')
+                    ->addSelect('o.oe')
+                    ->addSelect('o.oeNumber')
+                    ->addSelect('o.brandName as brand')
+                    ->addSelect('o.status')
+                    ->addSelect('o.source')
+                    ->addSelect('o.rating')
+                    ->addSelect('o.orderCount')
+                    ->addSelect('o.returnCount')
+                    ->from(Oem::class, 'o')
+                    ->andWhere($queryBuilder->expr()->in('o.good', $goodIds))
+                  ;
+
+    //        var_dump($queryBuilder->getQuery()->getSQL());
+            return $queryBuilder->getQuery()->getResult(2);
         }
         
-//        var_dump($queryBuilder->getQuery()->getSQL());
-        return $queryBuilder->getQuery()->getResult(2);
+        return [];
     }   
     
     /**
