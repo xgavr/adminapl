@@ -130,6 +130,10 @@ class GoodAplResource extends AbstractResourceListener
                 'models' => [],
                 'cars' => [],
                 'products' => [],
+                'oems' => [],
+                'images' => [],
+                'product_cars' => [],
+                'related' => [],
             ];
             $limit = $paramsArray['limit'] ?? 1000;
             $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
@@ -158,7 +162,7 @@ class GoodAplResource extends AbstractResourceListener
                         break;
                     case Goods::FASADE_EX_CAR:
                         $data['cars'] = $good->getCarIdsAsArray();       
-                        $result['cars'][$good->getId()] = $data;
+                        $result['product_cars'][$good->getId()] = $data;
                         
                         $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
                         $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
