@@ -177,7 +177,7 @@ class GoodAplResource extends AbstractResourceListener
                 
                 
             }
-            return [$result];
+            return $result;
         }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');
