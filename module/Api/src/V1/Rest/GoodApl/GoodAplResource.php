@@ -206,12 +206,19 @@ class GoodAplResource extends AbstractResourceListener
     {
         if (is_object($data)){
             
-            $fasade = $data['fasade'] ?? Goods::FASADE_EX_FULL_LOADED;
+            switch ($data['fasade']){
+                case Goods::FASADE_EX_NEW: $nextFasade = Goods::FASADE_EX_OEM; break;
+                case Goods::FASADE_EX_OEM: $nextFasade = Goods::FASADE_EX_IMG; break;
+                case Goods::FASADE_EX_IMG: $nextFasade = Goods::FASADE_EX_CAR; break;
+                case Goods::FASADE_EX_CAR: $nextFasade = Goods::FASADE_EX_RLT; break;
+                default:
+                    $nextFasade = Goods::FASADE_EX_FULL_LOADED;
+            }
             
             foreach ($data as $row){
                 if (!empty($row['fasade_loaded'])){
                     foreach($row['fasade_loaded'] as $goodId){
-                        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $fasade], ['id' => $goodId]);                        
+                        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $goodId]);                        
                     } 
                     return 'Успешно обновлено!';
                 }
