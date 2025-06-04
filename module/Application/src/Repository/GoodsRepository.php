@@ -2842,12 +2842,12 @@ class GoodsRepository extends EntityRepository
         }
 
         if (count($goodIds)){
-            $queryBuilder->select('identity(o.good) as admin_apl_id')
+            $queryBuilder->select('identity(i.good) as admin_apl_id')
                     ->addSelect('i.id')
                     ->addSelect('i.path')
-                    ->addSelect('o.name')
-                    ->addSelect('o.similar')
-                    ->addSelect('o.status')
+                    ->addSelect('i.name')
+                    ->addSelect('i.similar')
+                    ->addSelect('i.status')
                     ->from(Images::class, 'i')
                     ->andWhere($queryBuilder->expr()->in('i.good', $goodIds))
                   ;
