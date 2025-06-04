@@ -145,15 +145,20 @@ class GoodAplResource extends AbstractResourceListener
                         $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
                         $data['attributes'] = $good->getAttributeValuesAsArray();
                         
-                        $result['products'][] = $data;
+                        $result['products'][$good->getId()] = $data;
                         $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
                         break;
                     case Goods::FASADE_EX_OEM:
-                        $data['oems'] = $good->getOemsAsArray(); break;
+                        $data['oems'] = $good->getOemsAsArray();
+                        $result['oems'][$good->getId()] = $data;
+                        break;
                     case Goods::FASADE_EX_IMG:
-                        $data['images'] = $good->getImagesAsArray(); break;
+                        $data['images'] = $good->getImagesAsArray();
+                        $result['images'][$good->getId()] = $data;
+                        break;
                     case Goods::FASADE_EX_CAR:
                         $data['cars'] = $good->getCarIdsAsArray();       
+                        $result['cars'][$good->getId()] = $data;
                         
                         $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
                         $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
@@ -162,6 +167,7 @@ class GoodAplResource extends AbstractResourceListener
                     case Goods::FASADE_EX_RLT:
                         $data['related'] = $this->entityManager->getRepository(Goods::class)
                             ->relatedGoods($good);
+                        $result['related'][$good->getId()] = $data;
                         break;
                 }
                 
