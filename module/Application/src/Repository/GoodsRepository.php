@@ -2776,6 +2776,39 @@ class GoodsRepository extends EntityRepository
     }   
     
     /**
+     * Запрос для фасада
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function oemForFasade($params = null)
+    {
+        ini_set('memory_limit', '1024M');
+      
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $fasade = $params['fasade'] ?? Goods::FASADE_EX_NEW;
+
+        $queryBuilder->select('o')
+                ->from(Oem::class, 'o')
+                ->join('o.good', 'g')
+                ->where('g.fasadeEx = :fasadeEx')
+                ->setParameter('fasadeEx', $fasade)
+                ;
+        
+        if (!empty($params['limit'])){
+            if (is_numeric($params['limit'])){
+                $queryBuilder->setMaxResults($params['limit']);
+            }
+        }
+        
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        return $queryBuilder->getQuery()->getResult(2);
+    }   
+    
+    /**
      * Связанные товары
      * @param Goods $good
      * @return array
