@@ -199,6 +199,8 @@ class GoodAplResource extends AbstractResourceListener
      */
     public function patchList($data)
     {
+        ini_set('memory_limit', '512M');
+        
         if (is_object($data)){
 //            var_dump($data[0]['fasade'], $data[0]['fasade_loaded']); exit;
             
