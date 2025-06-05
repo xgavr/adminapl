@@ -2900,7 +2900,7 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('m.constructionTo')
                     ->addSelect('m.interval')
                     ->addSelect('m.status as modelStatus')
-                    ->addSelect('mk.id as makelId')
+                    ->addSelect('mk.id as makeId')
                     ->addSelect('mk.name as makeName')
                     ->addSelect('mk.fullName as makeFullName')
                     ->addSelect('mk.nameRu as makeNameRu')
