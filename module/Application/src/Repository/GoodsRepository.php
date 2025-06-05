@@ -2760,9 +2760,10 @@ class GoodsRepository extends EntityRepository
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
                 ->join('g.categories', 'c')
+                ->join('g.tokenGroup', 'tg')
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', $fasade)
-                ->andWhere('g.tokenGroup is not null')
+                ->andWhere('tg.name != ""')
                 ->andWhere('g.aplId > 0')
                 ->orderBy('g.retailCount', 'desc')
                 ;
