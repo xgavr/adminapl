@@ -2898,6 +2898,7 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('m.saleMonth as modelSaleMonth')
                     ->addSelect('m.constructionFrom')
                     ->addSelect('m.constructionTo')
+                    ->addSelect('m.interval')
                     ->addSelect('m.status as modelStatus')
                     ->addSelect('mk.id as makelId')
                     ->addSelect('mk.name as makeName')
