@@ -2998,4 +2998,18 @@ class GoodsRepository extends EntityRepository
         }
         return max(1, $result['lot']);
     }
+    
+    public function fasadeStat()
+    {
+       $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('g.fasadeEx, count(g.id) as goodCount')
+                ->from(Goods::class, 'g')
+                ->groupBy('g.fasadeEx')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
 }

@@ -163,6 +163,16 @@ class GoodAplResource extends AbstractResourceListener
                         ->relatedForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
             }            
+        }    
+        if (!empty($paramsArray['stat'])){
+            $fasadeStat = $this->entityManager->getRepository(Goods::class)
+                    ->fasadeStat();
+            
+            $result = [
+                'fasade' => $fasadeStat,
+            ];
+            
+            return [$result];
         }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');
