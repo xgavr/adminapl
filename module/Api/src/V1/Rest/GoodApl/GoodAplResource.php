@@ -124,41 +124,19 @@ class GoodAplResource extends AbstractResourceListener
         }
         
         if (!empty($paramsArray['fasade'])){
-            $result = [
-                'categories' => [],
-                'makes' => [],
-                'models' => [],
-                'cars' => [],
-                'products' => [],
-                'oems' => [],
-                'images' => [],
-                'product_cars' => [],
-                'related' => [],
-            ];
+            
             $limit = $paramsArray['limit'] ?? 1000;
             $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
 
             switch ($fasade){
-                case Goods::FASADE_EX_OEM:
-                    $result = $this->entityManager->getRepository(Goods::class)
-                        ->oemForFasade(['fasade' => $fasade, 'limit' => $limit]);
-                    return $result;
-                case Goods::FASADE_EX_IMG:
-                    $result = $this->entityManager->getRepository(Goods::class)
-                        ->imgForFasade(['fasade' => $fasade, 'limit' => $limit]);
-                    return $result;
-                case Goods::FASADE_EX_RLT:
-                    $result = $this->entityManager->getRepository(Goods::class)
-                        ->relatedForFasade(['fasade' => $fasade, 'limit' => $limit]);
-                    return $result;
-            }
-            
-            $goods = $this->entityManager->getRepository(Goods::class)
-                    ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
-            
-            foreach ($goods as $good){
-                switch ($fasade){
-                    case Goods::FASADE_EX_NEW:
+                case Goods::FASADE_EX_NEW:
+                    $result = [
+                        'categories' => [],
+                        'products' => [],
+                    ];
+                    $goods = $this->entityManager->getRepository(Goods::class)
+                            ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    foreach ($goods as $good){
                         $data = $good->toArray();
                         $data['categories'] = $good->getCategoryIdsAsArray();
                         $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
@@ -167,19 +145,26 @@ class GoodAplResource extends AbstractResourceListener
                         $result['products'][$good->getId()] = $data;
                         $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
                         break;
-                    case Goods::FASADE_EX_CAR:
-                        $data['cars'] = $good->getCarIdsAsArray();       
-                        $result['product_cars'][$good->getId()] = $data;
-                        
-                        $result['makes'] = array_replace($result['makes'], $good->getMakesAsArray());
-                        $result['models'] = array_replace($result['models'], $good->getModelsAsArray());
-                        $result['cars'] = array_replace($result['cars'], $good->getCarsAsArray());
-                        break;
-                }
-                
-                
+                    }
+                    return [$result];
+                case Goods::FASADE_EX_OEM:
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->oemForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    return $result;
+                case Goods::FASADE_EX_IMG:
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->imgForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    return $result;
+                case Goods::FASADE_EX_CAR:
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->carsForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    return $result;
+                case Goods::FASADE_EX_RLT:
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->relatedForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    return $result;
             }
-            return [$result];
+            
         }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');

@@ -2860,6 +2860,71 @@ class GoodsRepository extends EntityRepository
     }   
     
     /**
+     * Запрос для фасада
+     * 
+     * @param array $params
+     * @return query
+     */
+    public function carsForFasade($params = null)
+    {
+        ini_set('memory_limit', '1024M');
+      
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $goods = $this->findForFasade($params);
+        
+        $goodIds = [];
+        foreach ($goods as $good){
+            $goodIds[] = $good->getId();
+        }
+
+        if (count($goodIds)){
+            $queryBuilder->select('g.id as admin_apl_id')
+                    ->addSelect('c.id as carId')
+                    ->addSelect('c.name as carName')
+                    ->addSelect('c.fullName as carFullName')
+                    ->addSelect('c.goodCount as carGoodCount')
+                    ->addSelect('c.saleCount as carSaleCount')
+                    ->addSelect('c.saleMonth as carSaleMonth')
+                    ->addSelect('c.status')
+                    ->addSelect('m.id as modelId')
+                    ->addSelect('m.name as modelName')
+                    ->addSelect('m.displayName as modelDisplayName')
+                    ->addSelect('m.fullName as modelFullName')
+                    ->addSelect('m.nameRu as modelNameRu')
+                    ->addSelect('m.goodCount as modelGoodCount')
+                    ->addSelect('m.saleCount as modelSaleCount')
+                    ->addSelect('m.saleMonth as modelSaleMonth')
+                    ->addSelect('m.constructionFrom')
+                    ->addSelect('m.constructionTo')
+                    ->addSelect('m.constructionInterval')
+                    ->addSelect('m.status')
+                    ->addSelect('mk.id as makelId')
+                    ->addSelect('mk.name as makeName')
+                    ->addSelect('mk.displayName as makeDisplayName')
+                    ->addSelect('mk.fullName as makeFullName')
+                    ->addSelect('mk.nameRu as makeNameRu')
+                    ->addSelect('mk.goodCount as makeGoodCount')
+                    ->addSelect('mk.saleCount as makeSaleCount')
+                    ->addSelect('mk.saleMonth as makeSaleMonth')
+                    ->addSelect('mk.status')
+                    ->from(Goods::class, 'g')
+                    ->join('g.cars', 'c')
+                    ->join('c.model', 'm')
+                    ->join('c.make', 'mk')
+                    ->andWhere($queryBuilder->expr()->in('g.id', $goodIds))
+                  ;
+
+    //        var_dump($queryBuilder->getQuery()->getSQL());
+            return $queryBuilder->getQuery()->getResult(2);
+        }
+        
+        return [];
+    }   
+
+    /**
      * Связанные товары
      * @param Goods $good
      * @return array
