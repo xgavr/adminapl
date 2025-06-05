@@ -2763,7 +2763,7 @@ class GoodsRepository extends EntityRepository
                 ->join('g.tokenGroup', 'tg')
                 ->where('g.fasadeEx = :fasadeEx')
                 ->setParameter('fasadeEx', $fasade)
-                ->andWhere('tg.name != ""')
+                ->andWhere('tg.name != \"\"') //не равно пусто
                 ->andWhere('g.aplId > 0')
                 ->orderBy('g.retailCount', 'desc')
                 ;
