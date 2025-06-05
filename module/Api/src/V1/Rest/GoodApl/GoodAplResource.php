@@ -144,7 +144,6 @@ class GoodAplResource extends AbstractResourceListener
                         
                         $result['products'][$good->getId()] = $data;
                         $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
-                        break;
                     }
                     return [$result];
                 case Goods::FASADE_EX_OEM:
@@ -163,8 +162,7 @@ class GoodAplResource extends AbstractResourceListener
                     $result = $this->entityManager->getRepository(Goods::class)
                         ->relatedForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
-            }
-            
+            }            
         }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');
