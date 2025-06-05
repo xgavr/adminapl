@@ -219,7 +219,7 @@ class GoodAplResource extends AbstractResourceListener
                                 $nextFasade = Goods::FASADE_EX_IMG; break;
                             }    
                         case Goods::FASADE_EX_IMG:
-                            if ($good->getCarCount()){
+                            if ($good->getCars()->count()){
                                 $nextFasade = Goods::FASADE_EX_CAR; break;
                             }    
                         case Goods::FASADE_EX_CAR: 
