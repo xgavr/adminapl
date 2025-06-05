@@ -2913,7 +2913,7 @@ class GoodsRepository extends EntityRepository
                     ->from(Goods::class, 'g')
                     ->join('g.cars', 'c')
                     ->join('c.model', 'm')
-                    ->join('c.make', 'mk')
+                    ->join('m.make', 'mk')
                     ->andWhere($queryBuilder->expr()->in('g.id', $goodIds))
                   ;
 
