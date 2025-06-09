@@ -10,6 +10,7 @@ namespace Application\Filter;
 
 use Laminas\Filter\AbstractFilter;
 use Application\Entity\OemRaw;
+use Cocur\Slugify\Slugify;
 
 /**
  * Приводит артикул товара к нужному виду
@@ -24,6 +25,8 @@ class ArticleCode extends AbstractFilter
     protected $options = [
     ];    
 
+    protected $slugify;
+            
     // Конструктор.
     public function __construct($options = null) 
     {     
@@ -31,6 +34,8 @@ class ArticleCode extends AbstractFilter
         if(is_array($options)) {
             $this->options = $options;
         }    
+        
+        $this->slugify = new Slugify();
     }
     
     public function filter($value)
@@ -39,9 +44,9 @@ class ArticleCode extends AbstractFilter
         
         if (mb_strlen($result, 'utf-8') > 24){
             $result = OemRaw::LONG_CODE;
-        }
+        }        
         
-        return $result;
+        return $this->slugify->slugify($result);;
     }
     
 }

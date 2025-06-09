@@ -71,6 +71,10 @@ class Order {
     const TEMPLATE_REVISE       = './data/template/revise.xls';
     const TEMPLATE_CHECK       = './data/template/check.html';
     
+    const FASADE_EX_NEW            = 1; // не передано
+    const FASADE_EX_IN_JOB         = 2; // передается
+    const FASADE_EX_FULL_LOADED    = 9; // все передано.
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -195,6 +199,11 @@ class Order {
      * @ORM\Column(name="status_account")  
      */
     protected $statusAccount;    
+
+    /**
+     * @ORM\Column(name="fasade_ex")  
+     */
+    protected $fasadeEx;    
 
     /**
      * @ORM\Column(name="depend_info")  
@@ -1046,6 +1055,14 @@ class Order {
     {
         $this->statusAccount = $statusAccount;
     }   
+    
+    public function getFasadeEx() {
+        return $this->fasadeEx;
+    }
+
+    public function setFasadeEx($fasadeEx) {
+        $this->fasadeEx = $fasadeEx;
+    }
 
     /*
      * Возвращает связанный contact.
