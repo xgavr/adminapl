@@ -1672,7 +1672,7 @@ class GoodsRepository extends EntityRepository
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
                 
-//                var_dump($q);
+                var_dump($q);
 
                 $searchOpt= Goods::SEARCH_CODE;
                 if (isset($params['accurate'])){
