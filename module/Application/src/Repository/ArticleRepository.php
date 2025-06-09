@@ -49,8 +49,12 @@ class ArticleRepository  extends EntityRepository
      */
     public function insertArticle($row)
     {
-        $inserted = $this->getEntityManager()->getConnection()->insert('article', $row);
-        return $inserted;
+        try {
+            $inserted = $this->getEntityManager()->getConnection()->insert('article', $row);
+            return $inserted;
+        } catch(\Throwable $e){
+            return 0;
+        }    
     }    
 
     /**
