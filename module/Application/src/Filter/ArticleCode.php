@@ -46,7 +46,7 @@ class ArticleCode extends AbstractFilter
             $result = OemRaw::LONG_CODE;
         }        
         
-        return $this->slugify->slugify($result);
+        return strtoupper($this->slugify->slugify($result));
     }
     
 }
