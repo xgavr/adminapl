@@ -194,8 +194,10 @@ class ArticleManager
                     $article = $this->entityManager->getRepository(Article::class)
                             ->findOneBy(['code' => $filteredCode, 'unknownProducer' => $rawprice->getUnknownProducer()->getId()]);
                 }    
-                $this->entityManager->getRepository(Article::class)
-                        ->updateRawpriceCode($rawprice, $article);
+                if ($article){
+                    $this->entityManager->getRepository(Article::class)
+                            ->updateRawpriceCode($rawprice, $article);
+                }    
                 
                 $this->entityManager->detach($rawprice);
             }    
