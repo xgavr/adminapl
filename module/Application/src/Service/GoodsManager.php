@@ -234,6 +234,9 @@ class GoodsManager
         if ($articleCount){
             return false;
         }
+        if ($good->getImageCount()){
+            return false;
+        }
         $movementsCount = $this->entityManager->getRepository(Movement::class)
                 ->count(['good' => $good->getId()]);
         if ($movementsCount){
