@@ -36,6 +36,7 @@ class ArticleCode extends AbstractFilter
         }    
         
         $this->slugify = new Slugify();
+        $this->slugify->addRule("с", "c"); // с - русская на с - анлийская (по умолчанию s)
     }
     
     public function filter($value)
