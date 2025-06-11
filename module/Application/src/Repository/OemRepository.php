@@ -72,6 +72,10 @@ class OemRepository  extends EntityRepository{
         $filter = new ArticleCode();
         $oe = $filter->filter($oems['oeNumber']);
         
+        if ($oe === 'NULL'){
+            return;
+        }
+        
         if (is_numeric($supplierId) && $source == Oem::SOURCE_IID){
             $oe = $supplierId.'@'.$oe;
         }
