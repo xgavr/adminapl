@@ -158,9 +158,12 @@ class GoodAplResource extends AbstractResourceListener
                     $cars = $this->entityManager->getRepository(Goods::class)
                         ->carsForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     $result = [];
-                    foreach($cars as $car){
-//                        $car['attr'] = 
-                        $result[] = $car;        
+                    foreach($cars as $carData){
+                        $car = $this->entityManager->getRepository(Car::class)->find($carData['carId']);
+                        if ($car){
+                            $carData['attr'] = $car->getVehicleDetailsCarAsArray();
+                            $result[] = $carData;        
+                        }    
                     }
                     return $result;
                 case Goods::FASADE_EX_RLT:

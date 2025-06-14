@@ -434,6 +434,16 @@ class Car {
         return $this->vehicleDetailsCar;
     }
     
+    public function getVehicleDetailsCarAsArray()
+    {
+        $result = [];
+        foreach ($this->vehicleDetailsCar as $vehicleDetailCar){
+            $result[$vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getName()] = $vehicleDetailCar->getVehicleDetailValue()->getName();
+        }
+        
+        return $result;
+    }
+    
     /**
      * 
      * @param \Application\Entity\VehicleDetailCar $vehicleDetailCar
