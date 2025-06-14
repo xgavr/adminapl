@@ -408,15 +408,6 @@ class Car {
         $this->carFillVolumes[] = $carFillVolume;
     }
     
-    /*
-     * Возвращает values.
-     * @return array
-     */    
-    public function getVehicleDetailsCar() 
-    {
-        return $this->vehicleDetailsCar;
-    }
-    
     public function getSaleCount() {
         return $this->saleCount;
     }
@@ -431,6 +422,16 @@ class Car {
 
     public function setSaleMonth($saleMonth) {
         $this->saleMonth = $saleMonth;
+    }
+    
+    
+    /*
+     * Возвращает values.
+     * @return array
+     */    
+    public function getVehicleDetailsCar() 
+    {
+        return $this->vehicleDetailsCar;
     }
     
     /**

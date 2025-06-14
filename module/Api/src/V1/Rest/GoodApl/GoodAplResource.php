@@ -155,8 +155,13 @@ class GoodAplResource extends AbstractResourceListener
                         ->imgForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
                 case Goods::FASADE_EX_CAR:
-                    $result = $this->entityManager->getRepository(Goods::class)
+                    $cars = $this->entityManager->getRepository(Goods::class)
                         ->carsForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    $result = [];
+                    foreach($cars as $car){
+//                        $car['attr'] = 
+                        $result[] = $car;        
+                    }
                     return $result;
                 case Goods::FASADE_EX_RLT:
                     $result = $this->entityManager->getRepository(Goods::class)
