@@ -8,6 +8,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
 use Application\Entity\GoodRelated;
+use Application\Entity\Car;
 
 class GoodAplResource extends AbstractResourceListener
 {
