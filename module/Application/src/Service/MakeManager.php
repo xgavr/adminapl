@@ -252,8 +252,8 @@ class MakeManager
     {
         $details = $car->getVehicleDetailsCarAsArray();
         if (!empty($details)){
-            $year_from = (int) substr($details['yearOfConstrFrom'], 0, 4);
-            $year_to = (int) substr($details['yearOfConstrTo'], 0, 4);
+            $year_from = empty($details['yearOfConstrFrom']) ? 0: (int) substr($details['yearOfConstrFrom'], 0, 4);
+            $year_to = empty($details['yearOfConstrTo']) ? 9999:(int) substr($details['yearOfConstrTo'], 0, 4);
         }    
         
         $newName =  $car->getModel()->getMake()->getName(). ' ' . $car->getModel()->getFullName() . ' ' . $car->getName();
@@ -273,7 +273,7 @@ class MakeManager
      */
     public function fixCarFullNames() 
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         
         $cars = $this->entityManager->getRepository(Car::class)
                 ->findAll();
