@@ -359,4 +359,21 @@ class CarManager
 
         return $filename;
     }    
+    
+    /**
+     * Заполнить details
+     * @param Car $car
+     */
+    public function updateDetails($car)
+    {
+        $details = $car->getVehicleDetailsCarAsArray();
+        $car->setDetails(json_encode($details));
+        $car->setYearFrom((int) substr($details['yearOfConstrFrom'], 0, 4));
+        $car->setYearTo((int) substr($details['yearOfConstrTo'], 0, 4));
+        
+        $this->entityManager->persist($car);
+        $this->entityManager->flush();
+        
+        return;
+    }
 }

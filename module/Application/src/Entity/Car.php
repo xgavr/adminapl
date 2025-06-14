@@ -125,6 +125,21 @@ class Car {
     protected $saleMonth;
 
     /**
+     * @ORM\Column(name="details")  
+     */
+    protected $details;
+
+    /**
+     * @ORM\Column(name="year_from")  
+     */
+    protected $yearFrom;
+
+    /**
+     * @ORM\Column(name="year_to")  
+     */
+    protected $yearTo;
+
+    /**
      * @ORM\ManyToOne(targetEntity="\Application\Entity\Model", inversedBy="model") 
      * @ORM\JoinColumn(name="model_id", referencedColumnName="id")
      * 
@@ -317,6 +332,30 @@ class Car {
         $this->goodCount = $goodCount;
     }         
         
+    public function getDetails() {
+        return $this->details;
+    }
+
+    public function setDetails($details) {
+        $this->details = $details;
+    }
+        
+    public function getYearFrom() {
+        return $this->yearFrom;
+    }
+
+    public function setYearFrom($yearFrom) {
+        $this->yearFrom = $yearFrom;
+    }
+
+    public function getYearTo() {
+        return $this->yearTo;
+    }
+
+    public function setYearTo($yearTo) {
+        $this->yearTo = $yearTo;
+    }
+    
     /**
      * Returns status.
      * @return int     
