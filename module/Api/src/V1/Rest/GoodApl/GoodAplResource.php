@@ -8,7 +8,6 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
 use Application\Entity\GoodRelated;
-use Application\Entity\Car;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -156,16 +155,8 @@ class GoodAplResource extends AbstractResourceListener
                         ->imgForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     return $result;
                 case Goods::FASADE_EX_CAR:
-                    $cars = $this->entityManager->getRepository(Goods::class)
-                        ->carsForFasade(['fasade' => $fasade, 'limit' => $limit]);
-                    $result = [];
-                    foreach($cars as $carData){
-                        $car = $this->entityManager->getRepository(Car::class)->find($carData['carId']);
-                        if ($car){
-                            $carData['attr'] = $car->getVehicleDetailsCarAsArray();
-                            $result[] = $carData;        
-                        }    
-                    }
+                    $result = $this->entityManager->getRepository(Goods::class)
+                        ->carsForFasade(['fasade' => $fasade, 'limit' => $limit]);                    
                     return $result;
                 case Goods::FASADE_EX_RLT:
                     $result = $this->entityManager->getRepository(Goods::class)
