@@ -2968,15 +2968,19 @@ class GoodsRepository extends EntityRepository
             $goodIds[] = $good->getId();
         }
                 
-        $queryBuilder->select('identity(gr.good) as admin_apl_id, identity(gr.goodRelated) as goodRelatedId, g.aplId as goodRelatedAplId, count(identity(gr.goodRelated)) as position')
-                ->from(GoodRelated::class, 'gr')
-                ->join('gr.goodRelated', 'g')
-                ->groupBy('gr.good')
-                ->addGroupBy('gr.goodRelated')
-                ->andWhere($queryBuilder->expr()->in('gr.good', $goodIds))
-                ;
+        if (count($goodIds)){
+            $queryBuilder->select('identity(gr.good) as admin_apl_id, identity(gr.goodRelated) as goodRelatedId, g.aplId as goodRelatedAplId, count(identity(gr.goodRelated)) as position')
+                    ->from(GoodRelated::class, 'gr')
+                    ->join('gr.goodRelated', 'g')
+                    ->groupBy('gr.good')
+                    ->addGroupBy('gr.goodRelated')
+                    ->andWhere($queryBuilder->expr()->in('gr.good', $goodIds))
+                    ;
+
+            return $queryBuilder->getQuery()->getResult();
+        }
         
-        return $queryBuilder->getQuery()->getResult();
+        return [];
     }
     
     
