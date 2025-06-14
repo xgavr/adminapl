@@ -88,6 +88,8 @@ class GoodAplResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
+//        ini_set('memory_limit', '2048M');
+        
         $code = $producerStr = $unknownProducer = null;
         $result = [];
         

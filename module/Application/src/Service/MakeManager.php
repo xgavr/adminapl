@@ -262,8 +262,8 @@ class MakeManager
         }
         $this->entityManager->getConnection()->update('car', [
             'details' => json_encode($details),
-            'year_from' => $year_from,
-            'year_to' => $year_to,
+            'year_from' => $year_from ?? 0,
+            'year_to' => $year_to ?? 9999,
             'fullname' => $newName,
         ], ['id' => $car->getId()]);
     }
