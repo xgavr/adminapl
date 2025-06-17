@@ -1536,5 +1536,30 @@ class OrderRepository extends EntityRepository{
         
     }
     
+    /**
+     * Выборка для fasade
+     * @param array $params Description
+     */
+    public function findForFasade($params)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('o')
+            ->distinct()    
+            ->from(Order::class, 'o')
+            ->where('o.status = :status')
+            ->setParameter('status', Order::STATUS_SHIPPED)  
+            ->andWhere('o.fasadeEx = :fasade')    
+            ->setParameter('fasade', $params['fasade'])  
+            ->andWhere('o.aplId > 0')    
+            ->setMaxResults($params['limit'])
+               ;
+        
+        return $queryBuilder->getQuery()->getResult();
+        
+    }
+    
     
 }

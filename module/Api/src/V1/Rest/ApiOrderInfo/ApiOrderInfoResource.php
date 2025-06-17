@@ -277,10 +277,10 @@ class ApiOrderInfoResource extends AbstractResourceListener
                 return $result;
             }
         }
-        if (!empty($paramsArray['fasade'])){
+        if (!empty($params['fasade'])){
             
-            $limit = $paramsArray['limit'] ?? 1000;
-            $fasade = $paramsArray['fasade'] ?? Order::FASADE_EX_NEW;
+            $limit = $params['limit'] ?? 1000;
+            $fasade = $params['fasade'] ?? Order::FASADE_EX_NEW;
 
             $result = [];
             
