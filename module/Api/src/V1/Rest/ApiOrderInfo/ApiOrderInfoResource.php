@@ -218,6 +218,32 @@ class ApiOrderInfoResource extends AbstractResourceListener
     }
     
     /**
+     * 
+     * @param Order $order
+     * @return ApiProblem
+     */
+    private function fasadeInfo($order)
+    {
+        if ($order){
+            $orderInfo = $order->toArray();
+
+            $bids = $this->entityManager->getRepository(Bid::class)
+                    ->findBy(['order' => $order->getId()]);
+            $bidsInfo = [];
+            foreach($bids as $bid){
+                $bidInfo = $bid->toArray();
+                $bidInfo['good'] = $bid->getGood()->toArray();
+                $bidsInfo[] = $bidInfo;
+            }
+
+            $orderInfo['goods'] = $bidsInfo;
+
+            return $orderInfo;                 
+        }        
+        return new ApiProblem(404, 'Заказ не найден');                
+    }    
+    
+    /**
      * Fetch a resource
      *
      * @param  mixed $id
@@ -251,7 +277,24 @@ class ApiOrderInfoResource extends AbstractResourceListener
                 return $result;
             }
         }
-        return new ApiProblem(404, 'Заказ '.$params['orderAplId'].' не найден');        
+        if (!empty($paramsArray['fasade'])){
+            
+            $limit = $paramsArray['limit'] ?? 1000;
+            $fasade = $paramsArray['fasade'] ?? Order::FASADE_EX_NEW;
+
+            $result = [];
+            
+            $orders = $this->entityManager->getRepository(Order::class)
+                    ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
+            
+            foreach ($orders as $order){
+                $data = $this->fasadeInfo($order);
+
+                $result[] = $data;
+            }
+            return [$result];
+        }         
+        return new ApiProblem(404, 'Заказы не найдены');        
 //        return new ApiProblem(405, 'The GET method has not been defined for collections');
     }
 

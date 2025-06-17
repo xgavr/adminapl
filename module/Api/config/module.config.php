@@ -1495,6 +1495,8 @@ STATUS_CANCELED  = -10; // Отменен.',
             ],
             'collection_query_whitelist' => [
                 0 => 'orderAplId',
+                1 => 'fasade',
+                2 => 'limit',
             ],
             'page_size' => 25,
             'page_size_param' => null,
