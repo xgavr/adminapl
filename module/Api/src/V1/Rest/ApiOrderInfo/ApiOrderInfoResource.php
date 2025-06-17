@@ -288,7 +288,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
                     ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);                        
             
             foreach ($orders as $order){                
-                $this->entityManager->getRepository(Order::class)->update(['fasade_ex' => Order::FASADE_EX_IN_JOB], ['id' => $order->id()]);
+                $this->entityManager->getRepository(Order::class)->update(['fasade_ex' => Order::FASADE_EX_IN_JOB], ['id' => $order->getId()]);
             }
             
             $orders = $this->entityManager->getRepository(Order::class)
