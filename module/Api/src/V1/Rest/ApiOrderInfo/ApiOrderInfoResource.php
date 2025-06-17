@@ -285,9 +285,17 @@ class ApiOrderInfoResource extends AbstractResourceListener
             $result = [];
             
             $orders = $this->entityManager->getRepository(Order::class)
-                    ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
+                    ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);                        
+            
+            foreach ($orders as $order){                
+                $this->entityManager->getRepository(Order::class)->update(['fasade_ex' => Order::FASADE_EX_IN_JOB], ['id' => $order->id()]);
+            }
+            
+            $orders = $this->entityManager->getRepository(Order::class)
+                    ->findForFasade(['fasade' => Order::FASADE_EX_IN_JOB, 'limit' => $limit]);                        
             
             foreach ($orders as $order){
+                
                 $data = $this->fasadeInfo($order);
 
                 $result[] = $data;
@@ -318,6 +326,33 @@ class ApiOrderInfoResource extends AbstractResourceListener
      */
     public function patchList($data)
     {
+        ini_set('memory_limit', '512M');
+        
+        if (is_object($data)){
+//            var_dump($data[0]['fasade'], $data[0]['fasade_loaded']); exit;
+            
+            $i = 0;
+            foreach ($data[0]['fasade_loaded'] as $orderId){
+                
+                $order = $this->entityManager->getRepository(Order::class)
+                        ->find($orderId);
+                
+                if ($order){
+                    if ($order->getFasadeEx() === Order::FASADE_EX_IN_JOB){
+                        $this->entityManager->getConnection()->update('orders', ['fasade_ex' => Order::FASADE_EX_FULL_LOADED], ['id' => $order->getId()]);
+                    }                        
+                }    
+                $i++;
+            } 
+            
+            if ($i){
+                return "$i - успешно обновлено!";
+            } else {
+                return new ApiProblem(204, 'Нет данных для обновления');
+            }
+            
+//            return new ApiProblem(204, 'Нет данных для обновления!');
+        }
         return new ApiProblem(405, 'The PATCH method has not been defined for collections');
     }
 

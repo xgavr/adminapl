@@ -803,6 +803,30 @@ return [
                 'allow_empty' => true,
                 'error_message' => 'Не верный id поставщика',
             ],
+            8 => [
+                'required' => false,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\I18n\Validator\IsInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'fasade',
+                'field_type' => 'integer',
+            ],
+            9 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'fasade_loaded',
+                'field_type' => 'array',
+            ],
         ],
         'Api\\V1\\Rest\\ApiClientInfo\\Validator' => [
             0 => [
@@ -1492,6 +1516,7 @@ STATUS_CANCELED  = -10; // Отменен.',
             'collection_http_methods' => [
                 0 => 'GET',
                 1 => 'POST',
+                2 => 'PATCH',
             ],
             'collection_query_whitelist' => [
                 0 => 'orderAplId',
