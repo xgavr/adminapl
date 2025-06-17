@@ -292,7 +292,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
 
                 $result[] = $data;
             }
-            return [$result];
+            return $result;
         }         
         return new ApiProblem(404, 'Заказы не найдены');        
 //        return new ApiProblem(405, 'The GET method has not been defined for collections');
