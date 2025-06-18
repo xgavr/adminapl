@@ -888,10 +888,11 @@ $this->headScript()
             var company = $("#mutualCompanySelect").val();
             var legal = $("#mutualLegalSelect").val();
             var contract = $("#mutualContractSelect").val();
+            var contact = <?= $client->getLegalContact()->getId() ?>;
             var period = $("#mutualPeriodSelect").val();
             var dateStart = $("#mutualDateStart").val();
             var dateRange = $("#rangeDateStart").val();
-            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&period='+period+'&dateStart='+dateStart;
+            var url = '/print/revise?ext=Pdf&company='+company+'&legal='+legal+'&contract='+contract+'&contact='+contact+'&period='+period+'&dateStart='+dateStart;
             window.open(url, 'windowObject');
         });
         

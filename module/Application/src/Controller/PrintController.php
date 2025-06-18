@@ -16,6 +16,7 @@ use Application\Entity\Client;
 use Stock\Entity\Vtp;
 use Company\Entity\Legal;
 use Company\Entity\Contract;
+use Application\Entity\Contact;
 
 class PrintController extends AbstractActionController
 {
@@ -349,6 +350,7 @@ class PrintController extends AbstractActionController
         $companyId = $this->params()->fromQuery('company', -1);
         $legalId = $this->params()->fromQuery('legal', -1);
         $contractId = $this->params()->fromQuery('contract', -1);
+        $contactId = $this->params()->fromQuery('contact', -1);
         $ext = $this->params()->fromQuery('ext', 'Pdf');
         $stamp = $this->params()->fromQuery('stamp');
 //        $range = $this->params()->fromQuery('dateRange');
@@ -397,9 +399,14 @@ class PrintController extends AbstractActionController
             $contract = $this->entityManager->getRepository(Contract::class)
                     ->find($contractId);
         }
+        $contact = null;
+        if ($contactId > 0){
+            $contact = $this->entityManager->getRepository(Contact::class)
+                    ->find($contactId);
+        }
         
 //        var_dump($startDate, $endDate); exit;
-        $updfile = $this->printManager->revise($startDate, min($endDate, $current), $company, $legal, $contract, $ext, $stamp);
+        $updfile = $this->printManager->revise($startDate, min($endDate, $current), $company, $legal, $contract, $ext, $stamp, $contact);
         
         // Render the view template.
         header('Content-type: application/'. strtolower($ext));

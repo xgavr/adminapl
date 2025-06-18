@@ -27,6 +27,7 @@ use Company\Entity\LegalLocation;
 use Bank\Entity\QrCode;
 use Stock\Entity\Mutual;
 use Stock\Entity\Movement;
+use Application\Entity\Contact;
 
 
 /**
@@ -1238,9 +1239,10 @@ class PrintManager {
      * @param string $writerType
      * @param bool $stamp
      * @param bool $edo
+     * @param Contact $contact
      * @return string 
      */
-    public function revise($dateStart, $dateEnd, $company, $legal, $contract = null, $writerType = 'Pdf', $stamp = false, $edo = true)
+    public function revise($dateStart, $dateEnd, $company, $legal, $contract = null, $writerType = 'Pdf', $stamp = false, $edo = true, $contact = null)
     {
         ini_set('memory_limit', '512M');
         ini_set("pcre.backtrack_limit", "5000000");
@@ -1289,6 +1291,10 @@ class PrintManager {
             $params['contractId'] = $contract->getId();
         }
         
+        if ($contact){
+            $params['contactId'] = $contact->getId();
+        }
+        
         $startTotal = 0;
 //        var_dump(strtotime($dateStart.' -1 day')); exit;
         $startBalance = $this->entityManager->getRepository(Mutual::class)
@@ -1296,6 +1302,7 @@ class PrintManager {
                     'companyId' => $company->getId(), 
                     'legalId' => $legal->getId(), 
                     'contractId' => ($contract) ? $contract->getId():null, 
+                    'contactId' => ($contact) ? $contact->getId():null, 
                     'endDate' => date('Y-m-d 23:59:59', strtotime($dateStart.' -1 day')),
                     'endBalance' => true,
                 ])->getOneOrNullResult();

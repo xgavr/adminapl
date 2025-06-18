@@ -351,6 +351,11 @@ class MutualRepository extends EntityRepository{
                         ->setParameter('legal', $params['legalId'])
                         ;
             }
+            if (!empty($params['contactId'])){
+                $queryBuilder->andWhere("$alias.mcn = :contact")
+                        ->setParameter('contact', $params['contactId'])
+                        ;
+            }
             if (!empty($params['contractId'])){
                 $queryBuilder->andWhere("$alias.contract = :contract")
                         ->setParameter('contract', $params['contractId'])
@@ -512,6 +517,14 @@ class MutualRepository extends EntityRepository{
                     $queryBuilder
                         ->andWhere('m.contract = :contract')
                         ->setParameter('contract', $params['contractId'])
+                            ;
+                }    
+            }            
+            if (!empty($params['contactId'])){
+                if (is_numeric($params['contactId'])){
+                    $queryBuilder
+                        ->andWhere('cn.contact = :contact')
+                        ->setParameter('contact', $params['contactId'])
                             ;
                 }    
             }            
