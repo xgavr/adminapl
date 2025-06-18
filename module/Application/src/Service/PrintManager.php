@@ -1358,6 +1358,10 @@ class PrintManager {
                     $sheet->setCellValue("E$row", number_format($data->getAmount(), 2, ',', ' '));
                     $dTotal += $data->getAmount();
                     break;
+                case Movement::DOC_CASH:
+                    $sheet->setCellValue("G$row", number_format(-$data->getAmount(), 2, ',', ' '));
+                    $dTotal += -$data->getAmount();
+                    break;
                 default:    
                     $sheet->setCellValue("G$row", number_format(abs($data->getAmount()), 2, ',', ' '));
                     $cTotal += abs($data->getAmount());
