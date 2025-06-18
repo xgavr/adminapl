@@ -1360,7 +1360,7 @@ class PrintManager {
                     break;
                 case Movement::DOC_CASH:
                     $sheet->setCellValue("G$row", number_format(-$data->getAmount(), 2, ',', ' '));
-                    $dTotal += -$data->getAmount();
+                    $cTotal += -$data->getAmount();
                     break;
                 default:    
                     $sheet->setCellValue("G$row", number_format(abs($data->getAmount()), 2, ',', ' '));
