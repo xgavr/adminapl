@@ -2915,9 +2915,9 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('mk.saleMonth as makeSaleMonth')
                     ->addSelect('mk.status as makeStatus')
                     ->from(Goods::class, 'g')
-                    ->join('g.cars', 'c')
-                    ->join('c.model', 'm')
-                    ->join('m.make', 'mk')
+                    ->leftJoin('g.cars', 'c')
+                    ->leftJoin('c.model', 'm')
+                    ->leftJoin('m.make', 'mk')
                     ->andWhere($queryBuilder->expr()->in('g.id', $goodIds))
                   ;
 
