@@ -213,9 +213,9 @@ class GoodAplResource extends AbstractResourceListener
                         ->find($goodId);
                 
                 if ($good){
-                    if ($good->getAvailable() === Goods::AVAILABLE_FALSE){
-                        $nextFasade = Goods::FASADE_EX_FULL_LOADED;
-                    } else {
+//                    if ($good->getAvailable() === Goods::AVAILABLE_FALSE){
+//                        $nextFasade = Goods::FASADE_EX_FULL_LOADED;
+//                    } else {
                         switch ($data[0]['fasade']){
                             case Goods::FASADE_EX_NEW: 
                                 if ($good->getOems()->count()){
@@ -226,9 +226,9 @@ class GoodAplResource extends AbstractResourceListener
                                     $nextFasade = Goods::FASADE_EX_IMG; break;
                                 }    
                             case Goods::FASADE_EX_IMG:
-//                                if ($good->getCars()->count()){
+                                if ($good->getCars()->count()){
                                     $nextFasade = Goods::FASADE_EX_CAR; break;
-//                                }    
+                                }    
                             case Goods::FASADE_EX_CAR: 
                                 $goodRelatedCount = $this->entityManager->getRepository(GoodRelated::class)
                                     ->count(['good' => $good->getId()]);
@@ -238,7 +238,7 @@ class GoodAplResource extends AbstractResourceListener
                             default:
                                 $nextFasade = Goods::FASADE_EX_FULL_LOADED;
                         }
-                    }    
+//                    }    
     //                var_dump($nextFasade, $goodId); exit;
                     $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $good->getId()]);                        
                 }    
