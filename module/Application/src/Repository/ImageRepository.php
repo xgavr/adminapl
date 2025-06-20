@@ -162,7 +162,7 @@ class ImageRepository extends EntityRepository
         if ($image == null){
             $this->getEntityManager()->getConnection()->insert('images', $data);
             $this->getEntityManager()->getRepository(Goods::class)
-                    ->updateGoodId($data['good_id'], ['status_img_ex' => Goods::IMG_EX_NEW]);
+                    ->updateGoodId($data['good_id'], ['status_img_ex' => Goods::IMG_EX_NEW, 'fasade_ex' => Goods::FASADE_EX_NEW]);
         }
        
        return;
@@ -292,6 +292,7 @@ class ImageRepository extends EntityRepository
         if (file_exists($image->getPath())){
             unlink(realpath($image->getPath()));        
         }    
+        $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $image->getGood()->getId()]);        
         $this->getEntityManager()->getConnection()->delete('images', ['id' => $image->getId()]);        
     }
     
