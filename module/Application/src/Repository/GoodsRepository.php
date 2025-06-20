@@ -2076,7 +2076,7 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('available', Goods::AVAILABLE_FALSE)
                 ;
 
-        
+        var_dump($params);
         if (is_array($params)){
             if (!empty($params['retailCount'])){
                 if ($params['retailCount'] == 2){
