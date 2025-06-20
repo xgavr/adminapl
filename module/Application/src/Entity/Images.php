@@ -301,6 +301,7 @@ class Images {
             'path' => $this->getPath(),
             'publicPath' => $this->getPublicPath(),
             'similar' => $this->getSimilar(),
+            'similarName' => $this->(),
             'status' => $this->getStatus(),
             'transferPath' => $this->getTransferPath(),
         ];
