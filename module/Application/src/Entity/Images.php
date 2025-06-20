@@ -303,6 +303,7 @@ class Images {
             'similar' => $this->getSimilar(),
             'similarName' => $this->getSimilarAsString(),
             'status' => $this->getStatus(),
+            'statusName' => $this->getStatusAsString(),
             'transferPath' => $this->getTransferPath(),
         ];
     }
