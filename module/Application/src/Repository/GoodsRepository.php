@@ -1979,7 +1979,8 @@ class GoodsRepository extends EntityRepository
             }
             if (!empty($params['withImage'])){
                 if ($params['withImage'] === 1){
-                    $queryBuilder->join('g.images', 'i');
+                    $queryBuilder->join('g.images', 'i')
+                            ->andWhere('i.path is not null');
                 } else {
                     $queryBuilder->leftJoin('g.images', 'i')
                             ->andWhere('i.path is null')
