@@ -1973,7 +1973,7 @@ class GoodsRepository extends EntityRepository
                     ;
             }
             if (!empty($params['categoryId'])){
-                $queryBuilder->andWhere('g.groupSite = :category')
+                $queryBuilder->andWhere('gs.id = :category')
                     ->setParameter('category', $params['categoryId'])    
                     ;
             }
