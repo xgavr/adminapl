@@ -41,7 +41,7 @@ $this->pageBreadcrumbs()->setItems([
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
                     <select class="form-control good-toolbar cookie-control refresh-table" name="category">
-                        <option value="-1">все категории</option>
+                        <!--<option value="-1">все категории</option>-->
                         <?php foreach ($categories as $category): ?>
                             <option value="<?= $category->getId() ?>"><?= $category->getFullName() ?></option>
                         <?php endforeach?>
