@@ -2119,14 +2119,22 @@ class GoodsRepository extends EntityRepository
                     ;
             }
             if (!empty($params['withImage'])){
-                if ($params['withImage'] === 1){
-                    $queryBuilder->join('g.images', 'i');
+                if ($params['withImage'] == 1){
+                    $queryBuilder->join('g.images', 'i')
+                            ->andWhere('i.similar = :similar')
+                            ->setParameter('similar', Images::SIMILAR_MATCH)
+                            ;
+                } else if ($params['withImage'] == 2){
+                    $queryBuilder->join('g.images', 'i')
+                            ->andWhere('i.similar = :similar')
+                            ->setParameter('similar', Images::SIMILAR_SIMILAR)
+                            ;
                 } else {
                     $queryBuilder->leftJoin('g.images', 'i')
                             ->andWhere('i.path is null')
                             ;
                 }
-            }            
+            }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);
