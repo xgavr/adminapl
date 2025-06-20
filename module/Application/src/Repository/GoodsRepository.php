@@ -1982,7 +1982,7 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder->join('g.images', 'i');
                 } else {
                     $queryBuilder->leftJoin('g.images', 'i')
-                            ->where('i.path is null')
+                            ->andWhere('i.path is null')
                             ;
                 }
             }
