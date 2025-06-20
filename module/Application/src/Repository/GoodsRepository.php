@@ -2076,7 +2076,7 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('available', Goods::AVAILABLE_FALSE)
                 ;
 
-        var_dump($params);
+//        var_dump($params);
         if (is_array($params)){
             if (!empty($params['retailCount'])){
                 if ($params['retailCount'] == 2){
@@ -2115,7 +2115,7 @@ class GoodsRepository extends EntityRepository
                     $queryBuilder->join('g.images', 'i');
                 } else {
                     $queryBuilder->leftJoin('g.images', 'i')
-                            ->where('i.path is null')
+                            ->andWhere('i.path is null')
                             ;
                 }
             }            
@@ -2181,7 +2181,7 @@ class GoodsRepository extends EntityRepository
             }                                    
         }
         
-//        var_dump($queryBuilder->getQuery()->getParameters()); exit;
+//        var_dump($queryBuilder->getQuery()->getSql()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();            
     }    
     
