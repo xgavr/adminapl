@@ -51,7 +51,7 @@ class IndexController extends AbstractActionController
     {
         $categories = $this->entityManager->getRepository(GroupSite::class)
                 ->queryAllGroupSite([
-                    'hasChild' => '0', 
+                    'hasChild' => GroupSite::HAS_NO_CHILD, 
                     'sort' => 'code',
                     'order' => 'asc',
                 ]);
