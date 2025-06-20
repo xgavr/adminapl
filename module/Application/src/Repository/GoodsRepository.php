@@ -1927,13 +1927,18 @@ class GoodsRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         
-        $queryBuilder->select('g.id, g.aplId, g.code, g.name, g.retailCount')
+        $queryBuilder->select('g.id, g.aplId, g.code, g.name, g.retailCount, g.saleMonth')
                 ->addSelect('g.checkOem, g.checkDescription, g.checkImage, g.checkCar, g.fasadeEx')
                 ->addSelect('p.name as producerName')
                 ->addSelect('tg.name as tokenGroupName')
+                ->addSelect('gs.code as categoryCode')
+                ->addSelect('gs.name as categoryName')
+                ->addSelect('gs.fullName as categoryFullName')
+                ->distinct()
                 ->from(Goods::class, 'g')
-                ->leftJoin('g.producer', 'p')    
-                ->leftJoin('g.tokenGroup', 'tg')
+                ->join('g.producer', 'p')    
+                ->join('g.tokenGroup', 'tg')
+                ->join('g.categories', 'gs')
                 ->andWhere('g.available != :available')
                 ->setParameter('available', Goods::AVAILABLE_FALSE)
                 ;
@@ -1966,6 +1971,20 @@ class GoodsRepository extends EntityRepository
                 $queryBuilder->andWhere('g.checkCar = :checkCar')
                     ->setParameter('checkCar', $params['checkCar'])    
                     ;
+            }
+            if (!empty($params['categoryId'])){
+                $queryBuilder->andWhere('g.groupSite = :category')
+                    ->setParameter('category', $params['categoryId'])    
+                    ;
+            }
+            if (!empty($params['withImage'])){
+                if ($params['withImage'] === 1){
+                    $queryBuilder->join('g.images', 'i');
+                } else {
+                    $queryBuilder->leftJoin('g.images', 'i')
+                            ->where('i.path is null')
+                            ;
+                }
             }
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
@@ -2049,7 +2068,9 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->select('count(g.id) as totalCount')
                 ->from(Goods::class, 'g')
-                //->join('g.producer', 'p')   
+                ->join('g.producer', 'p')    
+                ->join('g.tokenGroup', 'tg')
+                ->join('g.categories', 'gs')
                 ->setMaxResults(1)
                 ->andWhere('g.available != :available')
                 ->setParameter('available', Goods::AVAILABLE_FALSE)
@@ -2084,6 +2105,20 @@ class GoodsRepository extends EntityRepository
                     ->setParameter('checkCar', $params['checkCar'])    
                     ;
             }
+            if (!empty($params['categoryId'])){
+                $queryBuilder->andWhere('g.groupSite = :category')
+                    ->setParameter('category', $params['categoryId'])    
+                    ;
+            }
+            if (!empty($params['withImage'])){
+                if ($params['withImage'] === 1){
+                    $queryBuilder->join('g.images', 'i');
+                } else {
+                    $queryBuilder->leftJoin('g.images', 'i')
+                            ->where('i.path is null')
+                            ;
+                }
+            }            
             if (isset($params['q'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['q']);

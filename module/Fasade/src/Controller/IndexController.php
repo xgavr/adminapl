@@ -11,6 +11,7 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 use Application\Entity\Goods;
+use Fasade\Entity\GroupSite;
 
 
 
@@ -48,9 +49,10 @@ class IndexController extends AbstractActionController
 
     public function catalogAction()
     {
-
+        $categories = $this->entityManager->getRepository(GroupSite::class)
+                ->findBy(['level' => 0], ['code' => 'asc']);
         return new ViewModel([
-
+            'categories' => $categories,
         ]);
     }
 
@@ -68,6 +70,8 @@ class IndexController extends AbstractActionController
         $accurate = $this->params()->fromQuery('accurate');
         $retailCount = $this->params()->fromQuery('retailCount');
         $checks = $this->params()->fromQuery('checks');
+        $categotyId = $this->params()->fromQuery('category');
+        $withImage = $this->params()->fromQuery('withImage');
         
         $params = [
             'q' => $q, 
@@ -77,6 +81,8 @@ class IndexController extends AbstractActionController
             'groupId' => $group,
             'accurate' => $accurate,            
             'retailCount' => $retailCount,            
+            'withImage' => $withImage,            
+            'categoryId' => ($categotyId > 0) ? $categotyId:null,            
         ];
         
         if (!empty($checks)){

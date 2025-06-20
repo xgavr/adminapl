@@ -40,7 +40,18 @@ $this->pageBreadcrumbs()->setItems([
                     <button id="ok" type="submit" class="btn btn-default" title="Поиск">
                         <span class="glyphicon glyphicon-search"></span>
                     </button>
-                    <select class="form-control good-toolbar cookie-control refresh-table" name="retailCount">
+                    <select class="form-control good-toolbar cookie-control refresh-table" name="category">
+                        <option value="-1">все категории</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= $category->getId() ?>"><?= $category->getFullName() ?></option>
+                        <?php endforeach?>
+                    </select>                    
+                   <select class="form-control good-toolbar cookie-control refresh-table" name="withImage">
+                        <option value="0">все с картинками и без</option>
+                        <option value="2">без картинок</option>
+                        <option value="1">с картинками</option>
+                    </select>                    
+<!--                    <select class="form-control good-toolbar cookie-control refresh-table" name="retailCount">
                         <option value="0">все товары</option>
                         <option value="1">с продажами</option>
                         <option value="2">без продаж</option>
@@ -50,7 +61,7 @@ $this->pageBreadcrumbs()->setItems([
                         <?php foreach(Goods::getCheckList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
                         <?php endforeach;?>
-                    </select>                    
+                    </select>                    -->
                 </div>
             </div>
         </div>
@@ -78,9 +89,9 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="producerName" data-formatter="producerFormatter"data-width="100">Производитель</th>             
                      <th data-field="code" data-formatter="linkFormatter" data-sortable="true" data-width="100">Артикул</th>
                      <th data-field="name" data-formatter="nameFormatter">Наименование</th>             
-                     <th data-field="available" data-width="50" data-formatter="activeFormatter">Проверки</th>             
-                     <th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>             
-                     <th data-field="retailCount" data-width="50" data-sortable="true" data-align="right">Продаж</th>             
+                     <th data-field="categoryFullName" >Категория</th>             
+                     <!--<th data-field="available" data-width="50" data-align="right" data-formatter="availableFormatter">Доступно</th>-->             
+                     <th data-field="saleMonth" data-width="50" data-sortable="true" data-align="right">Продаж</th>             
                  </tr>                
             </thead>
         </table>
