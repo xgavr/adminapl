@@ -43,7 +43,7 @@ $this->pageBreadcrumbs()->setItems([
                     <select class="form-control good-toolbar cookie-control refresh-table" name="category">
                         <!--<option value="-1">все категории</option>-->
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category->getId() ?>"><?= $category->getFullName() ?></option>
+                            <option value="<?= $category['id'] ?>"><?= $category['fullName'] ?></option>
                         <?php endforeach?>
                     </select>                    
                    <select class="form-control good-toolbar cookie-control refresh-table" name="withImage">

@@ -50,9 +50,9 @@ class IndexController extends AbstractActionController
     public function catalogAction()
     {
         $categories = $this->entityManager->getRepository(GroupSite::class)
-                ->findBy(['hasChild' => 0], ['code' => 'asc']);
+                ->queryAllGroupSite(['hasChild' => 0]);
         return new ViewModel([
-            'categories' => $categories,
+            'categories' => $categories->getResult(),
         ]);
     }
 
