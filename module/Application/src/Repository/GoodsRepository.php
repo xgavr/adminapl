@@ -2068,7 +2068,7 @@ class GoodsRepository extends EntityRepository
         
         $queryBuilder->select('count(g.id) as totalCount')
                 ->from(Goods::class, 'g')
-                ->join('g.producer', 'p')    
+//                ->join('g.producer', 'p')    
                 ->join('g.tokenGroup', 'tg')
                 ->join('g.categories', 'gs')
                 ->setMaxResults(1)
