@@ -1224,6 +1224,11 @@ class GoodsManager
             ];
         }
         
+        $images = [];
+        foreach ($good->getImages() as $image){
+            $images[] = $image->toArray();
+        }
+        
         $result = [
             'goodId' => $good->getId(),
             'goodAplId' => $good->getAplId(),
@@ -1240,6 +1245,7 @@ class GoodsManager
             'inStore' => $inStore,
             'description' => '',
             'info' => '',
+            'images' => $images,
         ];
         
         return $result;
