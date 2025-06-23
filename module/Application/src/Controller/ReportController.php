@@ -232,7 +232,7 @@ class ReportController extends AbstractActionController
         $result = $query->getResult();
         
         return new JsonModel([
-            'total' => $totalResult['countId'],
+            'total' => count($result),
             'income' => $totalResult['income'],
             'quantity' => $totalResult['quantity'],
             'rows' => $result,
