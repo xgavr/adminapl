@@ -1013,16 +1013,17 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('ifnull(tg.name, \'Без категории\') as tgName, ifnull(tg.lemms, \'Без категории\') as tgLemms, '
+        $queryBuilder->select('ifnull(gs.fullName, \'Без категории\') as tgName, ifnull(gs.code, \'Без категории\') as tgLemms, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
                 ->join('m.good', 'g')
                 ->leftJoin('g.tokenGroup', 'tg')
+                ->leftJoin('tg.groupSite', 'gs')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
-                ->groupBy('g.tokenGroup')
+                ->groupBy('tg.groupSite')
                 ;
         
         if (!empty($params['office'])){
