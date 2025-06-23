@@ -187,7 +187,13 @@
                         <th colspan="3">Группа наименований</th>
                     </tr>
                     <tr>
-                        <td colspan="3"><a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId() ?>" target="_blank"><?= $goods->getTokenGroup()->getName() ?? 'Нет наименования' ?></a></td>
+                        <td colspan="3">
+                            <?php if ($goods->getTokenGroup()):?>
+                                <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId() ?>" target="_blank"><?= $goods->getTokenGroup()->getName() ?? 'Нет наименования' ?></a>
+                            <?php else:?>
+                                <i>Нет группы наименования</i>
+                            <?php endif?>  
+                        </td>        
                     </tr>
                     <tr>
                         <th colspan="3">Наименование</th>
