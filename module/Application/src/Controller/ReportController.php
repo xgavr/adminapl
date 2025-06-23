@@ -221,6 +221,7 @@ class ReportController extends AbstractActionController
                     ->revenueByGoodsCount($params);            
         
         $totalResult = $countQuery->getOneOrNullResult();
+        $fullResult = $query->getResult();
         
         if ($offset) {
             $query->setFirstResult($offset);
@@ -232,7 +233,7 @@ class ReportController extends AbstractActionController
         $result = $query->getResult();
         
         return new JsonModel([
-            'total' => count($result),
+            'total' => count($fullResult),
             'income' => $totalResult['income'],
             'quantity' => $totalResult['quantity'],
             'rows' => $result,
