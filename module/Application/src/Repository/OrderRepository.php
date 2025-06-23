@@ -1064,11 +1064,12 @@ class OrderRepository extends EntityRepository{
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_ORDER));
         $orX->add($queryBuilder->expr()->eq('m.docType', Movement::DOC_VT));
         
-        $queryBuilder->select('count(distinct(ifnull(g.tokenGroup, 0))) as tgCount, '
+        $queryBuilder->select('count(distinct(ifnull(tg.groupSite, 0))) as tgCount, '
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
                 ->join('m.good', 'g')
+                ->leftJoin('g.tokenGroup', 'tg')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
                 ->andWhere($orX)
