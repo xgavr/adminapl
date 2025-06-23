@@ -665,13 +665,6 @@ class BillManager
         $pathinfo = pathinfo($filename);
 //        var_dump($pathinfo);
 //        $stripContent = strip_tags($content);
-        if ($supplier){
-            if($supplier->getId() == 65) { //микадо злбчее
-    //            // contains HTML
-                $content = file_get_contents($filepath);
-                return $this->_html2array($content);
-            }       
-        }    
         if (!empty($pathinfo['extension'])){
             
             switch (strtolower($pathinfo['extension'])){
@@ -683,6 +676,13 @@ class BillManager
                     $result = $this->_csv2array($filepath); 
                     break;
                 default:
+                    if ($supplier){
+                        if($supplier->getId() == 65) { //микадо злбчее
+                //            // contains HTML
+                            $content = file_get_contents($filepath);
+                            return $this->_html2array($content);
+                        }       
+                    }    
                     $result = $this->_xls2array($filepath);
             }      
         }

@@ -975,6 +975,7 @@ class GoodsManager
                         'status_description' => Goods::DESCRIPTION_FOR_UPDATE,
                         'status_group' => Goods::GROUP_FOR_UPDATE,
                         'status_oem' => Goods::OEM_FOR_UPDATE,
+                        'fasade_ex' => Goods::FASADE_EX_NEW,
                             ]);
         } else {
             $this->entityManager->getRepository(Goods::class)
