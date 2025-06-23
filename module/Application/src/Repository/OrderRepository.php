@@ -936,6 +936,12 @@ class OrderRepository extends EntityRepository{
                         ->setParameter('office', $params['office']);
             }    
         }
+        if (!empty($params['withoutCategory'])){
+            if (is_numeric($params['withoutCategory'])){
+                $queryBuilder->leftJoin('g.categories', 'cat')
+                        ->andWhere('cat.id is null');
+            }    
+        }
         if (!empty($params['startDate'])){
             $queryBuilder
                 ->andWhere('m.dateOper >= :startDate')    
@@ -982,6 +988,14 @@ class OrderRepository extends EntityRepository{
             if (is_numeric($params['office'])){
                 $queryBuilder->andWhere('m.office = :office')
                         ->setParameter('office', $params['office']);
+            }    
+        }
+        if (!empty($params['withoutCategory'])){
+            if (is_numeric($params['withoutCategory'])){
+                $queryBuilder
+                        ->join('m.good', 'g')
+                        ->leftJoin('g.categories', 'cat')
+                        ->andWhere('cat.id is null');
             }    
         }
         if (!empty($params['startDate'])){

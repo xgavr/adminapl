@@ -102,6 +102,12 @@
                     </select>
                     <input name="dateStart" style="width: 200px" class="form-control dateStart" type="month" value="<?= date('Y-m')?>">
                 </div>                
+                <div class="form-group">
+                    <select class="form-control withoutCategorySelect" name="withoutCategory">
+                        <option value="all">Все товары</option>                        
+                        <option value="1">Без категорий</option>                                            
+                    </select>
+                </div>                
             </div>
         </div>
         <table id="table3" 
@@ -402,6 +408,10 @@
         $(document).on('change', '.dateStart', function (e) {
             $('.dateStart').val($(this).val());
             refreshTable();
+        });
+
+        $(document).on('change', '.withoutCategorySelect', function (e) {
+            $table3.bootstrapTable('refresh');
         });
 
         $(document).on('change', '.newClient', function (e) {

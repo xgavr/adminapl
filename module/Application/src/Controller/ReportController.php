@@ -192,6 +192,7 @@ class ReportController extends AbstractActionController
         $period = $this->params()->fromQuery('period');
         $sort = $this->params()->fromQuery('sort');
         $order = $this->params()->fromQuery('order', 'DESC');
+        $withoutCategory = $this->params()->fromQuery('withoutCategory');
         
         $startDate = '2012-01-01';
         $endDate = '2199-01-01';
@@ -212,6 +213,7 @@ class ReportController extends AbstractActionController
 
         $params = ['office' => $office, 'period' => $period, 
             'startDate' => $startDate, 'endDate' => $endDate,
+            'withoutCategory' => $withoutCategory,
             'sort' => $sort, 'order' => $order];
         
         $query = $this->entityManager->getRepository(Order::class)
