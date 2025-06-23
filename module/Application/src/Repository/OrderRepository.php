@@ -972,12 +972,9 @@ class OrderRepository extends EntityRepository{
                 . 'sum(-m.amount + m.baseAmount) as income, '
                 . 'sum(-m.quantity) as quantity')
                 ->from(Movement::class, 'm')
-                ->join('m.good', 'g')
                 ->where('m.status = :status')
                 ->setParameter('status', Movement::STATUS_ACTIVE)    
-                ->andWhere($orX)
-                ->groupBy('g.id')
-                ->having('income != 0')                
+                ->andWhere($orX)               
                 ->setMaxResults(1)
                 ;
         
