@@ -540,7 +540,7 @@ class CarController extends AbstractActionController
         }
         
         $good = $this->entityManager->getRepository(Goods::class)
-                ->find($good);
+                ->find($goodId);
         
         if ($good == null) {
             $this->getResponse()->setStatusCode(404);
