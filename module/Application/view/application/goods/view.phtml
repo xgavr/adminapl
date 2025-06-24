@@ -539,6 +539,15 @@
                 </table>
             </div>
             <div class="tab-pane fade" role="tabpanel" id="linked" aria-labelledby="linked-tab">
+                <div id="linkedToolbar">
+                    <div class="form-inline" role="form">
+                        <button class="btn btn-default" 
+                                type="button" title="Обновить машины по номеру" id="updateCarByOem"
+                                url="/car/update-good-car-by-oem/<?= $goods->getId()?>">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>                
+                    </div>
+                </div>            
                 <table id="linkedTable" 
                     data-toggle="table" 
                     data-url="/goods/car-content/<?= $goods->getId()?>"
@@ -722,6 +731,15 @@
             if (url){
                 $.get( url, function(data){
                     $balanceTable.bootstrapTable('refresh');
+                });        
+            }    
+        })
+                
+        $('#updateCarByOem').click(function (){
+            var url = $(this).attr('url');
+            if (url){
+                $.get( url, function(data){
+                    $linkedTable.bootstrapTable('refresh');
                 });        
             }    
         })

@@ -14,6 +14,8 @@ use Application\Entity\CarFillVolume;
 use Application\Entity\Car;
 use Application\Entity\Model;
 use Application\Validator\IsEN;
+use Application\Entity\Goods;
+use Application\Entity\Oem;
 
 /**
  * Description of CarService
@@ -373,6 +375,38 @@ class CarManager
         
         $this->entityManager->persist($car);
         $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Обновить машина товара по товару с тем же номером
+     * @param Goods $good
+     */
+    public function updateCarsByOem($good)
+    {
+        if ($good->getCars()->count()){
+            return; //уже есть машины
+        }
+        
+        $oems = $this->entityManager->getRepository(Oem::class)
+                ->findOemForUpdateCar($good);
+        
+        foreach ($oems as $oem){
+            $goodsWithCars = $this->entityManager->getRepository(Oem::class)
+                    ->findGoodsWithCarsByOem($oem->getOe());
+            foreach ($goodsWithCars as $goodsWithCar){
+                foreach ($goodsWithCar->getCars() as $car){
+                    $this->entityManager->getRepository(Goods::class)
+                            ->addGoodCar($good, $car);
+                }
+                
+                $this->entityManager->getRepository(Goods::class)
+                    ->updateGoodId($good->getId(), [
+                        'fasade_ex' => Goods::FASADE_EX_NEW,
+                            ]);                             
+                }
+        }
         
         return;
     }

@@ -13,6 +13,7 @@ use Laminas\View\Model\JsonModel;
 use Application\Entity\Make;
 use Application\Entity\Model;
 use Application\Entity\Car;
+use Application\Entity\Goods;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -526,5 +527,30 @@ class CarController extends AbstractActionController
         unlink($file);
         // Return Response to avoid default view rendering
         return $this->getResponse(); 
-    }          
+    }     
+    
+    public function updateGoodCarByOemAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($good);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->carManager->updateCarsByOem($good);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);         
+    }
 }

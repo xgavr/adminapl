@@ -868,4 +868,55 @@ class OemRepository  extends EntityRepository{
         
         return;
     }
+    
+    /**
+     * Найти номера по которым можно обновлять машины
+     * @param Goods $good
+     * @return array
+     */
+    public function findOemForUpdateCar($good)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MAN));
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD));
+        
+        $queryBuilder->select('o.oe')
+                ->from(Oem::class, 'o')
+                ->andWhere('o.status = :status')
+                ->setParameter('status', Oem::STATUS_ACTIVE)
+                ->andWhere('o.good = :goodId')
+                ->setParameter('goodId', $good->getId())
+                ->andWhere($orX)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
+    
+    
+    /**
+     * Найти товары с машинами по номеру
+     * @param string $oe
+     * @return array
+     */
+    public function findGoodsWithCarsByOem($oe)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('g')
+                ->from(Goods::class, 'g')
+                ->distinct()
+                ->join('g.cars', 'c')
+                ->join('g.oems', 'o')
+                ->andWhere('o.status = :status')
+                ->setParameter('status', Oem::STATUS_ACTIVE)
+                ->andWhere('o.oe = :oe')
+                ->setParameter('oe', $oe)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
