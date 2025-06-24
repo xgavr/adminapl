@@ -404,10 +404,10 @@ class CarManager
                 $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), [
                         'fasade_ex' => Goods::FASADE_EX_NEW,
-                            ]);                             
-                }
+                            ]);                                             
                 
                 return;
+            }    
         }
         
         
