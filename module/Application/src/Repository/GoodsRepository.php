@@ -2818,7 +2818,7 @@ class GoodsRepository extends EntityRepository
                 ->setParameter('fasadeEx', $fasade)
                 ->andWhere('tg.name != \'\'') //не равно пусто
                 ->andWhere('g.aplId > 0')
-                ->orderBy('g.retailCount', 'desc')
+//                ->orderBy('g.retailCount', 'desc')
                 ;
         if (!empty($params['limit'])){
             if (is_numeric($params['limit'])){
