@@ -546,6 +546,11 @@
                                 url="/car/update-good-car-by-oem/<?= $goods->getId()?>">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                         </button>                
+                        <button class="btn btn-default" 
+                                type="button" title="Удалить все машины" id="removeCars"
+                                url="/car/delete-good-cars/<?= $goods->getId()?>">
+                            <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                        </button>                
                     </div>
                 </div>            
                 <table id="linkedTable" 
@@ -741,6 +746,17 @@
                 $.get( url, function(data){
                     $linkedTable.bootstrapTable('refresh');
                 });        
+            }    
+        })
+                
+        $('#removeCars').click(function (){
+            if (confirm('Удалить все машины товара?')){
+                var url = $(this).attr('url');
+                if (url){
+                    $.get( url, function(data){
+                        $linkedTable.bootstrapTable('refresh');
+                    });        
+                }    
             }    
         })
                 

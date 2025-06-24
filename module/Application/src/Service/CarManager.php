@@ -406,7 +406,10 @@ class CarManager
                         'fasade_ex' => Goods::FASADE_EX_NEW,
                             ]);                             
                 }
+                
+                return;
         }
+        
         
         return;
     }
