@@ -1878,18 +1878,25 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
-     * Обновление машин из текдока
+     * Обновление машин из текдока, обновление машин по номеру ое
      * @return JsonModel
      */
     public function tdUpdateCarsAction()
     {
-        $settings = $this->adminManager->getTdExchangeSettings();
-
-        if ($settings['update_car'] == 1){
-
-            $this->goodsManager->updateCars();            
-        }    
+//        $settings = $this->adminManager->getTdExchangeSettings();
+//
+//        if ($settings['update_car'] == 1){
+//
+////            $this->goodsManager->updateCars();            
+//                        
+//        }    
                 
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        if ($settings['car'] == 1){            
+            $this->carManager->checkGoodCarsByOem();            
+        } 
+        
         return new JsonModel(
             ['ok']
         );
