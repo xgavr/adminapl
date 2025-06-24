@@ -917,8 +917,8 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('status', Oem::STATUS_ACTIVE)
                 ->andWhere('o.oe = :oe')
                 ->setParameter('oe', $oe)
-                ->join('g.categories', 'c')
-                ->andWhere($queryBuilder->expr()->in('c.id', $good->getCategoryIdsAsArray()))
+                ->join('g.categories', 'cat')
+                ->andWhere($queryBuilder->expr()->in('cat.id', $good->getCategoryIdsAsArray()))
                 ;
         
         return $queryBuilder->getQuery()->getResult();
