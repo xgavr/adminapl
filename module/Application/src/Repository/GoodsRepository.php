@@ -1055,7 +1055,7 @@ class GoodsRepository extends EntityRepository
             ->from(Goods::class, 'g')
             ->distinct()    
             ->leftJoin('g.cars', 'c')
-            ->andWhere('c.good is null')    
+            ->andWhere('c.id is null')    
             ->andWhere('g.checkCar = ?1')
             ->setParameter('1', Goods::CHECK_CAR_NO)
             ->andWhere('g.available = ?2')
