@@ -394,7 +394,7 @@ class CarManager
         
         foreach ($oems as $oem){
             $goodsWithCars = $this->entityManager->getRepository(Oem::class)
-                    ->findGoodsWithCarsByOem($oem->getOe());
+                    ->findGoodsWithCarsByOem($oem['oe']);
             foreach ($goodsWithCars as $goodsWithCar){
                 foreach ($goodsWithCar->getCars() as $car){
                     $this->entityManager->getRepository(Goods::class)
