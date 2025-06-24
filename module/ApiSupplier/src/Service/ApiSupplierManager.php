@@ -10,6 +10,7 @@ namespace ApiSupplier\Service;
 
 use Application\Entity\Supplier;
 use Application\Entity\RequestSetting;
+use Application\Entity\SupplierApiSetting;
 
 /**
  * Description of ApiSupplierManager
@@ -43,7 +44,8 @@ class ApiSupplierManager {
      */
     public function reglament()
     {
-        $this->mikadoManager->deliveriesToPtu();
+        $this->mikadoManager->deliveriesToPtu(SupplierApiSetting::NAME_API_MIKADO);
+        $this->mikadoManager->deliveriesToPtu(SupplierApiSetting::NAME_API_MIKADO_CL);
         
         return;
     }

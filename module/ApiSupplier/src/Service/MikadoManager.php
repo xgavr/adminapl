@@ -225,10 +225,11 @@ class MikadoManager {
      *
      * @param Supplier $supplier 
      * @param array $data
+     * @param integer $pay
      * 
      * @return Ptu 
      */
-    public function deliveryToPtu($supplier, $data)
+    public function deliveryToPtu($supplier, $data, $pay = Contract::PAY_CASH)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
@@ -252,7 +253,7 @@ class MikadoManager {
                 ->findDefaultSupplierLegal($supplier, $docDate);
         
         $contract = $this->entityManager->getRepository(Office::class)
-                ->findDefaultContract($office, $legal, $docDate, Contract::PAY_CASH);
+                ->findDefaultContract($office, $legal, $docDate, $pay);
             
         $dataPtu['office'] = $office;
         $dataPtu['legal'] = $legal;
@@ -295,8 +296,9 @@ class MikadoManager {
      * Проверка накладной
      * @param SupplierApiSetting $supplierApi
      * @param array $cDelivery
+     * @param integer $pay
      */
-    private function cDelivery($supplierApi, $cDelivery)
+    private function cDelivery($supplierApi, $cDelivery, $pay = Contract::PAY_CASH)
     {
         if ($cDelivery['SumRUR'] > 0){
             $ptu = $this->entityManager->getRepository(Ptu::class)
@@ -314,7 +316,7 @@ class MikadoManager {
             $ptuXml = new \SimpleXMLElement($this->deliveryInfo($supplierApi, $cDelivery['DelNumber']));
             if (is_object($ptuXml)){
 
-                $this->deliveryToPtu($supplierApi->getSupplier(), json_decode(json_encode($ptuXml), TRUE));
+                $this->deliveryToPtu($supplierApi->getSupplier(), json_decode(json_encode($ptuXml), TRUE), $pay);
                 
             }    
             
@@ -324,12 +326,17 @@ class MikadoManager {
     }
     
     /**
-     * 
+     * @param integer $api
      */
-    public function deliveriesToPtu()
+    public function deliveriesToPtu($api = SupplierApiSetting::NAME_API_MIKADO)
     {
         $supplierApi = $this->entityManager->getRepository(SupplierApiSetting::class)
-                ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'name' => SupplierApiSetting::NAME_API_MIKADO]);
+                ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'name' => $api]);
+        
+        $pay = Contract::PAY_CASH;
+        if ($api === SupplierApiSetting::NAME_API_MIKADO_CL){
+            $pay = Contract::PAY_CASHLESS;
+        }
 
         $xml = new \SimpleXMLElement($this->deliveries($supplierApi));
         
@@ -339,10 +346,10 @@ class MikadoManager {
 //            var_dump($data); exit;
             foreach ($data['Deliveries'] as $cDelivery){                
                 if (isset($cDelivery['SumRUR'])){
-                    $this->cDelivery($supplierApi, $cDelivery);
+                    $this->cDelivery($supplierApi, $cDelivery, $pay);
                 } else {
                     foreach ($cDelivery as $delivery){
-                        $this->cDelivery($supplierApi, $delivery);
+                        $this->cDelivery($supplierApi, $delivery, $pay);
                     }    
                 }    
             }

@@ -24,7 +24,8 @@ class SupplierApiSetting {
     const STATUS_RETIRED      = 2; // Retired.
     
     const NAME_UNKNOWN              = 1;
-    const NAME_API_MIKADO        = 2; 
+    const NAME_API_MIKADO           = 2; 
+    const NAME_API_MIKADO_CL        = 3; 
     
     /**
      * @ORM\Id
@@ -103,7 +104,8 @@ class SupplierApiSetting {
     {
         return [
             self::NAME_UNKNOWN => 'Неизвестно',
-            self::NAME_API_MIKADO => 'API Mikado'
+            self::NAME_API_MIKADO => 'API Mikado',
+            self::NAME_API_MIKADO_CL => 'API Mikado Безнал'
         ];
     }    
     

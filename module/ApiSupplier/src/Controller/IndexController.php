@@ -68,7 +68,7 @@ class IndexController extends AbstractActionController
         $content = 'Привет мир!';
         
         if ($api == SupplierApiSetting::NAME_API_MIKADO){
-            $content = $this->mikadoManager->deliveriesToPtu();
+            $content = $this->mikadoManager->deliveriesToPtu(SupplierApiSetting::NAME_API_MIKADO);
         }    
         
         $this->layout()->setTemplate('layout/terminal');
