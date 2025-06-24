@@ -396,7 +396,7 @@ class CarManager
             $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), [
                     'check_car' => Goods::CHECK_CAR_NO_OE,
-                        ]);                                             
+                ]);                                             
             return;            
         }
         
@@ -413,10 +413,16 @@ class CarManager
                     ->updateGoodId($good->getId(), [
                         'fasade_ex' => Goods::FASADE_EX_NEW,
                         'check_car' => Goods::CHECK_CAR_OE,
-                            ]);                                                             
+                    ]);                                                             
                 return;
             }    
-        }                
+        }           
+        
+        $this->entityManager->getRepository(Goods::class)
+            ->updateGoodId($good->getId(), [
+                'check_car' => Goods::CHECK_CAR_NO_OE_CAR,
+            ]);                                                             
+        
         return;
     }
     
