@@ -579,4 +579,15 @@ class CarController extends AbstractActionController
             'result' => 'ok-reload',
         ]);         
     }
+    
+    public function checkGoodsCarByOemAction()
+    {
+       
+        $this->carManager->checkGoodCarsByOem();
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);                  
+    }
+    
 }

@@ -1042,6 +1042,32 @@ class GoodsRepository extends EntityRepository
     }
     
     /**
+     * Найти товары для обновления машин по номеру
+     * 
+     * @return object
+     */
+    public function findGoodsForCheckCarByOem()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->distinct()    
+            ->leftJoin('g.cars', 'c')
+            ->andWhere('c.good is null')    
+            ->andWhere('g.checkCar = ?1')
+            ->setParameter('1', Goods::CHECK_CAR_NO)
+            ->andWhere('g.available = ?2')
+            ->setParameter('2', Goods::AVAILABLE_TRUE)    
+            ->setMaxResults(10000) 
+                
+                ;
+        //var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        return $queryBuilder->getQuery();            
+    }
+    
+    /**
      * Найти машины товара
      * 
      * @param Goods $good

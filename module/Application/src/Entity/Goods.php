@@ -95,6 +95,8 @@ class Goods {
     
     const CHECK_CAR_OK = 1; //машина проверена
     const CHECK_CAR_NO = 2;
+    const CHECK_CAR_OE = 3; //заполнена по номеру
+    const CHECK_CAR_NO_OE = 4; //нет номеров
     
     const GROUP_TOKEN_UPDATE_FLAG = 2; // месяц обновления наименования товара
     

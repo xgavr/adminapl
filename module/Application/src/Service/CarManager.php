@@ -392,6 +392,14 @@ class CarManager
         $oems = $this->entityManager->getRepository(Oem::class)
                 ->findOemForUpdateCar($good);
         
+        if (empty($oems)){
+            $this->entityManager->getRepository(Goods::class)
+                ->updateGoodId($good->getId(), [
+                    'check_car' => Goods::CHECK_CAR_NO_OE,
+                        ]);                                             
+            return;            
+        }
+        
         foreach ($oems as $oem){
             $goodsWithCars = $this->entityManager->getRepository(Oem::class)
                     ->findGoodsWithCarsByOem($oem['oe']);
@@ -404,12 +412,39 @@ class CarManager
                 $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), [
                         'fasade_ex' => Goods::FASADE_EX_NEW,
-                            ]);                                             
-                
+                        'check_car' => Goods::CHECK_CAR_OE,
+                            ]);                                                             
                 return;
             }    
-        }
+        }                
+        return;
+    }
+    
+    /**
+     * Заполнение машин где нет
+     */
+    public function checkGoodCarsByOem()
+    {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(900);
+        $startTime = time();
+        $finishTime = $startTime + 840;
         
+        $goodsForUpdateQuery = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsForCheckCarByOem();
+        $iterable = $goodsForUpdateQuery->iterate();
+        $i = 0;
+                
+        foreach ($iterable as $row){
+            foreach ($row as $good){
+                $this->updateCarsByOem($good);
+                $this->entityManager->detach($good);
+            }    
+            $i++;
+            if (time() >= $finishTime){
+                return;
+            }
+        }
         
         return;
     }
