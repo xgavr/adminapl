@@ -908,6 +908,10 @@ class OemRepository  extends EntityRepository{
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MAN));
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD));        
+        
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
                 ->distinct()
@@ -918,6 +922,7 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('g.checkCar != :checkCar')
                 ->setParameter('checkCar', Goods::CHECK_CAR_OE)
                 ->andWhere('o.oe = :oe')
+                ->andWhere($orX)
                 ->setParameter('oe', $oe)
                 ->join('g.categories', 'cat')
                 ->andWhere($queryBuilder->expr()->in('cat.id', $good->getCategoryIdsAsArray()))
