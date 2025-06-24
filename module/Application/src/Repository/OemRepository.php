@@ -890,6 +890,7 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('o.good = :goodId')
                 ->setParameter('goodId', $good->getId())
                 ->andWhere($orX)
+                ->orderBy('o.rating', 'desc')
                 ;
         
         return $queryBuilder->getQuery()->getResult();

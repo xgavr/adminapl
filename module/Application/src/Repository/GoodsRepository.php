@@ -1673,6 +1673,7 @@ class GoodsRepository extends EntityRepository
                 ->addSelect('c.name as companyName')
                 ->addSelect('fb.foldName')
                 ->addSelect('fb.foldCode')
+                ->addSelect('g.checkCar')
                 ;
         
         $queryBuilder->from(GoodBalance::class, 'gb')
