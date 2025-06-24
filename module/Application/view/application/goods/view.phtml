@@ -548,6 +548,7 @@
                         </button>                
                         <button class="btn btn-default" 
                                 type="button" title="Удалить все машины" id="removeCars"
+                                <?= ($goods->getCheckCar() === Goods::CHECK_CAR_OE) ? '':'disabled' ?>
                                 url="/car/delete-good-cars/<?= $goods->getId()?>">
                             <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
                         </button>                
