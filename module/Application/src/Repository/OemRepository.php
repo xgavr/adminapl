@@ -915,6 +915,8 @@ class OemRepository  extends EntityRepository{
                 ->join('g.oems', 'o')
                 ->andWhere('o.status = :status')
                 ->setParameter('status', Oem::STATUS_ACTIVE)
+                ->andWhere('o.checkCar = :checkCar')
+                ->setParameter('checkCar', Goods::CHECK_CAR_OK)
                 ->andWhere('o.oe = :oe')
                 ->setParameter('oe', $oe)
                 ->join('g.categories', 'cat')
