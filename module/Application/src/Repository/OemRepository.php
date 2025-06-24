@@ -924,8 +924,8 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('o.oe = :oe')
                 ->andWhere($orX)
                 ->setParameter('oe', $oe)
-                ->join('g.categories', 'cat')
-                ->andWhere($queryBuilder->expr()->in('cat.id', $good->getCategoryIdsAsArray()))
+//                ->join('g.categories', 'cat')
+//                ->andWhere($queryBuilder->expr()->in('cat.id', $good->getCategoryIdsAsArray()))
                 ;
         
         return $queryBuilder->getQuery()->getResult();
