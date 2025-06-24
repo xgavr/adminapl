@@ -899,10 +899,11 @@ class OemRepository  extends EntityRepository{
     
     /**
      * Найти товары с машинами по номеру
+     * @param Goods $good
      * @param string $oe
      * @return array
      */
-    public function findGoodsWithCarsByOem($oe)
+    public function findGoodsWithCarsByOem($good, $oe)
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
@@ -916,6 +917,8 @@ class OemRepository  extends EntityRepository{
                 ->setParameter('status', Oem::STATUS_ACTIVE)
                 ->andWhere('o.oe = :oe')
                 ->setParameter('oe', $oe)
+                ->join('g.categories', 'c')
+                ->andWhere($queryBuilder->expr()->in('c.id', $good->getCategoryIdsAsArray()))
                 ;
         
         return $queryBuilder->getQuery()->getResult();
