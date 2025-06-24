@@ -386,14 +386,14 @@ class CarManager
     public function updateCarsByOem($good)
     {
         
-        if ($good->getCheckCar() === Goods::CHECK_CAR_OE){
-            $this->entityManager->getRepository(Goods::class)
-                ->removeGoodCars($good);
-        } else {        
+//        if ($good->getCheckCar() === Goods::CHECK_CAR_OE){
+//            $this->entityManager->getRepository(Goods::class)
+//                ->removeGoodCars($good);
+//        } else {        
             if ($good->getCars()->count()){
                 return; //уже есть машины
             }
-        }    
+//        }    
         
         $oems = $this->entityManager->getRepository(Oem::class)
                 ->findOemForUpdateCar($good);
@@ -419,7 +419,7 @@ class CarManager
                 $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($good->getId(), [
                         'fasade_ex' => Goods::FASADE_EX_NEW,
-                        'check_car' => Goods::CHECK_CAR_NO,
+                        'check_car' => Goods::CHECK_CAR_OE,
                     ]);                                                             
                 return;
             }    
