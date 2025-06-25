@@ -13,8 +13,8 @@ $form->get('company')->setAttributes([
 
 $form->get('comissSearch')->setAttributes([
     'class'=>'form-control', 
-    'data-provide' => "typeahead",
-    'autocomplete' => 'off',
+//    'data-provide' => "typeahead",
+//    'autocomplete' => 'off',
     'placeholder' => 'Телефон'
     ]);
 
@@ -249,6 +249,15 @@ if ($ot){
         }
     }
     
+    function contactName(){
+        if ($('#comissSearch').val()){
+            $.getJSON( '/till/phone-contact?phone='+$('#comissSearch').val(), function( data ) {
+                $('#comissName').html(data.name);
+
+            });            
+        }       
+    }
+    
     $( document ).ready(function() {
         
         hideComissGroup();
@@ -278,19 +287,19 @@ if ($ot){
             }            
         }); 
         
-        $('#comissSearch').typeahead({
-            source: function(query, process) {
-                return $.post("/contact/live-search",{search: query, limit: 8} ,function (data) {
-                    return process(data.rows);
-                });
-            },
-            changeInputOnSelect: false,
-            afterSelect: function(data) {
-                $('#comiss').val(data.id);
-                $('#comissSearch').val(data.phone);
-                $('#comissName').html(data.contactName);
-            }
-        });
+//        $('#comissSearch').typeahead({
+//            source: function(query, process) {
+//                return $.post("/contact/live-search",{search: query, limit: 8} ,function (data) {
+//                    return process(data.rows);
+//                });
+//            },
+//            changeInputOnSelect: false,
+//            afterSelect: function(data) {
+//                $('#comiss').val(data.id);
+//                $('#comissSearch').val(data.phone);
+//                $('#comissName').html(data.contactName);
+//            }
+//        });
         
         var forms = $('#ot-form');
         
@@ -312,6 +321,10 @@ if ($ot){
         
         $('#status').on('change', function(){
             hideComissGroup();
+        });
+
+        $('#comissSearch').on('change', function(){
+            contactName();
         });
 
     });    
