@@ -194,7 +194,7 @@ class Car {
     //убрать скобки
     public function getNameShort() 
     {
-        return trim(preg_replace('/\s*\([^)]*\)\s*/', '', $this->name));
+        return trim(preg_replace('/\(.*?\)/', '', $this->name));
     }
 
     public function getTransferName() 
