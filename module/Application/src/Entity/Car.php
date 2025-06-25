@@ -191,6 +191,12 @@ class Car {
         return $this->name;
     }
 
+    //убрать скобки
+    public function getNameShort() 
+    {
+        return trim(preg_replace('/\s*\([^)]*\)\s*/', '', $this->name));
+    }
+
     public function getTransferName() 
     {
         $filter = new \Admin\Filter\TransferName();

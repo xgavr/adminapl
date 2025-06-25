@@ -256,7 +256,11 @@ class MakeManager
             $year_to = empty($details['yearOfConstrTo']) ? 9999:(int) substr($details['yearOfConstrTo'], 0, 4);
         }    
         
-        $newName =  $car->getModel()->getMake()->getName(). ' ' . $car->getModel()->getFullName() . ' ' . $car->getName();
+        $newName =  $car->getModel()->getMake()->getName(). ' ' . $car->getModel()->getFullName() . ' ' . $car->getNameShort();
+        if (!empty($details['powerHpFrom'])){
+            $newName .= ' '. $details['powerHpFrom'];
+            $details['nameHP'] = $car->getNameShort().' '. $details['powerHpFrom'];
+        }
         if (!empty($year_from)){
             $newName .= ' c '. $year_from;
         }
