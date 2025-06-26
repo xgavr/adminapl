@@ -234,14 +234,26 @@ class GoodsManager
         if ($articleCount){
             return false;
         }
+        if ($good->getCars()->count()){
+            return false;
+        }
+        
         if ($good->getImageCount()){
             return false;
         }
+        
+        $oemsCount = $this->entityManager->getRepository(Oem::class)
+                ->count(['good' => $good->getId(), 'source' => Oem::SOURCE_TD]);
+        if ($oemsCount){
+            return false;
+        }
+        
         $movementsCount = $this->entityManager->getRepository(Movement::class)
                 ->count(['good' => $good->getId()]);
         if ($movementsCount){
             return false;
         }
+        
         $bidCount = $this->entityManager->getRepository(Bid::class)
                 ->count(['good' => $good->getId()]);
         if ($bidCount){
