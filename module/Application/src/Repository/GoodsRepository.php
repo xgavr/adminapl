@@ -2948,7 +2948,7 @@ class GoodsRepository extends EntityRepository
      */
     public function carsForFasade($params = null)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
       
         $entityManager = $this->getEntityManager();
 
