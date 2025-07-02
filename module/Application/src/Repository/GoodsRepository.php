@@ -2948,7 +2948,7 @@ class GoodsRepository extends EntityRepository
      */
     public function carsForFasade($params = null)
     {
-        ini_set('memory_limit', '4096M');
+        ini_set('memory_limit', '1024M');
       
         $entityManager = $this->getEntityManager();
 
@@ -2957,8 +2957,13 @@ class GoodsRepository extends EntityRepository
         $goods = $this->findForFasade($params);
         
         $goodIds = [];
+        $carCount = 0;
         foreach ($goods as $good){
+            $carCount += $good->getCars()->count();
             $goodIds[] = $good->getId();
+            if ($carCount > 10000){
+                break;
+            }
         }
 
         if (count($goodIds)){
