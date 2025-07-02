@@ -103,9 +103,7 @@ class GoodAplResource extends AbstractResourceListener
                 'reserve' => $rest['reserve'],
                 'delivery' => $rest['delivery'],
                 'vozvrat' => $rest['vozvrat'],
-                'available' => $rest['available'],                    
-                'foldCode' => $rest['foldCode'],                    
-                'foldName' => $rest['foldName'],                    
+                'available' => $rest['available'],                                       
             ];
         }                        
         
