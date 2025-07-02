@@ -2032,6 +2032,11 @@ class GoodsRepository extends EntityRepository
 //                var_dump($q); exit;
                 if ($q){
                 
+                    $queryBuilder->resetDQLPart('where');
+                    $queryBuilder->andWhere('g.available != :available')
+                            ->setParameter('available', Goods::AVAILABLE_FALSE)
+                            ;
+                    
                     switch ($searchOpt){
                         case Goods::SEARCH_APLID:
                             $queryBuilder
@@ -2172,6 +2177,11 @@ class GoodsRepository extends EntityRepository
                 }
 //                var_dump($q); exit;
                 if ($q){
+                    
+                    $queryBuilder->resetDQLPart('where');
+                    $queryBuilder->andWhere('g.available != :available')
+                            ->setParameter('available', Goods::AVAILABLE_FALSE)
+                            ;
                     
                     switch ($searchOpt){
                         case Goods::SEARCH_APLID:
