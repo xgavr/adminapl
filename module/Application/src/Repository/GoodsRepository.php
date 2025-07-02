@@ -2961,7 +2961,7 @@ class GoodsRepository extends EntityRepository
         foreach ($goods as $good){
             $carCount += $good->getCars()->count();
             $goodIds[] = $good->getId();
-            if ($carCount > 40000){
+            if ($carCount > 80000){
                 break;
             }
         }
