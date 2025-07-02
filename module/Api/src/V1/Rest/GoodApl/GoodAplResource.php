@@ -80,6 +80,38 @@ class GoodAplResource extends AbstractResourceListener
         return new ApiProblem(404, 'Товар с кодом '.$id.' не найден');        
     }
     
+    private function inStore($good)
+    {
+        $params = [
+            'q' => $good->getId(), 
+            'office' => 1, //перово
+            'accurate' => Goods::SEARCH_ID,            
+        ];
+        
+        $query = $this->entityManager->getRepository(Goods::class)
+                        ->presence($params);
+        
+        $rests = $query->getResult();
+        $result = [];
+        foreach ($rests as $rest){
+//            var_dump($rest); exit;
+            $result[] = [
+                'office' => $rest['officeName'].' ('.$rest['companyName'].')',
+                'officeId' => $rest['officeId'],
+                'officeAplId' => $rest['officeAplId'],
+                'rest' => $rest['rest'],
+                'reserve' => $rest['reserve'],
+                'delivery' => $rest['delivery'],
+                'vozvrat' => $rest['vozvrat'],
+                'available' => $rest['available'],                    
+                'foldCode' => $rest['foldCode'],                    
+                'foldName' => $rest['foldName'],                    
+            ];
+        }                        
+        
+        return $result;
+    }
+    
     /**
      * Fetch all or a subset of resources
      *
@@ -139,10 +171,12 @@ class GoodAplResource extends AbstractResourceListener
                     $goods = $this->entityManager->getRepository(Goods::class)
                             ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);
                     foreach ($goods as $good){
+                                                
                         $data = $good->toArray();
                         $data['categories'] = $good->getCategoryIdsAsArray();
                         $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
                         $data['attributes'] = $good->getAttributeValuesAsArray();
+                        $data['in_store'] = $this->inStore($good);
                         
                         $result['products'][$good->getId()] = $data;
                         $result['categories'] = array_replace($result['categories'], $good->getCategoriesAsFlatArray());
