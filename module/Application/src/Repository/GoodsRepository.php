@@ -2033,6 +2033,7 @@ class GoodsRepository extends EntityRepository
                 if ($q){
                 
                     $queryBuilder->resetDQLPart('where');
+                    $queryBuilder->getParameters()->clear();
                     $queryBuilder->andWhere('g.available != :available')
                             ->setParameter('available', Goods::AVAILABLE_FALSE)
                             ;
@@ -2179,6 +2180,7 @@ class GoodsRepository extends EntityRepository
                 if ($q){
                     
                     $queryBuilder->resetDQLPart('where');
+                    $queryBuilder->getParameters()->clear();
                     $queryBuilder->andWhere('g.available != :available')
                             ->setParameter('available', Goods::AVAILABLE_FALSE)
                             ;
