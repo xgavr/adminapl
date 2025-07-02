@@ -38,10 +38,9 @@ class ApiQrcodeResource extends AbstractResourceListener
                 ]);
                 
                 if ($qrCode){
-//                    $clickFilter = new ClickFilter();
+                    $clickFilter = new ClickFilter();
                     $result = $qrCode->toMsg();
-//                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
-                    $result['payloadShort'] = $result['payload'];
+                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
                     return $result;
                 }
             }
