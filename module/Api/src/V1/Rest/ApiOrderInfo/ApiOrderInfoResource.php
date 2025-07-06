@@ -313,14 +313,14 @@ class ApiOrderInfoResource extends AbstractResourceListener
             $result = [];
             
             $vts = $this->entityManager->getRepository(Vt::class)
-                    ->findBy(['fasadeEx' => $fasade, null, $limit]);                        
+                    ->findBy(['fasadeEx' => $fasade], null, $limit);                        
             
             foreach ($vts as $vt){                
                 $this->entityManager->getConnection()->update('vt', ['fasade_ex' => Vt::FASADE_EX_IN_JOB], ['id' => $vt->getId()]);
             }
             
             $vts = $this->entityManager->getRepository(Vt::class)
-                    ->findBy(['fasadeEx' => Vt::FASADE_EX_IN_JOB, null, $limit]);                        
+                    ->findBy(['fasadeEx' => Vt::FASADE_EX_IN_JOB], null, $limit);                        
             
             foreach ($vts as $vt){
                 
