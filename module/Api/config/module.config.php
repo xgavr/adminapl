@@ -827,6 +827,13 @@ return [
                 'name' => 'fasade_loaded',
                 'field_type' => 'array',
             ],
+            10 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'refunds_loaded',
+                'field_type' => 'integer',
+            ],
         ],
         'Api\\V1\\Rest\\ApiClientInfo\\Validator' => [
             0 => [
@@ -1522,6 +1529,7 @@ STATUS_CANCELED  = -10; // Отменен.',
                 0 => 'orderAplId',
                 1 => 'fasade',
                 2 => 'limit',
+                3 => 'refunds',
             ],
             'page_size' => 25,
             'page_size_param' => null,

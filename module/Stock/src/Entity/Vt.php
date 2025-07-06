@@ -47,6 +47,10 @@ class Vt {
     const STATUS_ACCOUNT_NO  = 2;// не обновлено
     const STATUS_TAKE_NO  = 3;// не проведено
     
+    const FASADE_EX_NEW            = 1; // не передано
+    const FASADE_EX_IN_JOB         = 2; // передается
+    const FASADE_EX_FULL_LOADED    = 9; // все передано.    
+    
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -88,6 +92,11 @@ class Vt {
      * @ORM\Column(name="status_ex")  
      */
     protected $statusEx;
+
+    /** 
+     * @ORM\Column(name="fasade_ex")  
+     */
+    protected $fasadeEx;
 
     /** 
      * @ORM\Column(name="status_account")  
@@ -458,6 +467,14 @@ class Vt {
     public function getDateCreated() 
     {
         return $this->dateCreated;
+    }
+    
+    public function getFasadeEx() {
+        return $this->fasadeEx;
+    }
+
+    public function setFasadeEx($fasadeEx) {
+        $this->fasadeEx = $fasadeEx;
     }
     
     /**

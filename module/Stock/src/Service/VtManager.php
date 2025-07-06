@@ -519,6 +519,7 @@ class VtManager
             $vt->setStatusEx($data['status_ex']);
             $vt->setStatus($data['status']);
             $vt->setStatusAccount(Vt::STATUS_ACCOUNT_NO);
+            $vt->setFasadeEx(Vt::FASADE_EX_NEW);
 
             $this->entityManager->persist($vt);
             $this->entityManager->flush($vt);
@@ -608,6 +609,7 @@ class VtManager
             $vt->setStatus($status);
             $vt->setStatusEx(Vt::STATUS_EX_NEW);
             $vt->setStatusAccount(Vt::STATUS_ACCOUNT_NO);
+            $vt->setFasadeEx(Vt::FASADE_EX_NEW);
             
             $this->entityManager->persist($vt);
             $this->entityManager->flush();

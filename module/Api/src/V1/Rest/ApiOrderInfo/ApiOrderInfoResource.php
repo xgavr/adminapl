@@ -8,6 +8,8 @@ use Application\Entity\Bid;
 use Application\Entity\Supplier;
 use Application\Entity\Goods;
 use Application\Entity\SupplierOrder;
+use Stock\Entity\Vt;
+use Stock\Entity\VtGood;
 
 class ApiOrderInfoResource extends AbstractResourceListener
 {
@@ -301,6 +303,32 @@ class ApiOrderInfoResource extends AbstractResourceListener
                 $result[] = $data;
             }
             return $result;
+        }    
+        
+        if (!empty($params['refunds'])){
+            
+            $limit = $params['limit'] ?? 1000;
+            $fasade = $params['fasade'] ?? Vt::FASADE_EX_NEW;
+
+            $result = [];
+            
+            $vts = $this->entityManager->getRepository(Vt::class)
+                    ->findBy(['fasadeEx' => $fasade, 'limit' => $limit]);                        
+            
+            foreach ($vts as $vt){                
+                $this->entityManager->getConnection()->update('vt', ['fasade_ex' => Vt::FASADE_EX_IN_JOB], ['id' => $vt->getId()]);
+            }
+            
+            $vts = $this->entityManager->getRepository(Vt::class)
+                    ->findBy(['fasadeEx' => Vt::FASADE_EX_IN_JOB, 'limit' => $limit]);                        
+            
+            foreach ($vts as $vt){
+                
+                $data = $vt->toArray();
+
+                $result[] = $data;
+            }
+            return $result;
         }         
         return new ApiProblem(404, 'Заказы не найдены');        
 //        return new ApiProblem(405, 'The GET method has not been defined for collections');
@@ -332,18 +360,35 @@ class ApiOrderInfoResource extends AbstractResourceListener
 //            var_dump($data[0]['fasade'], $data[0]['fasade_loaded']); exit;
             
             $i = 0;
-            foreach ($data[0]['fasade_loaded'] as $orderId){
-                
-                $order = $this->entityManager->getRepository(Order::class)
-                        ->find($orderId);
-                
-                if ($order){
-                    if ($order->getFasadeEx() === Order::FASADE_EX_IN_JOB){
-                        $this->entityManager->getConnection()->update('orders', ['fasade_ex' => Order::FASADE_EX_FULL_LOADED], ['id' => $order->getId()]);
-                    }                        
-                }    
-                $i++;
-            } 
+            if (!empty($data[0]['fasade_loaded'])){
+                foreach ($data[0]['fasade_loaded'] as $orderId){
+
+                    $order = $this->entityManager->getRepository(Order::class)
+                            ->find($orderId);
+
+                    if ($order){
+                        if ($order->getFasadeEx() === Order::FASADE_EX_IN_JOB){
+                            $this->entityManager->getConnection()->update('orders', ['fasade_ex' => Order::FASADE_EX_FULL_LOADED], ['id' => $order->getId()]);
+                        }                        
+                    }    
+                    $i++;
+                } 
+            }    
+            
+            if (!empty($data[0]['refunds_loaded'])){
+                foreach ($data[0]['refunds_loaded'] as $vtId){
+
+                    $vt = $this->entityManager->getRepository(Vt::class)
+                            ->find($vtId);
+
+                    if ($vt){
+                        if ($vt->getFasadeEx() === Vt::FASADE_EX_IN_JOB){
+                            $this->entityManager->getConnection()->update('vt', ['fasade_ex' => Vt::FASADE_EX_FULL_LOADED], ['id' => $vt->getId()]);
+                        }                        
+                    }    
+                    $i++;
+                } 
+            }    
             
             if ($i){
                 return "$i - успешно обновлено!";
