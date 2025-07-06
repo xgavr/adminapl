@@ -320,7 +320,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
             }
             
             $vts = $this->entityManager->getRepository(Vt::class)
-                    ->findBy(['fasadeEx' => Vt::FASADE_EX_IN_JOB, 'limit' => $limit]);                        
+                    ->findBy(['fasadeEx' => Vt::FASADE_EX_IN_JOB, null, $limit]);                        
             
             foreach ($vts as $vt){
                 
