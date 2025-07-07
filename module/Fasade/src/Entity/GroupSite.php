@@ -110,7 +110,7 @@ class GroupSite
     /**
      * @ORM\Column(name="total_score")  
      */
-    protected $ratingScope = 0; 
+    protected $totalScope = 0; 
     
     /**
      * @ORM\Column(name="status")  
@@ -269,6 +269,30 @@ class GroupSite
         $this->saleMonth = $saleMonth;
     }
 
+    public function getRating() {
+        return $this->rating;
+    }
+
+    public function setRating($rating) {
+        $this->rating = $rating;
+    }
+
+    public function getRatingCount() {
+        return $this->ratingCount;
+    }
+
+    public function setRatingCount($ratingCount) {
+        $this->ratingCount = $ratingCount;
+    }
+
+    public function getTotalScope() {
+        return $this->totalScope;
+    }
+
+    public function setTotalScope($totalScope) {
+        $this->totalScope = $totalScope;
+    }
+    
     public function getStatus() {
         return $this->status;
     }
@@ -440,6 +464,9 @@ class GroupSite
             'status' => $this->getStatus(),
             'hasChild' => $this->getHasChild(),
             'groupSiteId' => (!empty($this->getSiteGroup())) ? $this->getSiteGroup()->getId():null,
+            'rating' => $this->getRating(),
+            'ratingCount' => $this->getRatingCount(),
+            'totalScope' => $this->getTotalScope(),
 //            'groupSiteAsArray' => $this->getSiteGroupAsArray(),
         ];
         

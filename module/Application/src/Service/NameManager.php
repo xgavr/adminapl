@@ -1527,6 +1527,9 @@ class NameManager
         foreach ($siteGroups as $groupSite){
             $this->entityManager->getRepository(GroupSite::class)
                     ->updateGroupSiteGoodCount($groupSite);
+            
+            $this->entityManager->getRepository(GroupSite::class)
+                    ->updateRating($groupSite->getId());
         }
         
         return;

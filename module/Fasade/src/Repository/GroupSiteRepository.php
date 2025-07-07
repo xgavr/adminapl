@@ -181,7 +181,7 @@ class GroupSiteRepository extends EntityRepository{
         $entityManager->getConnection()->update('group_site', [
             'rating_count' => $ratingCount,
             'total_score' => $totalScope,
-            'rating' => ($ratingCount > 0) ? $totalScope/$ratingCount:0, 
+            'rating' => ($ratingCount > 10) ? $totalScope/$ratingCount:0, 
         ], ['id' => $categoryId]);
         
         return;        
