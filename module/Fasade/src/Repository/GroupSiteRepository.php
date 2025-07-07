@@ -12,6 +12,8 @@ use Doctrine\ORM\EntityRepository;
 use Fasade\Entity\GroupSite;
 use Application\Entity\TokenGroup;
 use Application\Entity\Goods;
+use Application\Entity\Bid;
+use Application\Entity\Order;
 
 /**
  * Description of GroupSiteRepository
@@ -132,6 +134,66 @@ class GroupSiteRepository extends EntityRepository{
         
         foreach ($categories as $category){
             $this->updateGroupSiteGoodCount($category);
+        }
+        
+        return;
+    }
+    
+
+    /**
+     * Подсчет рейтинга категории
+     * @param integer $categoryId
+     * @return null
+     */
+    public function updateRating($categoryId)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $qb = $entityManager->createQueryBuilder();
+        
+        $qb->select('count(distinct o.id) as rating_count, o.status')
+            ->from(Bid::class, 'b')
+            ->join('b.good', 'g')
+            ->join('g.categories', 'c')
+            ->join('b.order', 'o')                 
+            ->where('c.id = :category')
+            ->setParameter('category', $categoryId) 
+            ->groupBy('o.status')    
+            ;    
+                
+//        var_dump($qb->getQuery()->getSQL()); exit;
+        
+        $ratingCount = $totalScope = 0;
+        
+        $data = $qb->getQuery()->getResult();
+        foreach ($data as $row){
+            $ratingCount += $row['rating_count'];
+            switch ($row['status']){
+                case Order::STATUS_SHIPPED: 
+                    $totalScope += $row['rating_count'] * 5;
+                    break;
+                default: 
+                    $totalScope += $row['rating_count'] * 3;
+            }
+             
+        }
+        
+        $entityManager->getConnection()->update('group_site', [
+            'rating_count' => $ratingCount,
+            'total_score' => $totalScope,
+            'rating' => ($ratingCount > 0) ? $totalScope/$ratingCount:0, 
+        ], ['id' => $categoryId]);
+        
+        return;        
+    }   
+    
+    public function updateRatings()
+    {
+        $categories = $this->getEntityManager()->getRepository(GroupSite::class)
+                ->findBy(['hasChild' => GroupSite::HAS_NO_CHILD]);
+        
+        foreach ($categories as $category){
+            $this->updateRating($category->getId());
         }
         
         return;

@@ -98,6 +98,21 @@ class GroupSite
     protected $saleMonth = 0; 
     
     /**
+     * @ORM\Column(name="rating")  
+     */
+    protected $rating = 0; 
+    
+    /**
+     * @ORM\Column(name="rating_count")  
+     */
+    protected $ratingCount = 0; 
+    
+    /**
+     * @ORM\Column(name="total_score")  
+     */
+    protected $ratingScope = 0; 
+    
+    /**
      * @ORM\Column(name="status")  
      */
     protected $status;        

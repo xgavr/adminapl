@@ -213,4 +213,14 @@ class GroupSiteController extends AbstractActionController
         );                   
     }
     
+    public function updateRatingAction()
+    {
+        $this->entityManager->getRepository(GroupSite::class)
+                ->updateRatings();
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );                   
+    }
+    
 }

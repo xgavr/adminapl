@@ -15,6 +15,9 @@ use Application\Entity\GoodToken;
 use Application\Entity\Token;
 use Application\Entity\Goods;
 use Application\Entity\ArticleToken;
+use Stock\Entity\Movement;
+use Application\Entity\Bid;
+
 
 /**
  * Description of FasadeRepository
@@ -193,5 +196,6 @@ class FasadeRepository extends EntityRepository
         
         var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
-    }        
+    }    
+
 }
