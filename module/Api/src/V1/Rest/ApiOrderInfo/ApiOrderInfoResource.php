@@ -304,7 +304,7 @@ class ApiOrderInfoResource extends AbstractResourceListener
                 $result[] = $data;
                 
                 $bidCount += $order->getBids()->count();
-                if ($bidCount > 10000){
+                if ($bidCount > 5000){
                     break;
                 }
             }
