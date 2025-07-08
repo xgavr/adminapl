@@ -289,18 +289,24 @@ class ApiOrderInfoResource extends AbstractResourceListener
             $orders = $this->entityManager->getRepository(Order::class)
                     ->findForFasade(['fasade' => $fasade, 'limit' => $limit]);                        
             
-            foreach ($orders as $order){                
+            foreach ($orders as $order){ 
                 $this->entityManager->getConnection()->update('orders', ['fasade_ex' => Order::FASADE_EX_IN_JOB], ['id' => $order->getId()]);
             }
             
             $orders = $this->entityManager->getRepository(Order::class)
                     ->findForFasade(['fasade' => Order::FASADE_EX_IN_JOB, 'limit' => $limit]);                        
             
+            $bidCount = 0;
             foreach ($orders as $order){
                 
                 $data = $this->fasadeInfo($order);
 
                 $result[] = $data;
+                
+                $bidCount += $order->getBids()->count();
+                if ($bidCount > 10000){
+                    break;
+                }
             }
             return $result;
         }    
