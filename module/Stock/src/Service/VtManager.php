@@ -494,6 +494,7 @@ class VtManager
             $vt->setAmount(0);
             $vt->setDateCreated(date('Y-m-d H:i:s'));
             $vt->setStatusAccount(Vt::STATUS_ACCOUNT_NO);
+            $vt->setFasadeEx(Vt::FASADE_EX_NEW);
 
             $this->entityManager->persist($vt);        
             $this->entityManager->flush();
