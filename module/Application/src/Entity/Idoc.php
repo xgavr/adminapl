@@ -216,19 +216,23 @@ class Idoc {
             return $data;
         }
         
-        $matrix = new Matrix($data);
-        $transpose = $matrix->transpose()->toArray();
-//        return $transpose;
-        
-        $result = [];
-        foreach ($transpose as $row){
-            $filterRow = array_filter($row);
-            if (count($filterRow)){
-                $result[] = $row;
+        try {
+            $matrix = new Matrix($data);
+            $transpose = $matrix->transpose()->toArray();
+    //        return $transpose;
+
+            $result = [];
+            foreach ($transpose as $row){
+                $filterRow = array_filter($row);
+                if (count($filterRow)){
+                    $result[] = $row;
+                }
             }
-        }
-        $matrix2 = new Matrix($result);        
-        return $matrix2->transpose()->toArray();
+            $matrix2 = new Matrix($result);        
+            return $matrix2->transpose()->toArray();
+        } catch(\Throwable $e){
+            return $data;
+        }    
     }
 
     /**
