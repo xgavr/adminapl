@@ -253,22 +253,33 @@ class PrintManager {
         for ($row = $srcRowStart; $row <= $srcRowEnd; $row++) {
             $colCount = 0;
             for ($col = $srcColumnStart; $col <= $srcColumnEnd; $col++) {
-                $cell = $sheet->getCellByColumnAndRow($col, $row);
-                $style = $sheet->getStyleByColumnAndRow($col, $row);
-                $dstCell = Coordinate::stringFromColumnIndex($destColumnStart + $colCount) . (string)($destRowStart + $rowCount);
-                $destSheet->setCellValue($dstCell, $cell->getValue());
-                $destSheet->duplicateStyle($style, $dstCell);
+                // Получаем адрес ячейки в формате A1
+                $srcCellAddress = Coordinate::stringFromColumnIndex($col) . $row;
 
-                // Set width of column, but only once per column
+                // Получаем ячейку и стиль
+                $cell = $sheet->getCell($srcCellAddress);
+                $style = $sheet->getStyle($srcCellAddress);
+
+                // Вычисляем адрес целевой ячейки
+                $dstCol = Coordinate::stringFromColumnIndex($destColumnStart + $colCount);
+                $dstCellAddress = $dstCol . ($destRowStart + $rowCount);
+
+                // Копируем значение и стиль
+                $destSheet->setCellValue($dstCellAddress, $cell->getValue());
+                $destSheet->duplicateStyle($style, $dstCellAddress);
+
+                // Устанавливаем ширину колонки (только один раз для каждой колонки)
                 if ($rowCount === 0) {
-                    $w = $sheet->getColumnDimensionByColumn($col)->getWidth();
-                    $destSheet->getColumnDimensionByColumn ($destColumnStart + $colCount)->setAutoSize(false);
-                    $destSheet->getColumnDimensionByColumn ($destColumnStart + $colCount)->setWidth($w);
+                    $w = $sheet->getColumnDimension($srcCellAddress[0])->getWidth();
+                    $destSheet->getColumnDimension($dstCol)
+                        ->setAutoSize(false)
+                        ->setWidth($w);
                 }
 
                 $colCount++;
             }
 
+            // Копируем высоту строки
             $h = $sheet->getRowDimension($row)->getRowHeight();
             $destSheet->getRowDimension($destRowStart + $rowCount)->setRowHeight($h);
 
