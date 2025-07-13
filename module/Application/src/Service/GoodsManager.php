@@ -972,7 +972,8 @@ class GoodsManager
             }    
             unset($prices);
         }    
-
+        var_dump($oldMeanPrice, $meanPrice, $oldPrice, $price);
+        
         if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
             $upd = [
                 'min_price' => $minPrice, 
