@@ -10,6 +10,7 @@ use Stock\Entity\Retail;
 use Stock\Entity\Register;
 use Stock\Entity\ComissBalance;
 use Laminas\Json\Encoder;
+use Application\Entity\Goods;
 
 /**
  * This service is responsible for adding/editing ptu.

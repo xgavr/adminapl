@@ -15,6 +15,7 @@ use Stock\Entity\PtuCost;
 use Company\Entity\Cost;
 use Stock\Entity\Retail;
 use Company\Entity\Contract;
+use Application\Entity\Goods;
 
 /**
  * This service is responsible for adding/editing ptu.
