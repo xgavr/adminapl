@@ -130,7 +130,7 @@ class GroupSiteRepository extends EntityRepository{
         
         $entityManager = $this->getEntityManager();
         $categories = $entityManager->getRepository(GroupSite::class)
-                ->findAll();
+                ->findBy([], ['level' => 'desc']);
         
         foreach ($categories as $category){
             $this->updateGroupSiteGoodCount($category);

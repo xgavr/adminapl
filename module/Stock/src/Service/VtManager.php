@@ -555,6 +555,8 @@ class VtManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('vt_good', $vtGood);
+        
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $vtGood['good_id']]);
         return;
     }
     
@@ -569,6 +571,7 @@ class VtManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('vt_good', $data, ['id' => $vtGood->getId()]);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $vtGood->getGood()->getId()]);
         return;
     }
     

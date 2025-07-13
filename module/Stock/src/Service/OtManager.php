@@ -293,6 +293,7 @@ class OtManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('ot_good', $otGood);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $otGood['good_id']]);
         return;
     }
     
@@ -307,6 +308,8 @@ class OtManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('ot_good', $data, ['id' => $otGood->getId()]);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $otGood->getGood()->getId()]);
+
         return;
     }
     

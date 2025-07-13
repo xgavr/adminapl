@@ -498,6 +498,8 @@ class VtpManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('vtp_good', $data, ['id' => $vtpGood->getId()]);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $vtpGood->getGood()->getId()]);
+        
         $this->updateVtpAmount($vtpGood->getVtp());
         return;
     }

@@ -770,6 +770,8 @@ class OrderManager
         
         $this->entityManager->getConnection()
                 ->insert('bid', $upd);        
+        
+        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $upd['good_id']]);
         return;
     }
     
@@ -785,6 +787,7 @@ class OrderManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('bid', $data, ['id' => $bid->getId()]);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $bid->getGood()->getId()]);
         $this->updateOrderTotal($bid->getOrder());
         return;
     }

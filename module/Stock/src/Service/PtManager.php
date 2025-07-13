@@ -472,6 +472,8 @@ class PtManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('pt_good', $ptGood);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $ptGood['good_id']]);
+
         return;
     }
     
@@ -486,6 +488,8 @@ class PtManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('pt_good', $data, ['id' => $ptGood->getId()]);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $ptGood->getGood()->getId()]);
+        
         return;
     }
     

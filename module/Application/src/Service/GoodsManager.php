@@ -974,21 +974,32 @@ class GoodsManager
         }    
 
         if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
+            $upd = [
+                'min_price' => $minPrice, 
+                'mean_price' => $meanPrice,
+                'fix_price' => $fixPrice,
+                'status_price_ex' => Goods::PRICE_EX_NEW,
+                'date_price' => date('Y-m-d H:i:s'),
+                'status_image' => Goods::IMAGE_FOR_UPDATE,
+                'status_car' => Goods::CAR_FOR_UPDATE,
+                'status_description' => Goods::DESCRIPTION_FOR_UPDATE,
+                'status_group' => Goods::GROUP_FOR_UPDATE,
+                'status_oem' => Goods::OEM_FOR_UPDATE,               
+            ];
+            
+            // Вычисляем разницу в процентах
+            if ($oldPrice != 0) {  // Чтобы избежать деления на ноль
+                $percentageDifference = round((($oldPrice - $price) / $oldPrice) * 100, 2);
+
+                // Проверяем, превышает ли разница 5%
+                if (abs($percentageDifference) > 5) {            
+                    $upd['price'] = $price;
+                    $upd['fasade_ex'] = Goods::FASADE_EX_NEW;
+                }
+            }
+            
             $this->entityManager->getRepository(Goods::class)
-                    ->updateGoodId($goodData['goodId'], [
-                        'min_price' => $minPrice, 
-                        'mean_price' => $meanPrice,
-                        'fix_price' => $fixPrice,
-                        'price' => $price,
-                        'status_price_ex' => Goods::PRICE_EX_NEW,
-                        'date_price' => date('Y-m-d H:i:s'),
-                        'status_image' => Goods::IMAGE_FOR_UPDATE,
-                        'status_car' => Goods::CAR_FOR_UPDATE,
-                        'status_description' => Goods::DESCRIPTION_FOR_UPDATE,
-                        'status_group' => Goods::GROUP_FOR_UPDATE,
-                        'status_oem' => Goods::OEM_FOR_UPDATE,
-                        'fasade_ex' => Goods::FASADE_EX_NEW,
-                            ]);
+                    ->updateGoodId($goodData['goodId'], $upd);
         } else {
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($goodData['goodId'], [

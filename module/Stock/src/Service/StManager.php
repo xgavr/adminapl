@@ -406,6 +406,8 @@ class StManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->insert('st_good', $stGood);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $stGood['good_id']]);
+        
         return;
     }
     
@@ -420,6 +422,8 @@ class StManager
         
         $connection = $this->entityManager->getConnection(); 
         $connection->update('st_good', $data, ['id' => $stGood->getId()]);
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $stGood->getGood()->getId()]);
+        
         return;
     }
     
