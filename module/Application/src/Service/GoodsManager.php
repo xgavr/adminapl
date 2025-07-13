@@ -1002,7 +1002,7 @@ class GoodsManager
                 $upd['fasade_ex'] = Goods::FASADE_EX_NEW;                
             }
             
-            var_dump($upd);
+//            var_dump($upd);
             
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($goodData['goodId'], $upd);
