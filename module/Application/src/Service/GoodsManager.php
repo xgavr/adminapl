@@ -972,7 +972,6 @@ class GoodsManager
             }    
             unset($prices);
         }    
-        var_dump($oldMeanPrice, $meanPrice, $oldPrice, $price);
         
         if ($oldMeanPrice != $meanPrice || $oldPrice != $price){
             $upd = [
@@ -998,7 +997,12 @@ class GoodsManager
                     $upd['price'] = $price;
                     $upd['fasade_ex'] = Goods::FASADE_EX_NEW;
                 }
+            } else {
+                $upd['price'] = $price;
+                $upd['fasade_ex'] = Goods::FASADE_EX_NEW;                
             }
+            
+            var_dump($upd);
             
             $this->entityManager->getRepository(Goods::class)
                     ->updateGoodId($goodData['goodId'], $upd);
