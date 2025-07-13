@@ -945,7 +945,7 @@ class GoodsManager
                 
         $meanPrice = $price = $minPrice = 0;
         $oldMeanPrice = $goodData['meanPrice'];
-        $oldPrice = $goodData['price'];
+        $oldPrice = $goodData['price'] ?? 1;
         $fixPrice = $goodData['fixPrice'];
         
         if (count($prices)){
