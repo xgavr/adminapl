@@ -945,7 +945,7 @@ class GoodsManager
                 
         $meanPrice = $price = $minPrice = 0;
         $oldMeanPrice = $goodData['meanPrice'];
-        $oldPrice = $goodData['price'] ?? 1;
+        $oldPrice = $goodData['price'] ?? 0;
         $fixPrice = $goodData['fixPrice'];
         
         if (count($prices)){
@@ -978,6 +978,7 @@ class GoodsManager
                 'min_price' => $minPrice, 
                 'mean_price' => $meanPrice,
                 'fix_price' => $fixPrice,
+                'price' => $oldPrice,
                 'status_price_ex' => Goods::PRICE_EX_NEW,
                 'date_price' => date('Y-m-d H:i:s'),
                 'status_image' => Goods::IMAGE_FOR_UPDATE,
