@@ -421,14 +421,14 @@ class ZpRepository extends EntityRepository
             }            
             if (!empty($params['status'])){
                 if (is_numeric($params['status'])){
-                    $queryBuilder->andWhere('p.status = :status')
+                    $queryBuilder->andWhere('pr.status = :status')
                             ->setParameter('status', $params['status'])
                             ;
                 }    
             }            
             if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
-                    $queryBuilder->andWhere('p.kind = :kind')
+                    $queryBuilder->andWhere('pr.kind = :kind')
                             ->setParameter('kind', $params['kind'])
                             ;
                 }    
