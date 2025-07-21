@@ -154,7 +154,9 @@ class BillRepository  extends EntityRepository{
         
         $result = null;
         foreach ($billSettings as $billSetting){
-            $result = $billSetting;
+            if (!$result){
+                $result = $billSetting;
+            }    
             if ($billSetting->getName() == BillSetting::gname($idoc->getName())){
                 return $billSetting;
             }
