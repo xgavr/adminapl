@@ -233,7 +233,8 @@ class BankManager
         ];
         
         $result = $this->gigaManager->completions($messages, [
-            'model' => 'GigaChat-Pro',
+//            'model' => 'GigaChat-Pro',
+            'model' => 'GigaChat-2-Max',
             'temperature' => '0.1',
             'xSessionIId' => md5($messages[0]['content']),
         ]);
