@@ -85,7 +85,7 @@ class ApiLandingResource extends AbstractResourceListener
 
             $this->orderManager->updOrderTotal($order);
             
-            return ['result' => 'Z'.$order->getId()];
+            return ['result' => $order->getId()];
 //            return ['result' => $data];            
         }    
         

@@ -26,7 +26,7 @@ class SoapController extends AbstractActionController
     
     public function indexAction()
     {
-        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/index/');
+        $data = $this->soapManager->transapl('https://old.autopartslist.ru/soap/index/');
         header('Content-Type: text/xml');
         echo $data;
         exit;
@@ -34,7 +34,7 @@ class SoapController extends AbstractActionController
 
     public function wsdlAction()
     {
-        $data = $this->soapManager->transapl('https://autopartslist.ru/soap/wsdl/');
+        $data = $this->soapManager->transapl('https://old.autopartslist.ru/soap/wsdl/');
         header('Content-Type: text/xml');
         echo $data;
         exit;

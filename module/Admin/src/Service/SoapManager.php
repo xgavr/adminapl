@@ -46,7 +46,7 @@ class SoapManager {
     
     protected function api()
     {
-        return 'https://autopartslist.ru/soap/';
+        return 'https://old.autopartslist.ru/soap/';
         
     }
     
@@ -70,7 +70,7 @@ class SoapManager {
         $post = file_get_contents('php://input');
         if (!empty($post)){    
             $client->setMethod('POST');
-            $client->setRawBody(str_replace( 'http://adminapl.ru/soap/index', 'https://autopartslist.ru/soap/index', $post));
+            $client->setRawBody(str_replace( 'http://old.adminapl.ru/soap/index', 'https://old.autopartslist.ru/soap/index', $post));
             $client->setEncType('text/xml');
         } else {
             $client->setMethod('GET');            
@@ -78,7 +78,7 @@ class SoapManager {
 
         try{
             $response = $client->send();
-            $result = str_replace('https://autopartslist.ru/soap/index', 'http://adminapl.ru/soap/index', $response->getBody());
+            $result = str_replace('https://old.autopartslist.ru/soap/index', 'http://old.adminapl.ru/soap/index', $response->getBody());
 //                var_dump($response->getHeaders()); exit;
         } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
             $ok = true;

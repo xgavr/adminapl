@@ -2220,7 +2220,7 @@ class OrderManager
                         $this->entityManager->flush($order);
                     }
                     return $orderId;
-//                    $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$orderId";
+//                    $text .= PHP_EOL."https://old.autopartslist.ru/admin/orders/view/id/$orderId";
                 }
             }                
         }    

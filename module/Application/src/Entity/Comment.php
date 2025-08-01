@@ -181,7 +181,7 @@ class Comment {
     {
         if ($this->order){
             if ($this->order->getAplId()){
-                return '<a href="https://autopartslist.ru/admin/orders/view/id/'.$this->order->getAplId().'" target="_blank">'.$this->order->getAplId().'</a>';
+                return '<a href="https://old.autopartslist.ru/admin/orders/view/id/'.$this->order->getAplId().'" target="_blank">'.$this->order->getAplId().'</a>';
             }    
         }
         return;
@@ -216,7 +216,7 @@ class Comment {
     {
         if ($this->client){
             if ($this->client->getAplId()){
-                return '<a href="https://autopartslist.ru/admin/users/users-view/id/'.$this->client->getAplId().'" target="_blank">'.$this->client->getAplId().'</a>';
+                return '<a href="https://old.autopartslist.ru/admin/users/users-view/id/'.$this->client->getAplId().'" target="_blank">'.$this->client->getAplId().'</a>';
             }    
         }
         return;

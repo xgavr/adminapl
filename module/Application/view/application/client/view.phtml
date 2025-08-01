@@ -211,7 +211,7 @@ $this->headScript()
                                         АПЛ id                                    
                                     </div>    
                                     <div class="pull-right">
-                                        <a href="https://autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>                                    
+                                        <a href="https://old.autopartslist.ru/admin/users/users-view/id/<?= $client->getAplId()?>" target="_blank"><?= $client->getAplId()?></a>                                    
                                     </div>    
                                 </td>
                             </tr>
@@ -1113,7 +1113,7 @@ $this->headScript()
 
         if (row.aplId){
 //            idAplId += ' ('+row.aplId+')';
-            result += " <a href='https://autopartslist.ru/admin/orders/view/id/"+row.aplId+"' target='_blank'>"+row.aplId+"</a>";
+            result += " <a href='https://old.autopartslist.ru/admin/orders/view/id/"+row.aplId+"' target='_blank'>"+row.aplId+"</a>";
         }
         return result+"</nobr>";
     }
@@ -1126,7 +1126,7 @@ $this->headScript()
 
         if (row.order.aplId){
 //            idAplId += ' ('+row.aplId+')';
-            result += " <a href='https://autopartslist.ru/admin/orders/view/id/"+row.order.aplId+"' target='_blank'>"+row.order.aplId+"</a>";
+            result += " <a href='https://old.autopartslist.ru/admin/orders/view/id/"+row.order.aplId+"' target='_blank'>"+row.order.aplId+"</a>";
         }
         return result+"</nobr>";
     }

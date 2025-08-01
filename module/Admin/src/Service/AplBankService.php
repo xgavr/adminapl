@@ -41,7 +41,7 @@ class AplBankService {
     
     protected function aplApi()
     {
-        return 'https://autopartslist.ru/api/';
+        return 'https://old.autopartslist.ru/api/';
         
     }
     

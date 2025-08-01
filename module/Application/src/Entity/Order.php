@@ -51,6 +51,7 @@ class Order {
     const MODE_INNER  = 5; // Внутренний заказ
     const MODE_LANDING  = 6; // Заказ с лендинга
     const MODE_OFFER  = 7; // Заказ предложение
+    const MODE_FASADE  = 8; // Заказ предложение
     
     const STATUS_EX_OK  = 1;// обновлено 
     const STATUS_EX_NO  = 2;// не обновлено
@@ -86,6 +87,11 @@ class Order {
      * @ORM\Column(name="apl_id")   
      */
     protected $aplId;
+
+    /**
+     * @ORM\Column(name="fasade_id")   
+     */
+    protected $fasadeId;
 
     /**
      * @ORM\Column(name="client_name")   
@@ -549,7 +555,7 @@ class Order {
     {
         return $this->aplId;
     }
-
+    
     public function getMessageAplId() 
     {
         if (empty($this->aplId)){
@@ -561,7 +567,7 @@ class Order {
     public function getAplTurboLink()
     {
         if ($this->getAplId()){
-            return "https://autopartslist.ru/orders/turbo-link/id/". $this->getAplId();
+            return "https://old.autopartslist.ru/orders/turbo-link/id/". $this->getAplId();
         }
         
         return;
@@ -575,12 +581,12 @@ class Order {
     public function getAplPaymentLink($prepay = 0)
     {
         $sum = ($prepay) ? $prepay:$this->total;
-        return 'https://autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
+        return 'https://old.autopartslist.ru/payments/sb-register/amount/'.$sum.'/id/'.$this->aplId;
     }
 
     public function getAplIdLink() 
     {
-        return "<a href='https://autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
+        return "<a href='https://old.autopartslist.ru/admin/orders/view/id/{$this->aplId}' target=_blank>{$this->aplId}</a>";
     }
 
     public function setAplId($aplId) 
@@ -588,6 +594,14 @@ class Order {
         $this->aplId = $aplId;
     }     
     
+    public function getFasadeId() {
+        return $this->fasadeId;
+    }
+
+    public function setFasadeId($fasadeId) {
+        $this->fasadeId = $fasadeId;
+    }
+        
     public function getGeo() 
     {
         return $this->geo;

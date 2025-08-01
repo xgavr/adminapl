@@ -59,7 +59,7 @@ $tag = md5(time());
                 <a href="/order/intro/<?= $order->getId()?>" class="btn btn-default btn-sm" type="button" title="Редактировать" target="_blank">
                     <span class="glyphicon glyphicon-edit" aria-hidden="true"></span> <?= $order->getId()?>
                 </a>                
-                <a href="https://autopartslist.ru/admin/orders/view/id/<?= $order->getAplId()?>" 
+                <a href="https://old.autopartslist.ru/admin/orders/view/id/<?= $order->getAplId()?>" 
                    class="btn btn-default btn-sm" type="button" title="АПЛ ссылка" target="_blank"
                    <?= ($order->getAplId()) ? '':'disabled' ?>>
                     <span class="glyphicon glyphicon-link" aria-hidden="true"></span> <?= $order->getAplId()?>

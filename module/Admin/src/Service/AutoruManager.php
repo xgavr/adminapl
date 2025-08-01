@@ -99,7 +99,7 @@ class AutoruManager {
             if (is_array($aplResponce)){
                 $orderData = (array) $aplResponce['order'];
                 if ($order = $orderData['id']){
-                    $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                    $text .= PHP_EOL."https://old.autopartslist.ru/admin/orders/view/id/$order";
                 }
             }    
             
@@ -168,7 +168,7 @@ class AutoruManager {
             if (is_array($aplResponce)){
                 $orderData = (array) $aplResponce['order'];
                 if ($order = $orderData['id']){
-                    $text .= PHP_EOL."https://autopartslist.ru/admin/orders/view/id/$order";
+                    $text .= PHP_EOL."https://old.autopartslist.ru/admin/orders/view/id/$order";
                 }
             }    
             

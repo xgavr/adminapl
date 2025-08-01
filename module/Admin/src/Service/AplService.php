@@ -107,7 +107,7 @@ class AplService {
     
     public function aplApi()
     {
-        return 'https://autopartslist.ru/api/';
+        return 'https://old.autopartslist.ru/api/';
         
     }
     
@@ -2576,7 +2576,7 @@ class AplService {
         curl_setopt($process, CURLOPT_HTTPHEADER, $headers); 
         curl_setopt($process, CURLOPT_HEADER, 0); 
         curl_setopt($process, CURLOPT_USERAGENT, $useragent);
-        curl_setopt($process, CURLOPT_REFERER, 'http://autopartslist.ru');
+        curl_setopt($process, CURLOPT_REFERER, 'http://old.autopartslist.ru');
         curl_setopt($process, CURLOPT_TIMEOUT, 30); 
         curl_setopt($process, CURLOPT_RETURNTRANSFER, 1); 
         curl_setopt($process, CURLOPT_FOLLOWLOCATION, 1); 

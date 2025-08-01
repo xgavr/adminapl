@@ -346,7 +346,7 @@ $this->pageBreadcrumbs()->setItems([
     function idAplFormatter(value, row){
         var result = value;
         if (row.aplId){
-            result += '<br/><a title="АПЛ ссылка" href="https://autopartslist.ru/admin/orders/view/id/' + row.aplId + '" target="_blank">' + row.aplId + '</a>';
+            result += '<br/><a title="АПЛ ссылка" href="https://old.autopartslist.ru/admin/orders/view/id/' + row.aplId + '" target="_blank">' + row.aplId + '</a>';
         }
         return result;
     }    
@@ -362,7 +362,7 @@ $this->pageBreadcrumbs()->setItems([
     
     function aplLinkFormatter(value, row){
         if (value){
-            return '<a title="АПЛ ссылка" href="https://autopartslist.ru/admin/orders/view/id/' + value + '" target="_blank">' + value + '</a>';
+            return '<a title="АПЛ ссылка" href="https://old.autopartslist.ru/admin/orders/view/id/' + value + '" target="_blank">' + value + '</a>';
         }    
         return '';
     }    

@@ -765,10 +765,10 @@
 
     function orderFormatter(value, row){
         if (row.aplPaymentType == 'Orders'){
-            return '<a href="https://autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+            return '<a href="https://old.autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
         }
         if (row.aplPaymentType == 'Users'){
-            return '<a href="https://autopartslist.ru/admin/users/users-orders/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+            return '<a href="https://old.autopartslist.ru/admin/users/users-orders/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
         }
         
         return '';

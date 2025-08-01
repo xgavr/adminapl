@@ -474,7 +474,7 @@ class Goods {
     public function getAplIdLinkCode() 
     {
         if ($this->aplId){
-            return "<a href='https://autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$this->code}</a>";
+            return "<a href='https://old.autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$this->code}</a>";
         }
         return;
     }
@@ -490,7 +490,7 @@ class Goods {
             $title = $this->aplId;
         }
         if ($this->aplId){
-            return "<a href='https://autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$title}</a>";
+            return "<a href='https://old.autopartslist.ru/catalog/view/id/{$this->aplId}' target=_blank>{$title}</a>";
         }
         return 'Товара нет в Апл';
     }
