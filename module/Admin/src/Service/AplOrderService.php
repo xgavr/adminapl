@@ -440,7 +440,7 @@ class AplOrderService {
     }
     
     /**
-     * Загрузить заказ
+     * Загрузить заказ из old.autopartslist.ru
      * 
      * @param array $data
      * @para bool $debug

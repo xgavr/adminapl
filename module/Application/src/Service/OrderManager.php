@@ -1005,6 +1005,8 @@ class OrderManager
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             $order->setStatusEx(empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx']);
             $order->setClientName(!empty($data['name']) ? $data['name'] : null);
+            $order->setFasadeId($data['fasadeId'] ?? null);
+            $order->setFasadeEx($data['fasadeEx'] ?? Order::FASADE_EX_NEW);
 
             $order->setOffice($office);
             if (empty($data['company'])){
@@ -1516,6 +1518,7 @@ class OrderManager
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             $order->setStatusEx(empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx']);
             $order->setClientName(!empty($data['name']) ? $data['name'] : null);
+            $order->setFasadeEx($data['fasadeEx'] ?? Order::FASADE_EX_NEW);
 
             if ($order->getOffice()->getId() != $data['office']){
                 $office = $this->entityManager->getRepository(Office::class)

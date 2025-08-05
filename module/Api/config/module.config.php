@@ -1029,6 +1029,30 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'description' => 'Ид менеджера (в админапл)(Night - 21)',
                 'field_type' => 'integer',
             ],
+            11 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'fasade',
+                'field_type' => 'integer',
+            ],
+            12 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\ToInt::class,
+                        'options' => [],
+                    ],
+                ],
+                'name' => 'car',
+                'field_type' => 'integer',
+            ],
         ],
         'Api\\V1\\Rest\\ApiSearch\\Validator' => [
             0 => [

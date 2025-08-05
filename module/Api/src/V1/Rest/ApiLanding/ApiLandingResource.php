@@ -56,14 +56,29 @@ class ApiLandingResource extends AbstractResourceListener
                         ->find($data->office);
             }
             
-            $order = $this->orderManager->addNewOrder($office, $contact, [
+            $orderData = [
                 'mode' => ($data->mode) ? $data->mode:Order::MODE_LANDING,
                 'info' => (empty($data->need)) ? null:$data->need,
                 'address' => (empty($data->address)) ? null:$data->address,
                 'geo' => (empty($data->geo)) ? null:$data->geo,                
                 'vin' => (empty($data->vin)) ? null:$data->vin,
                 'user' => $data->user,
-            ]);
+                'fasadeId' => $data->fasade,                
+                'carId' => $data->car,
+                'fasadeEx' => Order::FASADE_EX_FULL_LOADED,
+            ];
+            
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->findBy(['fasadeId' => $data->fasade]);
+            
+            if ($order){
+                if ($order->getStatus() !== Order::STATUS_NEW){
+                    return ['result' => $order->getId()];
+                }                
+                $this->orderManager->updateOrder($order, $orderData);
+            } else {
+                $order = $this->orderManager->addNewOrder($office, $contact, $orderData);
+            }
             
             if ($order && !empty($data->goods)){
                 $i = 1;
