@@ -69,7 +69,7 @@ class ApiLandingResource extends AbstractResourceListener
             ];
             
             $order = $this->entityManager->getRepository(Order::class)
-                    ->findBy(['fasadeId' => $data->fasade]);
+                    ->findOneBy(['fasadeId' => $data->fasade]);
             
             if ($order){
                 if ($order->getStatus() !== Order::STATUS_NEW){
