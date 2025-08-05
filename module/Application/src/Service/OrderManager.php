@@ -1596,7 +1596,6 @@ class OrderManager
                 $order->setRecipient($recipient);
             }
 
-            $order->setShipping(null);
             if (!empty($data['shipping'])){
                 $shipping = $this->entityManager->getRepository(Shipping::class)
                         ->find($data['shipping']);
@@ -1614,8 +1613,7 @@ class OrderManager
             if (!empty($data['user'])){
                 $user = $this->entityManager->getRepository(User::class)
                         ->find($data['user']);
-                $order->setUser($user);
-                    
+                $order->setUser($user);                    
             }
 
             $this->entityManager->persist($order);
