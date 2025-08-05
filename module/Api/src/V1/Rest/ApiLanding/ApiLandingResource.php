@@ -51,10 +51,10 @@ class ApiLandingResource extends AbstractResourceListener
             $office = $this->entityManager->getRepository(Office::class)
                     ->findDefaultOffice();
             
-            if (is_numeric($data->office)){
-                $office = $this->entityManager->getRepository(Office::class)
-                        ->find($data->office);
-            }
+//            if (is_numeric($data->office)){
+//                $office = $this->entityManager->getRepository(Office::class)
+//                        ->find($data->office);
+//            }
             
             $orderData = [
                 'mode' => ($data->mode) ? $data->mode:Order::MODE_LANDING,
@@ -62,7 +62,7 @@ class ApiLandingResource extends AbstractResourceListener
                 'address' => (empty($data->address)) ? null:$data->address,
                 'geo' => (empty($data->geo)) ? null:$data->geo,                
                 'vin' => (empty($data->vin)) ? null:$data->vin,
-                'user' => $data->user,
+//                'user' => $data->user,
                 'fasadeId' => $data->fasade,                
                 'carId' => $data->car,
                 'fasadeEx' => Order::FASADE_EX_FULL_LOADED,
