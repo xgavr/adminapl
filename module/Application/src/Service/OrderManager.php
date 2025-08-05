@@ -1520,11 +1520,13 @@ class OrderManager
             $order->setClientName(!empty($data['name']) ? $data['name'] : null);
             $order->setFasadeEx($data['fasadeEx'] ?? Order::FASADE_EX_NEW);
 
-            if ($order->getOffice()->getId() != $data['office']){
-                $office = $this->entityManager->getRepository(Office::class)
-                        ->find($data['office']);
-                $order->setOffice($office);        
-            }
+            if (!empty($data['office'])){
+                if ($order->getOffice()->getId() != $data['office']){
+                    $office = $this->entityManager->getRepository(Office::class)
+                            ->find($data['office']);
+                    $order->setOffice($office);        
+                }
+            }    
             $order->setContactCar($this->findContactCarByOrderData($order->getContact(), $data));
             
             $order->setCourier(null);
