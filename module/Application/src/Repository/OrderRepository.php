@@ -1567,7 +1567,7 @@ class OrderRepository extends EntityRepository{
             ->from(Order::class, 'o')
 //            ->where('o.status = :status')
 //            ->setParameter('status', Order::STATUS_SHIPPED)  
-            ->andWhere('o.total > 0')    
+            ->andWhere('o.total > 0 or o.fasadeId is not null')    
             ->andWhere('o.fasadeEx = :fasade')    
             ->setParameter('fasade', $params['fasade'])  
             ->andWhere('o.aplId > 0')    

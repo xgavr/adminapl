@@ -2083,6 +2083,7 @@ class Order {
             'total' => $this->getTotal(),
             'amount' => $this->getTotal(),
             'staff' => $this->getStaffOrderAplId(),
+            'fasadeId' => $this->getFasadeId(),
         ];
     }    
     
