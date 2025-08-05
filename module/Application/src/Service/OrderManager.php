@@ -1975,6 +1975,7 @@ class OrderManager
                 $order->setAplId(null);
             }    
             $order->setStatusEx(Order::STATUS_EX_NEW);
+            $order->setFasadeEx(Order::FASADE_EX_NEW);
             $order->setStatusAccount(Order::STATUS_ACCOUNT_NO);
             
             if (empty($order->getUser()) && $this->currentUser()){
@@ -1989,6 +1990,7 @@ class OrderManager
         } else {
             if ($order->getStatus() !== Order::STATUS_SHIPPED && $status != Order::STATUS_SHIPPED){
                 $order->setStatus($status);
+                $order->setFasadeEx(Order::FASADE_EX_NEW);                
                 $this->entityManager->persist($order);
                 $this->entityManager->flush($order);
                 
