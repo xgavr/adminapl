@@ -68,6 +68,7 @@ class ApiLandingResource extends AbstractResourceListener
 //                'user' => $data->user,
                 'fasadeId' => $data->fasade,                
                 'carId' => $data->car,
+                'statusEx' => Order::STATUS_EX_NEW,
                 'fasadeEx' => Order::FASADE_EX_FULL_LOADED,
             ];
             
