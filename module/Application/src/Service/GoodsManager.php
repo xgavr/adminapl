@@ -368,13 +368,17 @@ class GoodsManager
                         ->count(['good' => $good->getId()]);
                 
                 if ($articleCount == 0){                    
-                    $upd['available'] = Goods::AVAILABLE_FALSE;
+                    $upd['available'] = Goods::AVAILABLE_FALSE;                    
                     
                     if (empty($good->getTokenGroupName())){
                         $upd['token_group_id'] = null;
                     }
     
                     $this->removeGood($good);
+                }
+                
+                if ($good->getAvailable() !== $upd['available']){
+                    $upd['fasade_ex'] = Goods::FASADE_EX_NEW;
                 }
                 
                 $this->entityManager->getRepository(Goods::class)
