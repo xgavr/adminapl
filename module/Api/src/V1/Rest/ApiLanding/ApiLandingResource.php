@@ -58,7 +58,8 @@ class ApiLandingResource extends AbstractResourceListener
 //            }
             
             $orderData = [
-                'mode' => ($data->mode) ? $data->mode:Order::MODE_LANDING,
+//                'mode' => ($data->mode) ? $data->mode:Order::MODE_LANDING,
+                'mode' => empty($data->goods) ? Order::MODE_VIN:Order::MODE_ORDER,
                 'name' => ($data->name) ?? null,
                 'info' => (empty($data->need)) ? null:$data->need,
                 'address' => (empty($data->address)) ? null:$data->address,
