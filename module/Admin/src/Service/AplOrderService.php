@@ -645,9 +645,10 @@ class AplOrderService {
     /**
      * Обновить статус загруженного заказа
      * @param Order $order
+     * @param bool $debug
      * @return boolean
      */
-    public function unloadedOrder($order)
+    public function unloadedOrder($order, $debug = false)
     {
         $result = true;
         if ($order->getAplId()){
@@ -666,7 +667,9 @@ class AplOrderService {
             $result = $ok = FALSE;
             try{
                 $response = $client->send();
-                var_dump('Debug', $post, $response->getBody());
+                if ($debug){
+                    var_dump('Debug', $post, $response->getBody());
+                }
                 if ($response->isOk()) {
                     $result = $ok = TRUE;
                 }
@@ -743,7 +746,7 @@ class AplOrderService {
             }
 
             if ($order = $this->getOrder($result, $debug)){ 
-                $this->unloadedOrder($order);
+                $this->unloadedOrder($order, $debug);
             } else {
                 return false;
             }    
