@@ -666,7 +666,7 @@ class AplOrderService {
             $result = $ok = FALSE;
             try{
                 $response = $client->send();
-                var_dump($post, $response->getBody()); exit;
+                var_dump('Debug', $post, $response->getBody());
                 if ($response->isOk()) {
                     $result = $ok = TRUE;
                 }
