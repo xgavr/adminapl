@@ -133,7 +133,7 @@ class JobManager
           323 => ['command' => 'update-good-car',               'shedule' => '27 * * * *',              'description' => 'Обновление машин товаров'],
           324 => ['command' => 'update-good-img',               'shedule' => '37 * * * *',              'description' => 'Обновление картинок товаров'],
           325 => ['command' => 'update-good-oem',               'shedule' => '18,48 * * * *',           'description' => 'Обновление номеров товаров'],
-          326 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_15,   'description' => 'Обновление заказов из АПЛ'],
+          326 => ['command' => 'update-apl-order',              'shedule' => self::CRON_EVERY_MIN_5,   'description' => 'Обновление заказов из АПЛ'],
 //          327 => ['command' => 'update-apl-ptu',                'shedule' => '25,55 * * * *',           'description' => 'Обновление поступлений из АПЛ'],
           328 => ['command' => 'update-apl-ptu',                'shedule' => self::CRON_EVERY_MIN_15,           'description' => 'Обновление поступлений из АПЛ'],
           329 => ['command' => 'update-orders-phones',          'shedule' => self::CRON_EVERY_MIN_30,   'description' => 'Обновление телефонов в заказах из АПЛ'],

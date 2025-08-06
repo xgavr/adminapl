@@ -1705,6 +1705,7 @@ class ProcessingController extends AbstractActionController
     }    
     
     /**
+     * ОТКЛЮЧЕНО
      * Проверка выгрузки заказов из апл
      * 
      * @return JsonModel
@@ -1715,7 +1716,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
 
         if ($settings['order'] == 1){
-            $this->aplOrderService->checkOrders();
+//            $this->aplOrderService->checkOrders();
         }    
         
         return new JsonModel([
