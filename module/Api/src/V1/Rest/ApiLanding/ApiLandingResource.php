@@ -5,6 +5,7 @@ use Laminas\ApiTools\ApiProblem\ApiProblem;
 use Laminas\ApiTools\Rest\AbstractResourceListener;
 use Application\Entity\Order;
 use Company\Entity\Office;
+use Application\Entity\Goods;
 
 class ApiLandingResource extends AbstractResourceListener
 {
@@ -81,19 +82,32 @@ class ApiLandingResource extends AbstractResourceListener
                 $order = $this->orderManager->addNewOrder($office, $contact, $orderData);
             }
             
+            $notFound = [];
             if ($order && !empty($data->goods)){
                 $i = 1;
-                foreach ($data->goods as $good){
+                foreach ($data->goods as $row){
 //                    var_dump($good); exit;
-                    $bid = [
-                        'good' => $good['id'],
-                        'price' => $good['price'],
-                        'num' => $good['num'],
-                        'rowNo' => $i,
-                    ];
-                    $i++;
-                    $this->orderManager->addNewBid($order, $bid, false);
+                    $good = $this->entityManager->getRepository(Goods::class)
+                                ->find($row['id']);
+                    if ($good){
+                        $bid = [
+                            'good' => $good->getId(),
+                            'price' => $row['price'],
+                            'num' => $row['num'],
+                            'rowNo' => $i,
+                        ];
+                        $i++;
+                        $this->orderManager->addNewBid($order, $bid, false);
+                    } else {
+                        $notFound[] = $row['name'];
+                    }   
                 }                    
+            }
+            
+            if (count($notFound)){
+                $info = $orderData['info'].' (Заказано клиентом но не найдено в базе: ' . implode('; ', $notFound) . ')';
+                $order->setInfo($info);
+                $this->entityManager->persist($order);
             }
             
             $this->orderManager->updateDependInfo($order);
