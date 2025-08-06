@@ -1280,6 +1280,8 @@ class GoodsManager
             'description' => '',
             'info' => '',
             'images' => $images,
+            'available' => $good->getAvailable(),
+            'availableName' => $good->getAvailableAsString(),
         ];
         
         return $result;
