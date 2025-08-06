@@ -624,7 +624,7 @@ class AplOrderService {
 
 
             $this->orderManager->updOrderTotal($order);
-            return true;
+            return $order;
 //            if (round($order->getTotal()) == round($data['sort'])){
 //                return true;            
 //            } else {
@@ -644,17 +644,18 @@ class AplOrderService {
     
     /**
      * Обновить статус загруженного заказа
-     * @param integer $aplId
+     * @param Order $order
      * @return boolean
      */
-    public function unloadedOrder($aplId)
+    public function unloadedOrder($order)
     {
         $result = true;
-        if (is_numeric($aplId)){
+        if ($order->getAplId()){
             $url = $this->aplApi().'aa-order?api='.$this->aplApiKey();
 
             $post = [
-                'orderId' => $aplId,
+                'orderId' => $order->getAplId(),
+                'adminId' => $order->getId(),
             ];
             
             $client = new Client();
@@ -741,8 +742,8 @@ class AplOrderService {
 //                var_dump($result); exit;
             }
 
-            if ($this->getOrder($result, $debug)){ 
-                $this->unloadedOrder($result['id']);
+            if ($order = $this->getOrder($result, $debug)){ 
+                $this->unloadedOrder($order);
             } else {
                 return false;
             }    
