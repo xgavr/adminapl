@@ -71,7 +71,7 @@ class GoodAplResource extends AbstractResourceListener
     public function fetch($id)
     {
         if (is_numeric($id)){
-            $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
+            $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['aplId' => $id]);
             if ($good){
                 return $this->goodManager->goodForApl($good);                

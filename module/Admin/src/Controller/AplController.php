@@ -175,6 +175,10 @@ class AplController extends AbstractActionController
         $this->aplService->updateGoodName($good);
         $this->aplService->updateGoodPrice([$good]);
         
+        $good->setFasadeEx(\Application\Entity\Goods::FASADE_EX_NEW);
+        $this->entityManager->persist($good);
+        $this->entityManager->flush();
+        
         return new JsonModel([
             'result' => 'ok-reload',
         ]);
