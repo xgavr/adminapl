@@ -1369,6 +1369,7 @@ class AplOrderService {
                 $order->setStatusEx(Order::STATUS_EX_OK);
                 if ($aplId > 0 && empty($order->getAplId())){
                     $order->setAplId($aplId);
+                    $order->setFasadeEx(Order::FASADE_EX_NEW);
                 }    
                 $this->entityManager->persist($order);
                 $this->entityManager->flush($order);

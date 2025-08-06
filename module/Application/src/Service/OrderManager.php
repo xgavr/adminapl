@@ -1180,6 +1180,7 @@ class OrderManager
                 'date_created' => date('Y-m-d H:i:s'),
                 'status_account' => Order::STATUS_ACCOUNT_NO,
                 'status_ex' => empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx'],
+                'fasade_ex' => empty($data['fasadeEx']) ? Order::FASADE_EX_NEW:$data['fasadeEx'],
                 'client_name' => (!empty($data['name']) ? $data['name'] : null),
             ];
 
@@ -1670,6 +1671,7 @@ class OrderManager
                 'user_id' => null,
                 'status_account' => Order::STATUS_ACCOUNT_NO,
                 'status_ex' => empty($data['statusEx']) ? Order::STATUS_EX_NO:$data['statusEx'],
+                'fasade_ex' => empty($data['fasadeEx']) ? Order::FASADE_EX_NEW:$data['fasadeEx'],
                 'client_name' => (!empty($data['name']) ? $data['name'] : null),
             ];
 
