@@ -814,8 +814,15 @@ class AssemblyManager
                 $this->entityManager->getRepository(Article::class)
                         ->updateArticle($article->getId(), ['good_id' => $good->getId()]);
                 
+                $upd = ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW];
+                
+                if ($good->getPrice() && $good->getAvailable() === Goods::AVAILABLE_FALSE){
+                    $upd['fasadeEx'] = Goods::FASADE_EX_NEW;
+                    $upd['available'] = Goods::AVAILABLE_TRUE;
+                }
+                
                 $this->entityManager->getRepository(Goods::class)
-                        ->updateGood($good->getId(), ['statusRawpriceEx' => Goods::RAWPRICE_EX_NEW]);                
+                        ->updateGood($good->getId(), $upd);                
             }
             
             if (!$supplier){
