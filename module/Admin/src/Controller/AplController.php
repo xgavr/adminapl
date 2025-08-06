@@ -157,7 +157,7 @@ class AplController extends AbstractActionController
     
         // Находим существующий пост в базе данных.    
         $good = $this->entityManager->getRepository(\Application\Entity\Goods::class)
-                ->findOneById($goodId);  
+                ->find($goodId);  
         	
         if ($good == null) {
             $this->getResponse()->setStatusCode(401);
@@ -175,9 +175,9 @@ class AplController extends AbstractActionController
         $this->aplService->updateGoodName($good);
         $this->aplService->updateGoodPrice([$good]);
         
-        $good->setFasadeEx(\Application\Entity\Goods::FASADE_EX_NEW);
-        $this->entityManager->persist($good);
-        $this->entityManager->flush();
+        
+        $this->entityManager->getConnection()
+                ->update('goods', ['fasade_ex' => \Application\Entity\Goods::FASADE_EX_NEW], ['id' => $good->getId()]);
         
         return new JsonModel([
             'result' => 'ok-reload',
