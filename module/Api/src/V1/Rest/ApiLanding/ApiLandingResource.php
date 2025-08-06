@@ -105,7 +105,7 @@ class ApiLandingResource extends AbstractResourceListener
             }
             
             if (count($notFound)){
-                $info = $orderData['info'].' (Заказано клиентом но не найдено в базе: ' . implode('; ', $notFound) . ')';
+                $info = $orderData['info'].' !(Заказано клиентом но не найдено в базе: ' . implode('; ', $notFound) . ')';
                 $order->setInfo($info);
                 $this->entityManager->persist($order);
             }
