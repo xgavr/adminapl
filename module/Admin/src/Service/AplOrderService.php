@@ -651,6 +651,11 @@ class AplOrderService {
     public function unloadedOrder($order, $debug = false)
     {
         $result = true;
+        
+        if (is_bool($order)){
+            return $result;
+        }
+        
         if ($order->getAplId()){
             $url = $this->aplApi().'aa-order?api='.$this->aplApiKey();
 
