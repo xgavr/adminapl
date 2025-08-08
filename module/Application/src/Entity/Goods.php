@@ -1795,6 +1795,7 @@ class Goods {
             'fixPrice' => $this->getFixPrice(),
             'inStore' => $this->getInStore(),
             'marketPlacePrice' => $this->getMarketPlacePrice(),
+            'available' => $this->getAvailable(),            
         ];
     }   
     

@@ -69,14 +69,28 @@ class GoodAplResource extends AbstractResourceListener
      * @return ApiProblem|mixed
      */
     public function fetch($id)
-    {
-        if (is_numeric($id)){
+    {         
+    // Проверяем, является ли $id строкой, начинающейся с 'Z'
+        if (is_string($id) && strpos($id, 'Z') === 0) {
+            // Извлекаем число после 'Z'
+            $numericId = substr($id, 1);
+            // Проверяем, что остаток является числом
+            if (is_numeric($numericId)) {
+                $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($numericId);
+                if ($good) {
+                    return $good->toLog();                
+                }
+            }
+        } elseif (is_numeric($id)) {
+            // Обработка чисто числового ID, как в исходном коде
             $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneBy(['aplId' => $id]);
-            if ($good){
+                ->findOneBy(['aplId' => $id]);
+            if ($good) {
                 return $this->goodManager->goodForApl($good);                
             }
         }        
+        
         return new ApiProblem(404, 'Товар с кодом '.$id.' не найден');        
     }
     
