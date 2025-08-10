@@ -83,7 +83,7 @@ class GoodAplResource extends AbstractResourceListener
                 }
             }
         } elseif (is_string($id) && strpos($id, 'C') === 0) {
-            // Извлекаем число после 'C'
+            // Извлекаем после 'C'
             list($code, $producerId) = explode('_', substr($id, 1));
             
             if ($code && $producerId) {

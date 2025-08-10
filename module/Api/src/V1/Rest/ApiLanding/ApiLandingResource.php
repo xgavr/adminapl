@@ -89,8 +89,19 @@ class ApiLandingResource extends AbstractResourceListener
                 $i = 1;
                 foreach ($data->goods as $row){
 //                    var_dump($good); exit;
-                    $good = $this->entityManager->getRepository(Goods::class)
-                                ->find($row['id']);
+                    
+                    $good = null;
+                    
+                    if (!empty($row['code']) && !empty($row['brand_id'])){
+                        $good = $this->entityManager->getRepository(Goods::class)
+                                    ->findOneBy(['code' => $row['code'], 'producer' => $row['brand_id']]);
+                    }    
+                    
+                    if (!$good){
+                        $good = $this->entityManager->getRepository(Goods::class)
+                                    ->find($row['id']);
+                    }
+                    
                     if ($good){
                         $bid = [
                             'good' => $good->getId(),
