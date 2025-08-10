@@ -88,7 +88,7 @@ class GoodAplResource extends AbstractResourceListener
             
             if ($code && $producerId) {
                 $good = $this->entityManager->getRepository(Goods::class)
-                    ->findOneBy(['code' => $code, 'producer_id']);
+                    ->findOneBy(['code' => $code, 'producer_id' => $producerId]);
                 if ($good) {
                     return $good->toLog();                
                 }
