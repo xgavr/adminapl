@@ -82,6 +82,17 @@ class GoodAplResource extends AbstractResourceListener
                     return $good->toLog();                
                 }
             }
+        } elseif (is_string($id) && strpos($id, 'C') === 0) {
+            // Извлекаем число после 'C'
+            list($code, $producerId) = explode('_', substr($id, 1));
+            
+            if ($code && $producerId) {
+                $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneBy(['code' => $code, 'producer_id']);
+                if ($good) {
+                    return $good->toLog();                
+                }
+            }
         } elseif (is_numeric($id)) {
             // Обработка чисто числового ID, как в исходном коде
             $good = $this->entityManager->getRepository(Goods::class)
