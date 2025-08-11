@@ -281,7 +281,11 @@ class ContactManager
         
         $this->entityManager->persist($contact);
         // Применяем изменения к базе данных.
-        $this->entityManager->flush();
+        try{
+            $this->entityManager->flush();
+        } catch(\Throwable $e){
+            return;
+        }    
     }    
     
     /**
