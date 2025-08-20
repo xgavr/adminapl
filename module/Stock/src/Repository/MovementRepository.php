@@ -679,6 +679,8 @@ class MovementRepository extends EntityRepository{
                 }
             }    
         }    
+        
+        $connection->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
                         
         return;
     }
