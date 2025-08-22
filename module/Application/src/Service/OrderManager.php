@@ -662,7 +662,7 @@ class OrderManager
             }
             $contactCar->setContact($contact);
             $this->entityManager->persist($contactCar);
-            $this->entityManager->flush($contactCar);
+            $this->entityManager->flush();
         }    
 
         return $contactCar;
