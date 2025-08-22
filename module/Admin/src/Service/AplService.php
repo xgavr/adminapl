@@ -390,7 +390,7 @@ class AplService {
                             }
                             if (is_array($contract_data)){
                                 $contracts = $legal->getContracts();
-                                if (count($contrats)){
+                                if (count($contracts)){
                                     $contract = $contracts[0];
                                     $this->legalManager->updateContract($contract, $contract_data, true);                                                                    
                                 } else {
@@ -400,6 +400,7 @@ class AplService {
                         }
                         
                         if ($row['manualPhone'] || $row['manualManager'] || $row['manualEmail']){
+                            $contacts = $supplier->getContacts();
                             if (count($contacts) == 1){
                                 $manager_data = [
                                     'name' => $row['manualManager'],
@@ -408,8 +409,7 @@ class AplService {
                                     'email' => $row['manualEmail'],
                                     'status' => $supplier->getStatus(),
                                 ];
-                                $this->contactManager->addNewContact($supplier, $manager_data); //Manager contact                            
-                                $contacts = $supplier->getContacts();                    
+                                $this->contactManager->addNewContact($supplier, $manager_data); //Manager contact                                                                               
                             }
                         }    
                         
