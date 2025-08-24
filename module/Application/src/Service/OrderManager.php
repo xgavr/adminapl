@@ -640,29 +640,35 @@ class OrderManager
                     ->findOneByVin($data['vin2']);                
         }
         if (!$contactCar && !empty($data['vin'])){
-            $contactCar = new ContactCar();
-            $contactCar->setVin($data['vin']);
-            $contactCar->setDateCreated(date('Y-m-d H:i:s'));
-            $contactCar->setStatus(ContactCar::STATUS_ACTIVE);
-            $contactCar->setAc(ContactCar::AC_UNKNOWN);
-            $contactCar->setTm(ContactCar::TM_UNKNOWN);
-            $contactCar->setWheel(ContactCar::WHEEL_LEFT);
+            $new = [
+                'vin' => $data['vin'],
+                'date_created' => date('Y-m-d H:i:s'),
+                'status' => ContactCar::STATUS_ACTIVE,
+                'ac' => ContactCar::AC_UNKNOWN,
+                'tm' => ContactCar::TM_UNKNOWN,
+                'wheel' => ContactCar::WHEEL_LEFT,
+            ];
         }    
         
+        $upd['comment'] = (empty($data['makeComment'])) ? null:$data['makeComment'];
+        if (!empty($data['make'])){
+            $make = $this->entityManager->getRepository(Make::class)
+                    ->findOneByName($data['make']);
+            $upd['make_id'] = $make ? $make->getId():null;
+        }
+
+        $upd['contact'] = $contact->getId();
+
         if ($contactCar){
             if (!empty($data['vin'])){
-                $contactCar->setVin($data['vin']);
+                $upd['vin'] = $data['vin'];
             }    
-            //$contactCar->setVin2((empty($data['vin2'])) ? null:$data['vin2']);
-            $contactCar->setComment((empty($data['makeComment'])) ? null:$data['makeComment']);
-            if (!empty($data['make'])){
-                $make = $this->entityManager->getRepository(Make::class)
-                        ->findOneByName($data['make']);
-                $contactCar->setMake($make);
-            }
-            $contactCar->setContact($contact);
-            $this->entityManager->persist($contactCar);
-            $this->entityManager->flush();
+            $this->entityManager->getConnection()->update('contact_car', $upd, ['id' => $contactCar->getId()]);
+        } else {
+            $this->entityManager->getConnection()->insert('contact_car', array_merge($new, $upd));
+            $lastId = $this->entityManager->getConnection()->lastInsertId();
+            $contactCar = $this->entityManager->getRepository(ContactCar::class)->find($lastId);
+                      
         }    
 
         return $contactCar;
