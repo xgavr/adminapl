@@ -115,23 +115,16 @@ class ContactManager
                             ->findOneByName($findstr);
 
                     if ($phone == null){
-                        $phone = new Phone();            
-                        $phone->setName($data['phone']);
-                        $phone->setComment('');
-                        if (!empty($data['comment'])){
-                            $phone->setComment($data['comment']);                            
-                        }
-
-                        $currentDate = date('Y-m-d H:i:s');
-                        $phone->setDateCreated($currentDate);
-
-                        $this->entityManager->persist($phone);
-
-                        $phone->setContact($contact);
-
-                        if ($flushnow){
-                            $this->entityManager->flush($phone);                
-                        }
+                        
+                        $upd = [
+                            'name' => $data['phone'],
+                            'comment' => $data['comment'] ?? '',
+                            'date_created' => date('Y-m-d H:i:s'),
+                            'contact_id' => $contact->getId(),
+                        ];
+                        
+                        $this->entityManager->getConnection()
+                                ->insert('phone', $upd);
                     }    
                 }    
             }
@@ -151,20 +144,15 @@ class ContactManager
                         ->findOneByName($emailstr);
 
                 if ($email == null){
-                    $email = new Email();            
-                    $email->setContact($contact);
-                    $email->setName($emailstr);            
+                    
+                    $upd = [
+                        'name' => $emailstr,
+                        'date_created' => date('Y-m-d H:i:s'),
+                        'contact_id' => $contact->getId(),
+                    ];
 
-                    $currentDate = date('Y-m-d H:i:s');
-                    $email->setDateCreated($currentDate);
-
-                    $contact->addEmail($email);
-
-                    $this->entityManager->persist($email);
-
-                    if ($flushnow){
-                        $this->entityManager->flush($email);                
-                    }
+                    $this->entityManager->getConnection()
+                            ->insert('email', $upd);                    
                 }    
             }    
         } 
