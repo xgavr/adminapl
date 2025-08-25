@@ -190,18 +190,6 @@ class ContactManager
         } else {
             throw new \Exception('Неверный тип родительской сущности');
         }
-
-        if (!empty($data['phones'])){
-            foreach ($data['phones'] as $phoneStr){
-                $this->addPhone($contact, ['phone' => $phoneStr]);                
-            }
-        } elseif (isset($data['phone'])){
-            $this->addPhone($contact, ['phone' => $data['phone']]);
-        }    
-        
-        if (isset($data['email'])){
-            $this->addEmail($contact, $data['email']);
-        }    
         
        if (!empty($data['email']) && !empty($data['password'])){
             $user = $this->entityManager->getRepository(User::class)
@@ -219,6 +207,18 @@ class ContactManager
         
         // Применяем изменения к базе данных.
         $this->entityManager->flush();
+        
+        if (!empty($data['phones'])){
+            foreach ($data['phones'] as $phoneStr){
+                $this->addPhone($contact, ['phone' => $phoneStr]);                
+            }
+        } elseif (isset($data['phone'])){
+            $this->addPhone($contact, ['phone' => $data['phone']]);
+        }    
+        
+        if (isset($data['email'])){
+            $this->addEmail($contact, $data['email']);
+        }    
         
         return $contact;
     }   
