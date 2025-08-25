@@ -657,7 +657,7 @@ class OrderManager
             $upd['make_id'] = $make ? $make->getId():null;
         }
 
-        $upd['contact'] = $contact->getId();
+        $upd['contact_id'] = $contact->getId();
 
         if ($contactCar){
             if (!empty($data['vin'])){
