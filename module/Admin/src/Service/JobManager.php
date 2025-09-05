@@ -226,7 +226,7 @@ class JobManager
         $jobs = $this->updateJobList();
         
         $load = sys_getloadavg();
-        if ($load[0] < 7){
+        if ($load[0] < 11){
             $processCount = $this->entityManager->getRepository(Setting::class)
                     ->procCount();
             

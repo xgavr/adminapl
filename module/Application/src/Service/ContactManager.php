@@ -117,7 +117,7 @@ class ContactManager
                     if ($phone == null){
                         
                         $upd = [
-                            'name' => $data['phone'],
+                            'name' => $findstr,
                             'comment' => $data['comment'] ?? '',
                             'date_created' => date('Y-m-d H:i:s'),
                             'contact_id' => $contact->getId(),
