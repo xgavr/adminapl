@@ -67,14 +67,14 @@ class ApiLandingResource extends AbstractResourceListener
                 'vin' => (empty($data->vin)) ? null:$data->vin,
 //                'user' => $data->user,
                 'fasadeId' => $data->fasade,                
-                'carId' => $data->car,
+                'carId' => $data->car ?? null,
                 'statusEx' => Order::STATUS_EX_NEW,
                 'fasadeEx' => Order::FASADE_EX_FULL_LOADED,
             ];
             
             $order = $this->entityManager->getRepository(Order::class)
-                    ->findOneBy(['fasadeId' => $data->fasade]);
-            
+                    ->findOneBy(['fasadeId' => $data->fasade ?? 0]);
+
             if ($order){
                 if ($order->getStatus() !== Order::STATUS_NEW){
                     return ['result' => $order->getId()];
