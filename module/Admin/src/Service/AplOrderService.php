@@ -1348,9 +1348,10 @@ class AplOrderService {
             }
             $post['tp'] = $so;
             $post['ds'] = $order->getDocDate();
-            
-            
-//            var_dump($post); exit;
+         
+            if ($debug){
+                var_dump($post);               
+            }
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
