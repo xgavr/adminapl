@@ -333,6 +333,10 @@ class MikadoManager {
         $supplierApi = $this->entityManager->getRepository(SupplierApiSetting::class)
                 ->findOneBy(['status' => SupplierApiSetting::STATUS_ACTIVE, 'name' => $api]);
         
+        if (empty($supplierApi)){
+            return;
+        }
+        
         $pay = Contract::PAY_CASH;
         if ($api === SupplierApiSetting::NAME_API_MIKADO_CL){
             $pay = Contract::PAY_CASHLESS;
