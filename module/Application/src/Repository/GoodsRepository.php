@@ -2981,6 +2981,7 @@ class GoodsRepository extends EntityRepository
         if (count($goodIds)){
             $queryBuilder->select('g.id as admin_apl_id')
                     ->addSelect('c.id as carId')
+                    ->addSelect('c.aplId as carAplId')
                     ->addSelect('c.name as carName')
                     ->addSelect('c.fullName as carFullName')
                     ->addSelect('c.goodCount as carGoodCount')
@@ -2991,6 +2992,7 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('c.yearFrom as carYearFrom')
                     ->addSelect('c.yearTo as carYearTo')
                     ->addSelect('m.id as modelId')
+                    ->addSelect('m.aplId as modelAplId')
                     ->addSelect('m.name as modelName')
                     ->addSelect('m.fullName as modelFullName')
                     ->addSelect('m.nameRu as modelNameRu')
@@ -3002,6 +3004,7 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('m.interval')
                     ->addSelect('m.status as modelStatus')
                     ->addSelect('mk.id as makeId')
+                    ->addSelect('mk.aplId as makeAplId')
                     ->addSelect('mk.name as makeName')
                     ->addSelect('mk.fullName as makeFullName')
                     ->addSelect('mk.nameRu as makeNameRu')
