@@ -90,6 +90,9 @@ class MakeManager
      */
     public function updateFullName($make, $fullName)
     {
+        $this->entityManager->getRepository(Car::class)
+                ->findGoodsForUpdateFasade($make->getId(), 'make');
+        
         $make->setFullName($fullName);
         $this->entityManager->persist($make);
         $this->entityManager->flush($make);
@@ -105,6 +108,9 @@ class MakeManager
      */
     public function updateRuName($make, $nameRu)
     {
+        $this->entityManager->getRepository(Car::class)
+                ->findGoodsForUpdateFasade($make->getId(), 'make');
+        
         $make->setNameRu($nameRu);
         $this->entityManager->persist($make);
         $this->entityManager->flush();
@@ -120,6 +126,9 @@ class MakeManager
      */
     public function updateModelFullName($model, $fullName)
     {
+        $this->entityManager->getRepository(Car::class)
+                ->findGoodsForUpdateFasade($model->getId(), 'model');
+        
         $model->setFullName($fullName);
         $this->entityManager->persist($model);
         $this->entityManager->flush($model);
@@ -135,6 +144,9 @@ class MakeManager
      */
     public function updateModelRuName($model, $nameRu)
     {
+        $this->entityManager->getRepository(Car::class)
+                ->findGoodsForUpdateFasade($model->getId(), 'model');
+        
         $model->setNameRu($nameRu);
         $this->entityManager->persist($model);
         $this->entityManager->flush();

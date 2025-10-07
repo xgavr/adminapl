@@ -120,7 +120,7 @@ class CarRepository extends EntityRepository
     /**
      * Найти товары машины
      * 
-     * @param Application\Entity\Car $car
+     * @param Car $car
      * @return object
      */
     public function findGoods($car)
@@ -129,13 +129,57 @@ class CarRepository extends EntityRepository
 
         $queryBuilder = $entityManager->createQueryBuilder();
         $queryBuilder->select('g')
-            ->from(\Application\Entity\Goods::class, 'g')
+            ->from(Goods::class, 'g')
             ->join('g.cars', 'c')
             ->where('c.id = ?1')    
             ->setParameter('1', $car->getId())
             ;
         
         return $queryBuilder->getQuery();            
+    }
+    
+    /**
+     * Найти товары машины для обновления фасада
+     * 
+     * @param integer $autoId
+     * @param string $autoType
+     * @return object
+     */
+    public function findGoodsForUpdateFasade($autoId, $autoType)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('g')
+            ->from(Goods::class, 'g')
+            ->join('g.categories', 'cat')    
+            ->join('g.cars', 'c')
+            ->setMaxResults(100)    
+            ->where('c.id = ?1')    
+            ->setParameter('1', $autoId)
+            ;
+        if ($autoType === 'make'){
+            $queryBuilder->join('c.models', 'models')
+                ->join('models.makes', 'makes')
+                ->where('makes.id = ?1')  
+                ;
+        }
+        if ($autoType === 'model'){
+            $queryBuilder->join('c.models', 'models')
+                ->where('makes.id = ?1')  
+                ;
+        }
+        
+        $goods = $queryBuilder->getQuery()->getResult();
+        var_dump(count($goods));
+        foreach ($goods as $good){
+            $good->setFasadeEx(Goods::FASADE_EX_NEW);
+            $entityManager->persist($good);
+        }
+        
+        $entityManager->flush();
+        
+        return;            
     }
     
     /**
