@@ -6,7 +6,7 @@ return [
     'session_config' => [
         'cookie_lifetime' => 0,
         'gc_maxlifetime' => 2592000,
-        'savePath' => './data/session1',
+        'savePath' => './data/session',
     ],
     'session_manager' => [
         'validators' => [
