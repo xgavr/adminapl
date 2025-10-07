@@ -171,7 +171,7 @@ class CarRepository extends EntityRepository
         }
         
         $goods = $queryBuilder->getQuery()->getResult();
-        var_dump(count($goods));
+//        var_dump(count($goods));
         foreach ($goods as $good){
             $good->setFasadeEx(Goods::FASADE_EX_NEW);
             $entityManager->persist($good);
