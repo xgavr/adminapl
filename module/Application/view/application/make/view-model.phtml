@@ -34,7 +34,7 @@ $this->headScript()
         <span><?= $model->getInterval()?></span>
         <span><?= $model->getStatusAsString();?></span>
         <?php if ($model->getStatus() == Model::STATUS_ACTIVE): ?>
-            Наименование выводимое: 
+<!--            Наименование выводимое: 
              <a href="#" 
                 class="bootstrapEdit" data-type="text" 
                 data-pk="<?= $model->getId()?>" 
@@ -42,7 +42,7 @@ $this->headScript()
                 data-name="fullName" data-emptytext="<?= $model->getName() ?>"
                 data-url="/make/edit-model-full-name">
                 <?= $model->getFullName() ?>    
-            </a>
+            </a>-->
         <?php endif; ?>    
     </small>
 </p>
