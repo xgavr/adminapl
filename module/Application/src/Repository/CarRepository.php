@@ -159,14 +159,14 @@ class CarRepository extends EntityRepository
             ->setParameter('1', $autoId)
             ;
         if ($autoType === 'make'){
-            $queryBuilder->join('c.models', 'models')
-                ->join('models.makes', 'makes')
+            $queryBuilder->join('c.model', 'model')
+                ->join('model.make', 'make')
                 ->where('makes.id = ?1')  
                 ;
         }
         if ($autoType === 'model'){
-            $queryBuilder->join('c.models', 'models')
-                ->where('makes.id = ?1')  
+            $queryBuilder->join('c.model', 'model')
+                ->where('model.id = ?1')  
                 ;
         }
         
