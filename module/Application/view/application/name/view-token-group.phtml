@@ -455,7 +455,7 @@ $this->pageBreadcrumbs()->setItems([
             });
             bootbox.prompt({
                 title: 'Укажите категорию',
-                message: '<p>Выберете категорию для <b><?= htmlspecialchars($goods->getInputName())?></b>:</p>',
+                message: '<p>Выберете категорию для <b><?= htmlspecialchars($tokenGroup->getName())?></b>:</p>',
                 inputType: 'select',
                 value: getGroupSiteCookie(),        
                 inputOptions: inputOptions,
