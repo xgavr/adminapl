@@ -30,6 +30,13 @@ $this->pageBreadcrumbs()->setItems([
     </button> 
 
 </h1>
+<div class="category_name">
+    Категория: <?= $tokenGroup->getGroupSite() ? $tokenGroup->getGroupSite()->getFullName():'нет'?>
+    <button class="btn btn-default btn-xs include-in-category"
+            title="Включить в категорию">
+        <span class="glyphicon glyphicon-plus"></span>
+    </button>    
+</div>
 <div>
     <?= $tokenGroup->getLemms()?> (<?= $meanFrequency['mean']; ?>)
 </div>
@@ -425,4 +432,40 @@ $this->pageBreadcrumbs()->setItems([
             });
         }        
     }    
+    
+    function updateTokenGroupGroupSite(groupSiteId){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: true
+        });
+        $.getJSON('/name/update-token-group-category/'+<?= $tokenGroup->getId()?>+'?groupSite='+groupSiteId, function( data ) {
+        if (data.row && data.id){
+            $('.category_name').html(dat.categoryName);
+        }
+    });                            
+    }
+    
+    $('.include-in-category').click(function (){
+        $.getJSON( '/group-site/content?hasChild=<?= GroupSite::HAS_NO_CHILD?>&sort=code', function( data ) {
+            var inputOptions = [{text: 'без категории', value: -1}];
+            $.each(data.rows, function( index, value ) {
+                inputOptions.push({text: value.fullName, value: value.id});
+            });
+            bootbox.prompt({
+                title: 'Укажите категорию',
+                message: '<p>Выберете категорию для <b><?= htmlspecialchars($goods->getInputName())?></b>:</p>',
+                inputType: 'select',
+                value: getGroupSiteCookie(),        
+                inputOptions: inputOptions,
+                callback: function (result) {
+//                    console.log(result); return;               
+                    if (result){
+                        setGroupSiteCookie(result);
+                        updateTokenGroupGroupSite(result);
+                    };    
+                }
+            });
+        }); 
+        return;            
+    });    
 </script>
