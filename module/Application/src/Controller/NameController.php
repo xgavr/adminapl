@@ -988,7 +988,7 @@ class NameController extends AbstractActionController
                 $result = $query->getOneOrNullResult(2);
                 return new JsonModel([
                     'id' => $tokenGroup->getId(),
-                    'categoryName' => $$groupSite->getFullName(),
+                    'categoryName' => $groupSite->getFullName(),
                     'row' => $result,
                 ]);
             }
