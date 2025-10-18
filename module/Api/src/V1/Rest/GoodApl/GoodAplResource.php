@@ -8,6 +8,7 @@ use Application\Entity\UnknownProducer;
 use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
 use Application\Entity\GoodRelated;
+use Application\Entity\Oem;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -148,7 +149,11 @@ class GoodAplResource extends AbstractResourceListener
         $code = $producerStr = $unknownProducer = null;
         $result = [];
         
-        $paramsArray = $params->toArray();
+        if (is_array($params)){
+            $paramsArray = $params;
+        } else {
+            $paramsArray = $params->toArray();
+        }   
         
         if (!empty($paramsArray['article'])){
             $articleFilter = new ArticleCode();
@@ -264,43 +269,64 @@ class GoodAplResource extends AbstractResourceListener
 //            var_dump($data[0]['fasade'], $data[0]['fasade_loaded']); exit;
             
             $i = 0;
-            foreach ($data[0]['fasade_loaded'] as $goodId){
-                
-                $good = $this->entityManager->getRepository(Goods::class)
-                        ->find($goodId);
-                
-                if ($good){
-//                    if ($good->getAvailable() === Goods::AVAILABLE_FALSE){
-//                        $nextFasade = Goods::FASADE_EX_FULL_LOADED;
-//                    } else {
-                        switch ($data[0]['fasade']){
-                            case Goods::FASADE_EX_NEW: 
-                                if ($good->getOems()->count()){
-                                    $nextFasade = Goods::FASADE_EX_OEM; break;
-                                }    
-                            case Goods::FASADE_EX_OEM: 
-                                if ($good->getImageCount()){
-                                    $nextFasade = Goods::FASADE_EX_IMG; break;
-                                }    
-                            case Goods::FASADE_EX_IMG:
-                                if ($good->getCars()->count()){
-                                    $nextFasade = Goods::FASADE_EX_CAR; break;
-                                }    
-                            case Goods::FASADE_EX_CAR: 
-                                $goodRelatedCount = $this->entityManager->getRepository(GoodRelated::class)
-                                    ->count(['good' => $good->getId()]);
-                                if ($goodRelatedCount){
-                                    $nextFasade = Goods::FASADE_EX_RLT; break;
-                                }    
-                            default:
-                                $nextFasade = Goods::FASADE_EX_FULL_LOADED;
+            if (!empty($data[0]['ean'])){
+                foreach ($data[0]['ean'] as $eanData){
+//                    {"producer":"TRW", "article":"DF4183", "EAN":3322937320103}
+                    if (!empty($eanData['ean'])){
+                        if (!empty($eanData['article']) && !empty($eanData['producer'])){
+                            $goods = $this->fetchAll($eanData);
+                            if (!empty($goods)){
+                                $goodId = $goods[0]['id'];
+                                $ean = $eanData['ean'];
+//                                var_dump($goodId, $ean); exit;
+                                $this->entityManager->getRepository(Oem::class)
+                                        ->addEanAsOe($goodId, $ean);
+                                $i++;
+                            }    
                         }
-//                    }    
-    //                var_dump($nextFasade, $goodId); exit;
-                    $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $good->getId()]);                        
-                }    
-                $i++;
-            } 
+                    }    
+                }                
+            }
+            
+            if (!empty($data[0]['fasade_loaded'])){
+                foreach ($data[0]['fasade_loaded'] as $goodId){
+
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->find($goodId);
+
+                    if ($good){
+    //                    if ($good->getAvailable() === Goods::AVAILABLE_FALSE){
+    //                        $nextFasade = Goods::FASADE_EX_FULL_LOADED;
+    //                    } else {
+                            switch ($data[0]['fasade']){
+                                case Goods::FASADE_EX_NEW: 
+                                    if ($good->getOems()->count()){
+                                        $nextFasade = Goods::FASADE_EX_OEM; break;
+                                    }    
+                                case Goods::FASADE_EX_OEM: 
+                                    if ($good->getImageCount()){
+                                        $nextFasade = Goods::FASADE_EX_IMG; break;
+                                    }    
+                                case Goods::FASADE_EX_IMG:
+                                    if ($good->getCars()->count()){
+                                        $nextFasade = Goods::FASADE_EX_CAR; break;
+                                    }    
+                                case Goods::FASADE_EX_CAR: 
+                                    $goodRelatedCount = $this->entityManager->getRepository(GoodRelated::class)
+                                        ->count(['good' => $good->getId()]);
+                                    if ($goodRelatedCount){
+                                        $nextFasade = Goods::FASADE_EX_RLT; break;
+                                    }    
+                                default:
+                                    $nextFasade = Goods::FASADE_EX_FULL_LOADED;
+                            }
+    //                    }    
+        //                var_dump($nextFasade, $goodId); exit;
+                        $this->entityManager->getConnection()->update('goods', ['fasade_ex' => $nextFasade], ['id' => $good->getId()]);                        
+                    }    
+                    $i++;
+                } 
+            }    
             
             if ($i){
                 return "$i - успешно обновлено!";

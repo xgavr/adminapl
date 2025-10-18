@@ -1355,6 +1355,12 @@ STATUS_CANCELED  = -10; // Отменен.',
                 'name' => 'fasade_loaded',
                 'field_type' => 'array',
             ],
+            5 => [
+                'required' => false,
+                'validators' => [],
+                'filters' => [],
+                'name' => 'ean',
+            ],
         ],
     ],
     'api-tools-rest' => [

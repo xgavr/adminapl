@@ -80,8 +80,13 @@ class OemRepository  extends EntityRepository{
             $oe = $supplierId.'@'.$oe;
         }
         
-        $oem = $this->getEntityManager()->getRepository(Oem::class)
-                ->findOneBy(['good' => $goodId, 'oe' => $oe]);
+        if ($source === Oem::SOURCE_EAN){
+            $oem = $this->getEntityManager()->getRepository(Oem::class)
+                    ->findOneBy(['good' => $goodId, 'oe' => $oe, 'source' => $source]);            
+        } else {
+            $oem = $this->getEntityManager()->getRepository(Oem::class)
+                    ->findOneBy(['good' => $goodId, 'oe' => $oe]);
+        }    
         
         $brandName = null;
         if (isset($oems['brandName'])){
@@ -151,9 +156,26 @@ class OemRepository  extends EntityRepository{
         }    
         
         return;
-    }
-
+    }    
     
+    /**
+     * Добавить штрихкод в таблицу номеров
+     * 
+     * @param integer $goodId
+     * @param string $ean
+     */
+    public function addEanAsOe($goodId, $ean)
+    {
+        $oem = $this->addOemToGood($goodId, [
+            'oeNumber' => $ean, 
+          ], Oem::SOURCE_EAN);
+        
+        if ($oem){    
+            $this->getEntityManager()->detach($oem);
+        }    
+        
+        return;
+    }    
     
     /**
      * Выборка не привязанных артикулов из прайса
