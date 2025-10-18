@@ -146,6 +146,7 @@ class GoodAplResource extends AbstractResourceListener
     {
 //        ini_set('memory_limit', '2048M');
         
+        $articleFilter = new ArticleCode();
         $code = $producerStr = $unknownProducer = null;
         $result = [];
         
@@ -156,7 +157,6 @@ class GoodAplResource extends AbstractResourceListener
         }   
         
         if (!empty($paramsArray['article'])){
-            $articleFilter = new ArticleCode();
             $code = $articleFilter->filter($paramsArray['article']);
         }
         
@@ -182,6 +182,18 @@ class GoodAplResource extends AbstractResourceListener
                         return $result;
                     }
                 }    
+            }
+        }
+        
+        if (!empty($paramsArray['ean'])){ //поиск по штрихкоду
+            $oems = $this->entityManager->getRepository(Oem::class)
+                    ->findBy(['oe' => $articleFilter->filter($paramsArray['ean']), 'source' => Oem::SOURCE_EAN]);
+            if ($oems){
+                foreach ($oems as $oem){
+                    $result[] = $oem->getGood()->toArray();
+                }
+                
+                return $result;                
             }
         }
         
