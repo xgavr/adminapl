@@ -156,7 +156,7 @@ class MikadoManager {
         $client->setUri(self::host.$uri);
         $client->setAdapter(self::HTTPS_ADAPTER);
         $client->setMethod('GET');
-        $client->setOptions(['timeout' => 30]);
+        $client->setOptions(['timeout' => 60]);
         
         $client->setParameterGet([
             'Date_From' => date('Y-m-d', strtotime("-3 day")),
