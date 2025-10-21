@@ -991,7 +991,7 @@ class AplController extends AbstractActionController
 
     public function unloadCommentAction()
     {                
-        $this->aplOrderService->unloadComment();
+        $this->aplOrderService->unloadComment(true);
         
         return new JsonModel([
             'result' => 'ok',

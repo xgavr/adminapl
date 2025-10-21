@@ -1023,9 +1023,10 @@ class AplOrderService {
 
     /*
      * Получить comment
+     * @param bool $debug
      * 
      */
-    public function getComment()
+    public function getComment($debug = false)
     {
         $url = $this->aplApi().'unload-comment?api='.$this->aplApiKey();
 
@@ -1041,10 +1042,17 @@ class AplOrderService {
         $response = $client->send();
         $body = $response->getBody();
 
+        if ($debug){
 //        var_dump($body); exit;
+            var_dump(1, $body);
+        }
+        
         try{
             $result = json_decode($body, true);
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+            if ($debug){
+                var_dump(2, $ex->getMessage());
+            }
 //            var_dump($ex->getMessage());
 //            var_dump($body);
             return false;
@@ -1052,6 +1060,9 @@ class AplOrderService {
             return true;
         }    
         
+        if ($debug){
+            var_dump(1, $result);
+        }
 //        var_dump($result); exit;
         if (is_array($result)){
             $comment = $this->entityManager->getRepository(Comment::class)
@@ -1135,11 +1146,12 @@ class AplOrderService {
 
     /**
      * Загрузить comments
+     * @param bool $debug Description
      * @return 
      */
-    public function unloadComment()
+    public function unloadComment($debug = false)
     {
-        $commentId = $this->getComment();
+        $commentId = $this->getComment($debug);
         if (is_numeric($commentId)){
             $this->unloadedComment($commentId);
             return true;
