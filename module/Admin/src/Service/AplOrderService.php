@@ -1061,7 +1061,7 @@ class AplOrderService {
         }    
         
         if ($debug){
-            var_dump(1, $result);
+            var_dump(3, $result);
         }
 //        var_dump($result); exit;
         if (is_array($result)){
@@ -1094,7 +1094,7 @@ class AplOrderService {
                 } elseif ($client) {
                     $comment = $this->commentManager->addClientComment($client, $data);                            
                 } else {
-                    return false;
+                    return true; //кривой заказ
                 }   
             }
 
