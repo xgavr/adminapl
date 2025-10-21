@@ -1094,7 +1094,7 @@ class AplOrderService {
                 } elseif ($client) {
                     $comment = $this->commentManager->addClientComment($client, $data);                            
                 } else {
-                    return true; //кривой заказ
+                    //return true; //кривой заказ
                 }   
             }
 
