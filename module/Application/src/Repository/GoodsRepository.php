@@ -2904,6 +2904,14 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('o.returnCount')
                     ->from(Oem::class, 'o')
                     ->andWhere($queryBuilder->expr()->in('o.good', $goodIds))
+                    ->andWhere($queryBuilder->expr()->in('o.source', [
+                        Oem::SOURCE_CROSS, 
+                        Oem::SOURCE_INTERSECT, 
+                        Oem::SOURCE_MAN,
+                        Oem::SOURCE_MY_CODE,
+                        Oem::SOURCE_SUP,
+                        Oem::SOURCE_TD,
+                    ]))
                   ;
 
     //        var_dump($queryBuilder->getQuery()->getSQL());

@@ -76,7 +76,8 @@
         "deepseek-php/deepseek-php-client": "^2.0",
         "kilylabs/upd-parser-php": "^0.2.0",
         "laximo/guayaquillib": "^3.0",
-        "cocur/slugify": "^3.2"
+        "cocur/slugify": "^3.2",
+        "laximo/search": "^1.1"
     },
     "autoload": {
         "psr-4": {

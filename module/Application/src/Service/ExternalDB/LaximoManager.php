@@ -18,6 +18,9 @@ use Application\Entity\GenericGroup;
 use Application\Entity\Oem;
 use GuayaquilLib\ServiceAm;
 use GuayaquilLib\Am;
+use Laximo\Search\Config;
+use Laximo\Search\SearchService;
+use GuayaquilLib\ServiceOem;
 
 /**
  * Description of LaximoManager
@@ -100,13 +103,34 @@ class LaximoManager
     {
         $settings = $this->adminManager->getLaximoSettings();
 //        var_dump($settings['login'], $settings['api_key']); exit;
-        $am = new ServiceAm($settings['login'], $settings['api_key']);
-        print_r($am->findOem('c110'));
-        print_r($am->findOem('c110', 'vic'));
-        print_r($am->findOem('c110', 'vic', [Am::optionsCrosses]));
-        print_r($am->findOem('90471-PX4-000', 'HONDA', [Am::optionsCrosses]));
-        print_r($am->findOem('AN723K', 'AKEBONO', [Am::optionsImages]));
-        print_r($am->findOem('44010-S04-961', 'honda', [Am::optionsCrosses], [Am::replacementTypePartOfTheWhole]));
+//        
+//        Laximo.DOC
+//        $am = new ServiceAm($settings['login'], $settings['api_key']);
+//        
+        $oem = new ServiceOem($settings['login'], $settings['api_key']);
+//        print_r($oem->listCatalogs());
+//        print_r($oem->getCatalogInfo('CFIAT84'));
+//        
+
+//        print_r($oem->findVehicle('XZU423-0001026'));
+//        print_r($oem->findVehicleByVin('VR3UDYHZSMJ631263'));
+//        print_r($oem->findVehicleByFrameNo('XZU423-0001026'));
+//        print_r($oem->execCustomOperation('DAF', 'findByChassisNumber', ['chassis' => 'EB100567']));
+//        print_r($oem->getVehicleInfo('TOYOTA00', '$*KwFEcGEOQQ9FN0UYBAtiQhwIKC8xR0RDQFFXVBI3C1MfA1JIDWdvNzo1U1pVGQENGx8uLSVFRERAQh8QDURBUl1UFBNQFQMKQUZBQkZVXFBCQh9MVSgrI0NCQQJ1bDA6J1NaVRYbSwMHREBIDAAAAACTKWcw$', '0'));
+        print_r($oem->getVehicleInfo('PSA_P202311', '$*KwFkWWR1AGUzJS4XK3BsIyd0ARMeZmVhZS0tPyV1anMbdXxweSMndAECYgMTCRpVUlAcYWNgZGFjcHJ_QhZiGxUfJxUIQ1NrYnYuDgkXaGI9NSVgZ2FjKAggIXtBSx8ZLg4mJCYSWVMuAxMJGQwEHRg5MixkYWMAAAAAyBeVuQ==$', '0'));
+//        
+//        print_r($am->findOem('c110'));
+//        print_r($am->findOem('c110', 'vic'));
+//        print_r($am->findOem('c110', 'vic', [Am::optionsCrosses]));
+//        print_r($am->findOem('90471-PX4-000', 'HONDA', [Am::optionsCrosses]));
+//        print_r($am->findOem('AN723K', 'AKEBONO', [Am::optionsImages]));
+//        print_r($am->findOem('44010-S04-961', 'honda', [Am::optionsCrosses], [Am::replacementTypePartOfTheWhole]));
+        
+        ///Laximo.Search SDK                
+//        $service = new SearchService(new Config(['login' => $settings['login'], 'password' => $settings['api_key']]));
+//        
+//        print_r($service->user());
+//        print_r($service->search('фильтр маслянный XW8ZZZ7PZHG003807'));        
     }
     
     /**
