@@ -9,6 +9,7 @@ use Application\Entity\Goods;
 use Application\Filter\ArticleCode;
 use Application\Entity\GoodRelated;
 use Application\Entity\Oem;
+use Application\Filter\GoodAvailable;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -201,6 +202,7 @@ class GoodAplResource extends AbstractResourceListener
             
             $limit = $paramsArray['limit'] ?? 1000;
             $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
+            $availableFilter = new GoodAvailable($this->entityManager);
 
             switch ($fasade){
                 case Goods::FASADE_EX_NEW:
@@ -213,6 +215,7 @@ class GoodAplResource extends AbstractResourceListener
                     foreach ($goods as $good){
                                                 
                         $data = $good->toArray();
+                        $data['available'] = $availableFilter->filter($good);
                         $data['categories'] = $good->getCategoryIdsAsArray();
                         $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
                         $data['attributes'] = $good->getAttributeValuesAsArray();
