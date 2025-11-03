@@ -148,6 +148,8 @@ class GoodAplResource extends AbstractResourceListener
 //        ini_set('memory_limit', '2048M');
         
         $articleFilter = new ArticleCode();
+        $availableFilter = new GoodAvailable($this->entityManager);
+        
         $code = $producerStr = $unknownProducer = null;
         $result = [];
         
@@ -180,6 +182,7 @@ class GoodAplResource extends AbstractResourceListener
                             ->findOneBy(['code' => $code, 'producer' => $producer->getId()]);
                     if ($good){
                         $result[] = $good->toArray();
+                        $result['available'] = $availableFilter->filter($good);
                         return $result;
                     }
                 }    
@@ -201,8 +204,7 @@ class GoodAplResource extends AbstractResourceListener
         if (!empty($paramsArray['fasade'])){
             
             $limit = $paramsArray['limit'] ?? 1000;
-            $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;
-            $availableFilter = new GoodAvailable($this->entityManager);
+            $fasade = $paramsArray['fasade'] ?? Goods::FASADE_EX_NEW;            
 
             switch ($fasade){
                 case Goods::FASADE_EX_NEW:
