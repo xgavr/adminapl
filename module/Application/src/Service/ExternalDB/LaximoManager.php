@@ -328,7 +328,7 @@ class LaximoManager
                 ];
                 
                 $source = Oem::SOURCE_CROSS;
-                if ($value['part']['manufacturer']['isOriginal']){
+                if ($value['part']['manufacturer']['isOriginal'] == true){
                     $source = Oem::SOURCE_TD;
                 }
                 
