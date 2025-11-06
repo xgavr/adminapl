@@ -185,16 +185,19 @@ class LaximoManager
                 [
                     'propertyId' => 341,
                     'value' => $laximoPart->getDimensions()->getD1(),
+                    'id' => md5($laximoPart->getDimensions()->getD1()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD1()),                    
                 ],
                 [
                     'propertyId' => 342,
                     'value' => $laximoPart->getDimensions()->getD2(),
+                    'id' => md5($laximoPart->getDimensions()->getD2()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD2()),                    
                 ],
                 [
                     'propertyId' => 343,
                     'value' => $laximoPart->getDimensions()->getD3(),
+                    'id' => md5($laximoPart->getDimensions()->getD3()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD3()),                    
                 ],
             ];
@@ -205,6 +208,7 @@ class LaximoManager
            $properties[$prop->getCode()] = [
                'code' => $prop->getCode(),
                'propertyId' => $prop->getCode() + 5000,
+               'id' => $prop->getCode() + 5000,
                'name' => $prop->getPropertyName(),
                'propertyShortName' => $prop->getPropertyName(),
                'propertyName' => $prop->getPropertyName(),
