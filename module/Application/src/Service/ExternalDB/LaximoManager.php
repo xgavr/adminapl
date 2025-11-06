@@ -165,7 +165,7 @@ class LaximoManager
         }
 //        var_dump($code, $brand); exit;
         if ($code){
-            $parts = $this->am->findOem($code, $brand);
+            $parts = $this->am->findOem($code, $brand, [Am::optionsCrosses, Am::optionsImages, Am::optionsNames, Am::optionsProperties]);
             var_dump($parts); exit;
         }
         
