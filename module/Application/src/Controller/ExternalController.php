@@ -10,6 +10,7 @@ namespace Application\Controller;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
+use Application\Entity\Goods;
 
 class ExternalController extends AbstractActionController
 {
@@ -137,6 +138,35 @@ class ExternalController extends AbstractActionController
         }        
 
         $result = $this->externalManager->laximo($action);
+        
+        //.
+        return new JsonModel([
+            'message' => $result,
+        ]);                   
+    }
+    
+    public function laximoFindOemAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        if ($goodId < 0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
+        if (!$good) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+
+        $result = $this->externalManager->laximo('findOem', [
+            'code' => $good->getCode(),
+            'brand' => $good->getProducer()->getName(),
+        ]);
         
         //.
         return new JsonModel([

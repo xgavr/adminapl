@@ -178,6 +178,7 @@ class ExternalManager
     {
         switch($action){
             case 'ping': $result = $this->laximoManager->ping(); break;
+            case 'findOem': $result = $this->laximoManager->findOem($params); break;
             default: break;
         }
         

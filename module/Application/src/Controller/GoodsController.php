@@ -1340,6 +1340,37 @@ class GoodsController extends AbstractActionController
             'result' => 'ok-reload',
         ]);                  
     }
+    
+    
+    public function laximoFindOemAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        if ($goodId < 0) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
+        if (!$good) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+
+        $result = $this->externalManager->laximo('findOem', [
+            'code' => $good->getCode(),
+            'brand' => $good->getProducer()->getName(),
+        ]);
+        
+        //.
+        return new JsonModel([
+            'message' => $result,
+        ]);                   
+    }
+
 
     public function goodOemAction()
     {

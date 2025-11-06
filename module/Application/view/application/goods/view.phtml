@@ -289,8 +289,12 @@
                                 <option value="<?= $key?>" <?= ($key === Oem::SOURCE_EXT_SOURCE) ? 'selected':'' ?>><?= $value?></option>
                             <?php endforeach;?>
                         </select>
-                        <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
+                        <button value="/goods/laximo-find-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
                                 title="Загрузить номера из ТекДока" data-table="oemTable">
+                            <span class="glyphicon glyphicon-import" >Laximo</span>
+                        </button>                             
+                        <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
+                                title="Загрузить номера из ТекДока" data-table="oemTable" disabled>
                             <span class="glyphicon glyphicon-import" ></span>
                         </button>                             
                         <button value="/goods/good-oem-sup-cross/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
