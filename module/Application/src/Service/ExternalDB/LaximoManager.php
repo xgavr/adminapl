@@ -218,7 +218,7 @@ class LaximoManager
      * @param PartCrossObject $partCrossObject
      * @retunr array
      */
-    private function getCroosPart($partCrossObject)
+    private function crossPartToArray($partCrossObject)
     {
         $result = [
             'rate' => $partCrossObject->getRate(),
@@ -263,8 +263,9 @@ class LaximoManager
             foreach ($parts->getOems() as $partObject){
 
                 $result[$partObject->getPartId()] = $this->partToArray($partObject); 
-                $result[$partObject->getPartId()]['oems'] = $this->getCroosPart($partObject); 
-      
+                foreach ($partObject->getReplacements() as $crossPart){
+                    $result[$partObject->getPartId()]['oems'][] = $this->crossPartToArray($crossPart); 
+                }      
             }
             
             var_dump($parts); exit;
