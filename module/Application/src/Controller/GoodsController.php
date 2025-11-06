@@ -1360,12 +1360,13 @@ class GoodsController extends AbstractActionController
         }        
         
 
-        $result = $this->externalManager->laximo('findOem', [
-            'code' => $good->getCode(),
-            'brand' => $good->getProducer()->getName(),
-        ]);
-        
-        var_dump($result);
+//        $result = $this->externalManager->laximo('findOem', [
+//            'code' => $good->getCode(),
+//            'brand' => $good->getProducer()->getName(),
+//        ]);
+//        
+//        var_dump($result);
+        $result = $this->externalManager->laximo('updateGood', $good);
         //.
         return new JsonModel([
             'message' => $result,

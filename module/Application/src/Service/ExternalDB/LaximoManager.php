@@ -276,4 +276,61 @@ class LaximoManager
         
         return $result; 
     }
+    
+    /**
+     * Сохранить картинку
+     * @param Goods $good
+     * @param array $part
+     */
+    private function saveImage($good, $part)
+    {
+        if (!empty($part['images'])){
+            
+            foreach ($good->getImages() as $oldImage){
+                if ($oldImage->getSimilar() !== Images::SIMILAR_MATCH){
+                    $this->entityManager->getRepository(Images::class)
+                            ->removeImage($oldImage);
+                }
+            }
+            
+            // если картинка есть, не добавляем
+            if ($good->getImages()->count() !== 0){
+                return;
+            }
+
+            $this->entityManager->getRepository(Images::class)
+                    ->addImageFolder($good, Images::STATUS_TD);                
+        
+            foreach ($part['images'] as $image){
+                        
+                $this->entityManager->getRepository(Images::class)
+                    ->saveImageGood($good, $image['filename'], basename($image['filename']), Images::STATUS_TD, Images::SIMILAR_MATCH);
+                
+            }
+        }
+        
+        return;
+    }
+    
+    /**
+     * 
+     * @param Goods $good
+     */
+    public function updateGoodFromLaximo($good)
+    {
+        $laximoData = $this->findOem([
+            'code' => $good->getCode(),
+            'brand' => $good->getProducer()->getName(),
+        ]);
+        
+        if(is_array($laximoData)){
+            foreach ($laximoData as $part){
+                
+                //1. Картирка
+                $this->saveImage($good, $part);
+            }
+        }
+        
+        return;
+    }
 }
