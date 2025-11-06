@@ -204,7 +204,7 @@ class LaximoManager
         foreach ($laximoPart->getProperties() as $prop){
            $properties[$prop->getCode()] = [
                'code' => $prop->getCode(),
-               'propertyId' => $prop->getCode(),
+               'propertyId' => $prop->getCode() + 5000,
                'name' => $prop->getPropertyName(),
                'propertyShortName' => $prop->getPropertyName(),
                'propertyName' => $prop->getPropertyName(),
