@@ -202,7 +202,7 @@ class LaximoManager
             'dimensions' => $dimensions,
             'formattedOem' => $laximoPart->getFormattedOem(),
             'images' => $images,
-            'manufacturer' => $this->getManufacturer($laximoPart->getManufacturerId()),
+            'manufacturer' => $this->getManufacturerInfo($laximoPart->getManufacturerId()),
             'manufacturerId' => $laximoPart->getManufacturerId(),
             'name' => $laximoPart->getName(),
             'oem' => $laximoPart->getOem(),
