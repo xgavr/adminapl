@@ -416,6 +416,6 @@ class LaximoManager
             }
         }
         
-        return;
+        return $laximoData;
     }
 }
