@@ -181,11 +181,14 @@ class LaximoManager
             ];                   
         }
         
-        $dimensions = [
-            'D1'=> $laximoPart->getDimensions()->getD1(),
-            'D2'=> $laximoPart->getDimensions()->getD2(),
-            'D3'=> $laximoPart->getDimensions()->getD3(),
-        ];
+        $dimensions = [];
+        if (!empty($laximoPart->getDimensions())){
+            $dimensions = [
+                'd1'=> $laximoPart->getDimensions()->getD1(),
+                'd2'=> $laximoPart->getDimensions()->getD2(),
+                'd3'=> $laximoPart->getDimensions()->getD3(),
+            ];
+        }    
         
         $properties = [];
         foreach ($laximoPart->getProperties() as $prop){
