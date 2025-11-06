@@ -7,14 +7,11 @@
  */
 namespace Application\Service\ExternalDB;
 
-use Laminas\Http\Client;
+
 use Laminas\Json\Decoder;
 use Laminas\Json\Encoder;
-use Application\Filter\ProducerName;
 use Application\Entity\Images;
-use Application\Entity\AutoDbResponse;
 use Application\Entity\Goods;
-use Application\Entity\GenericGroup;
 use Application\Entity\Oem;
 use GuayaquilLib\ServiceAm;
 use GuayaquilLib\Am;
@@ -23,6 +20,7 @@ use Laximo\Search\SearchService;
 use GuayaquilLib\ServiceOem;
 use GuayaquilLib\objects\am\PartObject;
 use GuayaquilLib\objects\am\PartCrossObject;
+use Application\Entity\GoodAttributeValue;
 
 /**
  * Description of LaximoManager
@@ -184,9 +182,21 @@ class LaximoManager
         $dimensions = [];
         if (!empty($laximoPart->getDimensions())){
             $dimensions = [
-                'd1'=> $laximoPart->getDimensions()->getD1(),
-                'd2'=> $laximoPart->getDimensions()->getD2(),
-                'd3'=> $laximoPart->getDimensions()->getD3(),
+                [
+                    'propertyId' => 341,
+                    'value' => $laximoPart->getDimensions()->getD1(),
+                    'valueId' => md5($laximoPart->getDimensions()->getD1()),                    
+                ],
+                [
+                    'propertyId' => 342,
+                    'value' => $laximoPart->getDimensions()->getD2(),
+                    'valueId' => md5($laximoPart->getDimensions()->getD2()),                    
+                ],
+                [
+                    'propertyId' => 343,
+                    'value' => $laximoPart->getDimensions()->getD3(),
+                    'valueId' => md5($laximoPart->getDimensions()->getD3()),                    
+                ],
             ];
         }    
         
@@ -194,9 +204,15 @@ class LaximoManager
         foreach ($laximoPart->getProperties() as $prop){
            $properties[$prop->getCode()] = [
                'code' => $prop->getCode(),
+               'propertyId' => $prop->getCode(),
                'name' => $prop->getPropertyName(),
+               'propertyShortName' => $prop->getPropertyName(),
+               'propertyName' => $prop->getPropertyName(),
                'rate' => $prop->getRate(),
+               'propertyUnitName' => $prop->getRate(),
+               'propertyType' => 'K',
                'value' => $prop->getValue(),
+               'valueId' => md5($prop->getValue()),
             ]; 
         }        
         
@@ -338,6 +354,41 @@ class LaximoManager
         }
         
         return;        
+    }
+    
+    /**
+     * Сохранить характеристики
+     * 
+     * @param Goods $good
+     * @param array $part
+     */
+    private function saveAttributes($good, $part)
+    {
+        $attrCount = $this->entityManager->getRepository(GoodAttributeValue::class)
+                    ->count(['good' => $good->getId()]);
+        
+        if ($attrCount > 1){
+            return;
+        }
+        
+        if (!empty($part['properties'])){                
+        
+            foreach ($part['properties'] as $attr){
+                $this->entityManager->getRepository(GoodAttributeValue::class)
+                        ->addGoodAttributeValue($good, $attr);
+            }                
+        }
+        
+        if (!empty($part['dimensions'])){                
+        
+            foreach ($part['dimensions'] as $attr){
+                $this->entityManager->getRepository(GoodAttributeValue::class)
+                        ->addGoodAttributeValue($good, $attr);
+            }                
+        }
+        
+        return;        
+        
     }
     
     /**

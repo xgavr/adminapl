@@ -150,9 +150,9 @@ class AttributeRepository  extends EntityRepository{
             $attribute = $this->addAtribute([
                 'id' => $attr['propertyId'],
                 'attrBlockNo' => 0,
-                'conditional' => $attr['valueCritical'],
-                'applicable' => $attr['valueApplicable'],
-                'interval' => $attr['valueInterval'],
+                'conditional' => $attr['valueCritical'] ?? 0,
+                'applicable' => $attr['valueApplicable'] ?? 0,
+                'interval' => $attr['valueInterval'] ?? 0,
                 'type' => $attr['propertyType'],
                 'unitName' => $attr['propertyUnitName'],
                 'nameAbbreviation' => $attr['propertyShortName'],
