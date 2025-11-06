@@ -21,6 +21,8 @@ use GuayaquilLib\Am;
 use Laximo\Search\Config;
 use Laximo\Search\SearchService;
 use GuayaquilLib\ServiceOem;
+use GuayaquilLib\objects\am\PartObject;
+use GuayaquilLib\objects\am\PartCrossObject;
 
 /**
  * Description of LaximoManager
@@ -144,7 +146,94 @@ class LaximoManager
     
     /**
      * 
+     * @param int $manufacturerId
+     * @return array
+     */
+    private function getManufacturerInfo($manufacturerId)
+    {
+
+        $manufacturerObject = $this->am->getManufacturerInfo($manufacturerId);
+        
+        if (!$manufacturerObject){
+            return;
+        }
+        
+        $result = [
+            'name' => $manufacturerObject->getName(),
+            'isOriginal' => $manufacturerObject->isOriginal(),
+        ];
+                
+        return $result;        
+    }
+    
+    /**
+     * @param PartObject $laximoPart
+     * @return array
+     */
+    private function partToArray($laximoPart)
+    {
+        $images = [];
+        foreach($laximoPart->getImages() as $image){
+            $images[] = [
+                'filename' =>  $image->getFilename(),
+                'hight' =>  $image->getHeight(),
+                'width' =>  $image->getWidth(),
+            ];                   
+        }
+        
+        $dimensions = [
+            'D1'=> $laximoPart->getDimensions()->getD1(),
+            'D2'=> $laximoPart->getDimensions()->getD2(),
+            'D3'=> $laximoPart->getDimensions()->getD3(),
+        ];
+        
+        $properties = [];
+        foreach ($laximoPart->getProperties() as $prop){
+           $properties[$prop->getCode()] = [
+               'code' => $prop->getCode(),
+               'name' => $prop->getPropertyName(),
+               'rate' => $prop->getRate(),
+               'value' => $prop->getValue(),
+            ]; 
+        }        
+        
+        $result = [
+            'partId' => $laximoPart->getPartId(),
+            'dimensions' => $dimensions,
+            'formattedOem' => $laximoPart->getFormattedOem(),
+            'images' => $images,
+            'manufacturer' => $this->getManufacturer($laximoPart->getManufacturerId()),
+            'manufacturerId' => $laximoPart->getManufacturerId(),
+            'name' => $laximoPart->getName(),
+            'oem' => $laximoPart->getOem(),
+            'properties' => $properties,
+            'volume' => $laximoPart->getVolume(),
+            'weight' => $laximoPart->getWeight(),
+        ];
+        
+        return $result;
+    }
+    
+    /**
+     * @param PartCrossObject $partCrossObject
+     * @retunr array
+     */
+    private function getCroosPart($partCrossObject)
+    {
+        $result = [
+            'rate' => $partCrossObject->getRate(),
+            'type' => $partCrossObject->getType(),
+            'part' => $this->partToArray($partCrossObject->getPart()),
+            'way' => $partCrossObject->getWay(),
+        ];
+        
+        return $result;
+    }
+    
+    /**
+     * 
      * @param array $params
+     * @return array
      */
     public function findOem($params)
     {
@@ -166,6 +255,18 @@ class LaximoManager
 //        var_dump($code, $brand); exit;
         if ($code){
             $parts = $this->am->findOem($code, $brand, [Am::optionsCrosses, Am::optionsImages, Am::optionsNames, Am::optionsProperties]);
+            
+            if (!$parts){
+                return;
+            }
+            
+            foreach ($parts->getOems() as $partObject){
+
+                $result[$partObject->getPartId()] = $this->partToArray($partObject); 
+                $result[$partObject->getPartId()]['oems'] = $this->getCroosPart($partObject); 
+      
+            }
+            
             var_dump($parts); exit;
         }
         
