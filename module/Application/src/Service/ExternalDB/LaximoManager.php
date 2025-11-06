@@ -313,6 +313,34 @@ class LaximoManager
     }
     
     /**
+     * Сохранить номера
+     * @param Goods $good
+     * @param array $part
+     */
+    private function saveOem($good, $part)
+    {
+        if (!empty($part['oems'])){                
+        
+            foreach ($part['oems'] as $value){
+                $oem = [
+                    'oeNumber' => $value['part']['formattedOem'],
+                    'brandName' => $value['part']['manufacturer']['name'],
+                ];
+                
+                $source = Oem::SOURCE_CROSS;
+                if ($value['part']['manufacturer']['isOriginal']){
+                    $source = Oem::SOURCE_TD;
+                }
+                
+                $this->entityManager->getRepository(Oem::class)
+                    ->addOemToGood($good->getId(), $oem, $source);                
+            }
+        }
+        
+        return;        
+    }
+    
+    /**
      * 
      * @param Goods $good
      */
@@ -328,6 +356,9 @@ class LaximoManager
                 
                 //1. Картирка
                 $this->saveImage($good, $part);
+                
+                //2. Номера
+                $this->saveOem($good, $part);
             }
         }
         
