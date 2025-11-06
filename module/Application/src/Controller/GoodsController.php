@@ -1365,6 +1365,7 @@ class GoodsController extends AbstractActionController
             'brand' => $good->getProducer()->getName(),
         ]);
         
+        var_dump($result);
         //.
         return new JsonModel([
             'message' => $result,

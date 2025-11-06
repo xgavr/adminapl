@@ -271,7 +271,7 @@ class LaximoManager
                 }      
             }
             
-            var_dump($parts); exit;
+//            var_dump($parts); exit;
         }
         
         return $result; 
