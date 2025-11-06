@@ -410,6 +410,9 @@ class LaximoManager
                 
                 //2. Номера
                 $this->saveOem($good, $part);
+                
+                //3. Атрибуты
+                $this->saveAttributes($good, $part);
             }
         }
         
