@@ -123,7 +123,17 @@ class OemRepository  extends EntityRepository{
             $this->getEntityManager()->getRepository(Goods::class)
                     ->updateGoodId($goodId, $upd);            
         } else {
-            if ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
+            if ($source == Oem::SOURCE_MY_CODE && $oem->getSource() != Oem::SOURCE_MY_CODE){
+                $this->getEntityManager()->getConnection()->update('oem', 
+                        [
+                            'oe' => $oe, 
+                            'oe_number' => $oems['oeNumber'],
+                            'brand_name' => $brandName,
+                            'source' => Oem::SOURCE_MY_CODE,
+                            'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                        ], 
+                        ['id' => $oem->getId()]);
+            } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
                 $this->getEntityManager()->getConnection()->update('oem', 
                         [
                             'oe' => $oe, 
