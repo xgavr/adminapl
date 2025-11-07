@@ -21,6 +21,7 @@ use GuayaquilLib\ServiceOem;
 use GuayaquilLib\objects\am\PartObject;
 use GuayaquilLib\objects\am\PartCrossObject;
 use Application\Entity\GoodAttributeValue;
+use Application\Entity\Producer;
 
 /**
  * Description of LaximoManager
@@ -461,6 +462,10 @@ class LaximoManager
                 
                 //3. Атрибуты
                 $this->saveAttributes($good, $part);
+                
+                if ($part['manufacturer']['isOriginal'] == true){
+                    $this->entityManager->getConnection()->update('producer', ['is_original' => Producer::ORIGINAL_IS], ['id' => $good->getProducer()->getId()]);                    
+                }
             }
             
             $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $good->getId()]);
