@@ -1159,9 +1159,20 @@ class GoodsManager
         $iterable = $goodsQuery->iterate();
         foreach ($iterable as $row){
             foreach ($row as $good){
-//                var_dump($good); exit;
-                $this->entityManager->getRepository(Oem::class)
-                        ->addMyCodeAsOe($good);
+                
+                $myCodeOe = $this->entityManager->getRepository(Oem::class)
+                        ->findOneBy(['oe' => $good->getCode(), 'good' => $good->getId(), 'source' => Oem::SOURCE_MY_CODE]);
+                
+                if (!$myCodeOe){
+
+                    var_dump($good->getId()); exit;
+
+                    $this->entityManager->getRepository(Oem::class)
+                            ->addMyCodeAsOe($good);
+                    
+                            
+                }
+                
                 
                 $this->entityManager->detach($good);
             }    
