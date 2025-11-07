@@ -133,7 +133,7 @@ class OemRepository  extends EntityRepository{
                             'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                         ], 
                         ['id' => $oem->getId()]);
-            } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
+            } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MY_CODE){
                 $this->getEntityManager()->getConnection()->update('oem', 
                         [
                             'oe' => $oe, 
