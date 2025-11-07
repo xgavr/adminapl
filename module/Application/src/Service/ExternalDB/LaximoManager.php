@@ -184,18 +184,24 @@ class LaximoManager
             $dimensions = [
                 [
                     'propertyId' => 341,
+                    'propertyShortName' => 'd1',
+                    'propertyName' => 'd1',
                     'value' => $laximoPart->getDimensions()->getD1(),
                     'id' => md5($laximoPart->getDimensions()->getD1()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD1()),                    
                 ],
                 [
                     'propertyId' => 342,
+                    'propertyShortName' => 'd2',
+                    'propertyName' => 'd2',
                     'value' => $laximoPart->getDimensions()->getD2(),
                     'id' => md5($laximoPart->getDimensions()->getD2()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD2()),                    
                 ],
                 [
                     'propertyId' => 343,
+                    'propertyShortName' => 'd3',
+                    'propertyName' => 'd3',
                     'value' => $laximoPart->getDimensions()->getD3(),
                     'id' => md5($laximoPart->getDimensions()->getD3()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD3()),                    
