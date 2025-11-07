@@ -424,8 +424,10 @@ class LaximoManager
         
             foreach ($part['dimensions'] as $attr){
 //                var_dump($attr);
-                $this->entityManager->getRepository(GoodAttributeValue::class)
-                        ->addGoodAttributeValue($good, $attr);
+                if (!empty($attr['value'])){
+                    $this->entityManager->getRepository(GoodAttributeValue::class)
+                            ->addGoodAttributeValue($good, $attr);
+                }    
             }                
         }
         
