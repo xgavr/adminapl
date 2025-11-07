@@ -341,27 +341,29 @@ class LaximoManager
     {
         if (!empty($part['images'])){
             
-            foreach ($good->getImages() as $oldImage){
-                if ($oldImage->getSimilar() !== Images::SIMILAR_MATCH){
-                    $this->entityManager->getRepository(Images::class)
-                            ->removeImage($oldImage);
+            if (count($part['images']) > 0){
+                foreach ($good->getImages() as $oldImage){
+                    if ($oldImage->getSimilar() !== Images::SIMILAR_MATCH){
+                        $this->entityManager->getRepository(Images::class)
+                                ->removeImage($oldImage);
+                    }
                 }
-            }
-            
-            // если картинка есть, не добавляем
-            if ($good->getImages()->count() !== 0){
-                return;
-            }
 
-            $this->entityManager->getRepository(Images::class)
-                    ->addImageFolder($good, Images::STATUS_TD);                
-        
-            foreach ($part['images'] as $image){
-                        
+                // если картинка есть, не добавляем
+                if ($good->getImages()->count() !== 0){
+                    return;
+                }
+
                 $this->entityManager->getRepository(Images::class)
-                    ->saveImageGood($good, $image['filename'], basename($image['filename']), Images::STATUS_TD, Images::SIMILAR_MATCH);
-                
-            }
+                        ->addImageFolder($good, Images::STATUS_TD);                
+
+                foreach ($part['images'] as $image){
+
+                    $this->entityManager->getRepository(Images::class)
+                        ->saveImageGood($good, $image['filename'], basename($image['filename']), Images::STATUS_TD, Images::SIMILAR_MATCH);
+
+                }
+            }    
         }
         
         return;
