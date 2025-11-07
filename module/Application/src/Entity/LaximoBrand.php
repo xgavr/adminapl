@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Description of Contact
  * @ORM\Entity(repositoryClass="\Application\Repository\ExternalRepository")
- * @ORM\Table(name="address")
+ * @ORM\Table(name="laximo_brand")
  * @author Daddy
  */
 class LaximoBrand {
