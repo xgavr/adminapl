@@ -463,7 +463,7 @@ class LaximoManager
                 $this->saveAttributes($good, $part);
             }
             
-            $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $good->getId()]);
+            $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $good->getId()]);
             
         }
         
