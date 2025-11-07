@@ -330,9 +330,11 @@ class ImageRepository extends EntityRepository
         $url = $uriNormalizeFilter->filter($uri);
         
         if (!$urlExists->isValid($url)){
+            var_dump($url, 'Ссылка не найдена');
             return;
         }
         if (!$uriValidator->isValid($url)){
+            var_dump($url, 'Ссылка не верная');
             return;
         }
         
@@ -347,6 +349,7 @@ class ImageRepository extends EntityRepository
         $headers = get_headers($url, 1);
 
         if (empty($headers)){
+            var_dump($url, 'Не верные заголовки');
             return;
         }
         
@@ -354,12 +357,15 @@ class ImageRepository extends EntityRepository
             $uriNormalizeFilterS = new UriNormalize(['enforcedScheme' => 'https']);
             $url = $uriNormalizeFilterS->filter($headers['Location']);
             if (!$fp = curl_init($url)) {
+                var_dump($url, 'Нет соединения');
                 return;
             } 
             if (!$urlExists->isValid($url)){
+                var_dump($url, '301 Ссылка не найдена');
                 return;
             }
             if (!$uriValidator->isValid($url)){
+                var_dump($url, '301 Ссылка не верная');
                 return;
             }
             $headers = @get_headers($url);
@@ -367,6 +373,7 @@ class ImageRepository extends EntityRepository
         }
         
         if (empty($headers)){
+            var_dump($url, 'Пустые заголовки');
             return;
         }
 
@@ -384,8 +391,14 @@ class ImageRepository extends EntityRepository
                         'similar' => $similar,
                         'good_id' => $good->getId(),
                     ]);
-                }    
-            }    
+                } else {
+                    var_dump($path, 'Путь не найден');
+                }   
+            } else {
+               var_dump($url, 'Файл не получен'); 
+            }   
+        } else {
+            var_dump($headers[0], 'Ответ сервера не 200');
         } 
         
         return;
