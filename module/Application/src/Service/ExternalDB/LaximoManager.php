@@ -183,28 +183,50 @@ class LaximoManager
         if (!empty($laximoPart->getDimensions())){
             $dimensions = [
                 [
-                    'propertyId' => 341,
+                    'propertyId' => 10001,
                     'propertyShortName' => 'd1',
                     'propertyName' => 'd1',
+                    'propertyType' => 'N',
+                    'propertyUnitName' => 'мм',
                     'value' => $laximoPart->getDimensions()->getD1(),
                     'id' => md5($laximoPart->getDimensions()->getD1()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD1()),                    
                 ],
                 [
-                    'propertyId' => 342,
+                    'propertyId' => 10002,
                     'propertyShortName' => 'd2',
                     'propertyName' => 'd2',
+                    'propertyType' => 'N',
+                    'propertyUnitName' => 'мм',
                     'value' => $laximoPart->getDimensions()->getD2(),
                     'id' => md5($laximoPart->getDimensions()->getD2()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD2()),                    
                 ],
                 [
-                    'propertyId' => 343,
+                    'propertyId' => 10003,
                     'propertyShortName' => 'd3',
                     'propertyName' => 'd3',
+                    'propertyType' => 'N',
+                    'propertyUnitName' => 'мм',
                     'value' => $laximoPart->getDimensions()->getD3(),
                     'id' => md5($laximoPart->getDimensions()->getD3()),                    
                     'valueId' => md5($laximoPart->getDimensions()->getD3()),                    
+                ],
+                [
+                    'propertyId' => 212,
+                    'value' => $laximoPart->getWeight(),
+                    'id' => md5($laximoPart->getWeight()),                    
+                    'valueId' => md5($laximoPart->getWeight()),                    
+                ],
+                [
+                    'propertyId' => 10004,
+                    'propertyShortName' => 'Объем [м³]',
+                    'propertyName' => 'Объем [м³]',
+                    'propertyType' => 'N',
+                    'propertyUnitName' => 'куб. м.',
+                    'value' => $laximoPart->getVolume(),
+                    'id' => md5($laximoPart->getVolume()),                    
+                    'valueId' => md5($laximoPart->getVolume()),                    
                 ],
             ];
         }    
