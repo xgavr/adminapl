@@ -341,6 +341,8 @@ class LaximoManager
     {
         if (!empty($part['images'])){
             
+            var_dump($part['images']); exit;
+            
             if (count($part['images']) > 0){
                 foreach ($good->getImages() as $oldImage){
                     if ($oldImage->getSimilar() !== Images::SIMILAR_MATCH){
