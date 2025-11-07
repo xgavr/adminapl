@@ -408,7 +408,7 @@ class LaximoManager
         $attrCount = $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->count(['good' => $good->getId()]);
         
-//        var_dump($attrCount, $part['properties'], $part['dimensions']); exit;
+        var_dump($attrCount, $part['properties'], $part['dimensions']); exit;
         
         if ($attrCount > 1){
             return;
