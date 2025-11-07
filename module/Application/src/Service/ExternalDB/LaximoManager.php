@@ -184,8 +184,8 @@ class LaximoManager
             $dimensions = [
                 [
                     'propertyId' => 10001,
-                    'propertyShortName' => 'd1',
-                    'propertyName' => 'd1',
+                    'propertyShortName' => 'd1 [мм]',
+                    'propertyName' => 'd1 [мм]',
                     'propertyType' => 'N',
                     'propertyUnitName' => 'мм',
                     'value' => $laximoPart->getDimensions()->getD1(),
@@ -194,8 +194,8 @@ class LaximoManager
                 ],
                 [
                     'propertyId' => 10002,
-                    'propertyShortName' => 'd2',
-                    'propertyName' => 'd2',
+                    'propertyShortName' => 'd2 [мм]',
+                    'propertyName' => 'd2 [мм]',
                     'propertyType' => 'N',
                     'propertyUnitName' => 'мм',
                     'value' => $laximoPart->getDimensions()->getD2(),
@@ -204,8 +204,8 @@ class LaximoManager
                 ],
                 [
                     'propertyId' => 10003,
-                    'propertyShortName' => 'd3',
-                    'propertyName' => 'd3',
+                    'propertyShortName' => 'd3 [мм]',
+                    'propertyName' => 'd3 [мм]',
                     'propertyType' => 'N',
                     'propertyUnitName' => 'мм',
                     'value' => $laximoPart->getDimensions()->getD3(),
@@ -213,7 +213,11 @@ class LaximoManager
                     'valueId' => md5($laximoPart->getDimensions()->getD3()),                    
                 ],
                 [
-                    'propertyId' => 212,
+                    'propertyId' => 10005,
+                    'propertyShortName' => 'Вес [кг]',
+                    'propertyName' => 'Вес [кг]',
+                    'propertyType' => 'N',
+                    'propertyUnitName' => 'кг',                    
                     'value' => $laximoPart->getWeight(),
                     'id' => md5($laximoPart->getWeight()),                    
                     'valueId' => md5($laximoPart->getWeight()),                    
