@@ -322,7 +322,7 @@ class LaximoManager
                     $result[$partObject->getPartId()]['oems'][] = $this->crossPartToArray($crossPart); 
                 }    
                 
-                var_dump($partObject);
+//                var_dump($partObject);
 //                var_dump($partObject->getProperties());
             }
             
