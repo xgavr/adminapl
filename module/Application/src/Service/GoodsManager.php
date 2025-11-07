@@ -1165,7 +1165,7 @@ class GoodsManager
                 
                 if (!$myCodeOe){
 
-                    var_dump($good->getId()); exit;
+//                    var_dump($good->getId()); exit;
 
                     $this->entityManager->getRepository(Oem::class)
                             ->addMyCodeAsOe($good);
