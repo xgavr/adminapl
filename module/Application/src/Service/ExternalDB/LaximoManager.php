@@ -22,6 +22,7 @@ use GuayaquilLib\objects\am\PartObject;
 use GuayaquilLib\objects\am\PartCrossObject;
 use Application\Entity\GoodAttributeValue;
 use Application\Entity\Producer;
+use Application\Entity\LaximoBrand;
 
 /**
  * Description of LaximoManager
@@ -150,6 +151,15 @@ class LaximoManager
      */
     private function getManufacturerInfo($manufacturerId)
     {
+        $laximoBrand = $this->entityManager->getRepository(LaximoBrand::class)
+                ->findOneBy(['laximoId' => $manufacturerId]);
+        
+        if ($laximoBrand){
+            return [
+                'name' => $laximoBrand->getName(),
+                'isOriginal' => $laximoBrand->getIsOriginal(),                
+            ];
+        }        
 
         $manufacturerObject = $this->am->getManufacturerInfo($manufacturerId);
         
@@ -161,6 +171,12 @@ class LaximoManager
             'name' => $manufacturerObject->getName(),
             'isOriginal' => $manufacturerObject->isOriginal(),
         ];
+        
+        $this->entityManager->getConnection()->insert('laximo_brand', [
+            'laximo_id' => $manufacturerId,
+            'name' => $manufacturerObject->getName(),
+            'is_original' => $manufacturerObject->isOriginal(),
+        ]);
                 
         return $result;        
     }
