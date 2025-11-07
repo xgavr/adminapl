@@ -341,7 +341,7 @@ class LaximoManager
     {
         if (!empty($part['images'])){
             
-            var_dump($part['images']); exit;
+//            var_dump($part['images']);
             
             if (count($part['images']) > 0){
                 foreach ($good->getImages() as $oldImage){
