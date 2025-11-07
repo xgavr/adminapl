@@ -327,6 +327,8 @@ class ImageRepository extends EntityRepository
         $urlExists = new UrlExists();
         $uriValidator = new Uri();
         
+        $result = 0;
+        
         $url = $uriNormalizeFilter->filter($uri);
         
         if (!$urlExists->isValid($url)){
@@ -391,6 +393,8 @@ class ImageRepository extends EntityRepository
                         'similar' => $similar,
                         'good_id' => $good->getId(),
                     ]);
+                    
+                    $result ++;
                 } else {
                     var_dump($path, 'Путь не найден');
                 }   
@@ -401,7 +405,7 @@ class ImageRepository extends EntityRepository
             var_dump($headers[0], 'Ответ сервера не 200');
         } 
         
-        return;
+        return $result;
             
     }
     
