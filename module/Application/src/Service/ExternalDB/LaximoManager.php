@@ -322,7 +322,7 @@ class LaximoManager
                     $result[$partObject->getPartId()]['oems'][] = $this->crossPartToArray($crossPart); 
                 }    
                 
-                var_dump($partObject->getProperties());
+//                var_dump($partObject->getProperties());
             }
             
 //            var_dump($parts); exit;
@@ -422,7 +422,7 @@ class LaximoManager
         if (!empty($part['dimensions'])){                
         
             foreach ($part['dimensions'] as $attr){
-                var_dump($attr);
+//                var_dump($attr);
                 $this->entityManager->getRepository(GoodAttributeValue::class)
                         ->addGoodAttributeValue($good, $attr);
             }                
