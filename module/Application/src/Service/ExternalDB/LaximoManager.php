@@ -288,7 +288,9 @@ class LaximoManager
                 $result[$partObject->getPartId()] = $this->partToArray($partObject); 
                 foreach ($partObject->getReplacements() as $crossPart){
                     $result[$partObject->getPartId()]['oems'][] = $this->crossPartToArray($crossPart); 
-                }      
+                }    
+                
+                var_dump($partObject->getProperties());
             }
             
 //            var_dump($parts); exit;
