@@ -1150,30 +1150,37 @@ class GoodsManager
         set_time_limit(3600);
         
         $qb = $this->entityManager->createQueryBuilder();
-        $qb->select('g')
+        $qb->select('g.id as goodId, g.code as goodCode')
+                ->distinct()
                 ->from(Goods::class, 'g')
+                ->join('g.oems', 'o')
+                ->where('o.source != :source')
+                ->setParameter('source', Oem::SOURCE_MY_CODE)
+                ->andWhere('o.oe = g.code')
                 ;
         
         $goodsQuery = $qb->getQuery();
         
+        var_dump($qb->getQuery()->getSQL()); exit;
+        
         $iterable = $goodsQuery->iterate();
-        foreach ($iterable as $row){
-            foreach ($row as $good){
+        foreach ($iterable as $data){
+            foreach ($data as $row){
                 
                 $myCodeOe = $this->entityManager->getRepository(Oem::class)
-                        ->findOneBy(['oe' => $good->getCode(), 'good' => $good->getId(), 'source' => Oem::SOURCE_MY_CODE]);
+                        ->findOneBy(['oe' => $row['goodCode'], 'good' => $row['goodId'], 'source' => Oem::SOURCE_MY_CODE]);
                 
                 if (!$myCodeOe){
 
 //                    var_dump($good->getId()); exit;
-
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->find($row['goodId']);
                     $this->entityManager->getRepository(Oem::class)
                             ->addMyCodeAsOe($good);
                     
                             
                 }
-                
-                
+                                
                 $this->entityManager->detach($good);
             }    
         }

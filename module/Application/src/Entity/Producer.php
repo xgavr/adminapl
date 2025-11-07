@@ -24,6 +24,9 @@ class Producer {
     const STATUS_ACTIVE       = 1; // Active producer.
     const STATUS_RETIRED      = 2; // Retired producer.   
 
+    const ORIGINAL_IS       = 1; // original producer.
+    const ORIGINAL_NO      = 2; // not original producer.   
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -60,6 +63,16 @@ class Producer {
      * @ORM\Column(name="sale_month")  
      */
     protected $saleMonth = 0;     
+
+    /**
+     * @ORM\Column(name="description")  
+     */
+    protected $description;     
+
+    /**
+     * @ORM\Column(name="is_original")  
+     */
+    protected $isOriginal;     
 
     /**
      * @ORM\ManyToOne(targetEntity="Company\Entity\Country", inversedBy="producer") 
@@ -205,6 +218,47 @@ class Producer {
         $this->saleMonth = $saleMonth;
     }
 
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function setDescription($description) {
+        $this->description = $description;
+    }
+
+    public function getIsOriginal() {
+        return $this->isOriginal;
+    }
+
+    /**
+     * Returns possible statuses as array.
+     * @return array
+     */
+    public static function getOriginalList() 
+    {
+        return [
+            self::ORIGINAL_IS => 'Оригинал',
+            self::ORIGINAL_NO => 'Не оригинал'
+        ];
+    }    
+    
+    /**
+     * Returns user status as string.
+     * @return string
+     */
+    public function getOriginalAsString()
+    {
+        $list = self::getOriginalList();
+        if (isset($list[$this->isOriginal]))
+            return $list[$this->isOriginal];
+        
+        return 'Unknown';
+    }    
+    
+    public function setIsOriginal($isOriginal) {
+        $this->isOriginal = $isOriginal;
+    }
+    
     /*
      * Возвращает связанный country.
      * @return \Company\Entity\Country
