@@ -336,10 +336,11 @@ class Producer {
             'aplId' => $this->getAplId(),
             'id' => $this->getId(),
             'name' => $this->getName(),
-            'description' => $this->getName(),
+            'description' => $this->getDescription(),
             'goodCount' => $this->getGoodCount(),
             'movement' => $this->getMovement(),
             'saleMonth' => $this->getSaleMonth(),
+            'isOriginal' => $this->isOriginal(),
         ];
         
         return $result;
