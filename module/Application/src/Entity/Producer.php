@@ -340,7 +340,7 @@ class Producer {
             'goodCount' => $this->getGoodCount(),
             'movement' => $this->getMovement(),
             'saleMonth' => $this->getSaleMonth(),
-            'isOriginal' => $this->isOriginal(),
+            'isOriginal' => $this->getIsOriginal(),
         ];
         
         return $result;
