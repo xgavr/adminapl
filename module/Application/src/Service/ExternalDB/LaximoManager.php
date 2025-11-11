@@ -405,7 +405,7 @@ class LaximoManager
         if (!empty($part['oems'])){    
 
             if (count($part['oems'])){
-                $this->getEntityManager()->getRepository(Goods::class)
+                $this->entityManager->getRepository(Goods::class)
                          ->removeGoodSourceOem($good->getId(), Oem::SOURCE_SUP);                
             }
         
