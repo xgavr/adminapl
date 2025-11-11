@@ -410,6 +410,9 @@ class LaximoManager
                  $this->entityManager->getConnection()->update('oem', 
                          ['status' => Oem::STATUS_RETIRED], 
                          ['good_id' => $good->getId(), 'source' => Oem::SOURCE_SUP]);         
+                 $this->entityManager->getConnection()->update('oem', 
+                         ['status' => Oem::STATUS_RETIRED], 
+                         ['good_id' => $good->getId(), 'source' => Oem::SOURCE_CROSS]);         
             }
         
             foreach ($part['oems'] as $value){

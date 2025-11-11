@@ -130,6 +130,7 @@ class OemRepository  extends EntityRepository{
                             'oe_number' => $oems['oeNumber'],
                             'brand_name' => $brandName,
                             'source' => Oem::SOURCE_MY_CODE,
+                            'status' => Oem::STATUS_ACTIVE,                            
                             'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                         ], 
                         ['id' => $oem->getId()]);
@@ -142,6 +143,18 @@ class OemRepository  extends EntityRepository{
                             'oe' => $oe, 
                             'oe_number' => $oems['oeNumber'],
                             'brand_name' => $brandName,
+                            'status' => Oem::STATUS_ACTIVE,                            
+                            'source' => Oem::SOURCE_TD,
+                            'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                        ], 
+                        ['id' => $oem->getId()]);
+            } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MY_CODE){
+                $this->getEntityManager()->getConnection()->update('oem', 
+                        [
+                            'oe' => $oe, 
+                            'oe_number' => $oems['oeNumber'],
+                            'brand_name' => $brandName,
+                            'status' => Oem::STATUS_ACTIVE,                            
                             'source' => Oem::SOURCE_TD,
                             'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                         ], 
