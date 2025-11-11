@@ -402,7 +402,12 @@ class LaximoManager
      */
     private function saveOem($good, $part)
     {
-        if (!empty($part['oems'])){                
+        if (!empty($part['oems'])){    
+
+            if (count($part['oems'])){
+                $this->getEntityManager()->getRepository(Goods::class)
+                         ->removeGoodSourceOem($good->getId(), Oem::SOURCE_SUP);                
+            }
         
             foreach ($part['oems'] as $value){
                 $oem = [

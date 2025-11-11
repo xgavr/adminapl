@@ -571,7 +571,8 @@ class OemRepository  extends EntityRepository{
         foreach($iterable as $item){
             foreach ($item as $oe){
                 if ($oe->getSource() != Oem::SOURCE_INTERSECT && $oe->getSource() != Oem::SOURCE_MY_CODE){
-                    $this->addIntersectOem($good, $oe->getOe());
+                    //отключено в надежеде обновления из лаксимо
+                    //$this->addIntersectOem($good, $oe->getOe());
                 }
             }    
         }

@@ -486,10 +486,11 @@ class GoodsManager
 
         foreach($iterable as $item){
             foreach ($item as $good){
-                $this->entityManager->getRepository(Oem::class)
-                        ->addSupOem($good['goodId']);
-                $this->entityManager->getRepository(Oem::class)
-                        ->addCrossOem($good['goodId']);    
+                //Отключено в надежде обновления из лаксимо
+//                $this->entityManager->getRepository(Oem::class)
+//                        ->addSupOem($good['goodId']);
+//                $this->entityManager->getRepository(Oem::class)
+//                        ->addCrossOem($good['goodId']);    
                 
                 $this->entityManager->getConnection()->update('goods', ['status_oem' => Goods::OEM_INTERSECT], ['id' => $good['goodId']]);
             }
