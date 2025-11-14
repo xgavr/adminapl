@@ -425,7 +425,7 @@ class LaximoManager
                 if ($value['part']['manufacturer']['isOriginal'] == true){
                     $source = Oem::SOURCE_TD;
                 }
-                var_dump($source, $oem, $value['part']['manufacturer']['isOriginal']);
+//                var_dump($source, $oem, $value['part']['manufacturer']['isOriginal']);
                 $this->entityManager->getRepository(Oem::class)
                     ->addOemToGood($good->getId(), $oem, $source);                
             }
