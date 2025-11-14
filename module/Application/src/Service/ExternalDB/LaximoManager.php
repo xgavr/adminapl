@@ -414,7 +414,7 @@ class LaximoManager
                          ['status' => Oem::STATUS_RETIRED], 
                          ['good_id' => $good->getId(), 'source' => Oem::SOURCE_CROSS]);         
             }
-            var_dump($part); exit;
+//            var_dump($part); exit;
             foreach ($part['oems'] as $value){
                 $oem = [
                     'oeNumber' => $value['part']['formattedOem'],
