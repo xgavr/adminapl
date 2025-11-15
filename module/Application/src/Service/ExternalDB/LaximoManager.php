@@ -502,7 +502,10 @@ class LaximoManager
                 }
             }
             
-            $this->entityManager->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $good->getId()]);
+            $this->entityManager->getConnection()->update('goods', [
+                'fasade_ex' => Goods::FASADE_EX_NEW, 
+                'check_car' => Goods::CHECK_CAR_NO
+            ], ['id' => $good->getId()]);
             
         }
         

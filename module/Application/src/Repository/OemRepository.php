@@ -931,6 +931,7 @@ class OemRepository  extends EntityRepository{
         $orX = $queryBuilder->expr()->orX();
         $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MAN));
         $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD));
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MY_CODE));
         
         $queryBuilder->select('o.oe')
                 ->from(Oem::class, 'o')
