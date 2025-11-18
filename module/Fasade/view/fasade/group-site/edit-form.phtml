@@ -87,8 +87,13 @@ $form->prepare();
     });    
 
     function submitForm(){
+        // Обязательно: обновить значение textarea перед сериализацией!
+        // Trumbowyg не обновляет DOM автоматически при программной отправке
+        $('#description').trumbowyg('save');
+        
         var data = serializeForm('#group-site-form');
          $('#group-site-submit').prop('disabled', true);
+         
         //console.log(data);
         $.ajax({
             type: 'POST',
@@ -112,6 +117,20 @@ $form->prepare();
     };
     
     $( document ).ready(function() {
+        
+        // Инициализация простого редактора
+        $('#description').trumbowyg({
+            btns: [
+                ['bold', 'italic'],
+                ['unorderedList', 'orderedList'],
+                ['link'],
+                ['removeformat']
+            ],
+            autogrow: true,        // автоматический рост высоты
+            removeformatPasted: true, // чистка форматирования при вставке
+            semantic: false,       // использовать <b>, <i> вместо <strong>, <em>
+            resetCss: true
+        });
     
         var forms = $('#group-site-form');
         

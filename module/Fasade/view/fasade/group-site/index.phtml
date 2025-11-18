@@ -71,9 +71,16 @@ $this->pageBreadcrumbs()->setItems([
     </div>
 </div>    
 
+<!-- Trumbowyg CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/ui/trumbowyg.min.css">
+
+<!-- Trumbowyg JS -->
+<script src="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/trumbowyg.min.js"></script>
+
 <script type="text/javascript">
     var $table = $('#table'),
         $ok = $('#ok');
+
     
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
