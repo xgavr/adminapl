@@ -146,6 +146,10 @@ $this->pageBreadcrumbs()->setItems([
             result = '<em>'+value+'</em>';
         } 
         
+        if (row.description){
+            result = result + ' <small style="color: #bde5a1">есть описание</small>';
+        }
+        
         var disabled = (row.goodCount > 0 && row.hasChild === <?= GroupSite::HAS_NO_CHILD?>) ? 'disabled="true"':''; 
         var url = '/group-site/edit-form?parent='+row.id;
         return [
@@ -160,6 +164,9 @@ $this->pageBreadcrumbs()->setItems([
     
     function activeFormatter(value, row){
         var url = '/group-site/edit-form/'+row.id;
+        if (row.pid){
+            url = url + '?parent=' + row.pid;
+        }
         btn = '<nobr><button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs group-site-modal-show"';
