@@ -366,6 +366,7 @@ class ProducerRepository  extends EntityRepository{
                 . 'p.status, count(up.id) as unknownProducerCount, '
                 . 'max(up.supplierCount) as supplierCount, '
                 . 'sum(up.rawpriceCount) as rawpriceCount')
+            ->addSelect('p.saleMonth')    
             ->addSelect('p.description')    
             ->from(Producer::class, 'p')
             ->leftJoin('p.unknownProducer', 'up') 
