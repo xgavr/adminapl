@@ -110,14 +110,14 @@ class GroupSiteManager
     {
         
         $groupSite->setDescription($data['description'] ?? null);
-        $groupSite->setGoodCount($data['goodCount'] ?? 0);
-        $groupSite->setSaleCount($data['saleCount'] ?? 0);
-        $groupSite->setImage($data['image'] ?? null);
+//        $groupSite->setGoodCount($data['goodCount'] ?? 0);
+//        $groupSite->setSaleCount($data['saleCount'] ?? 0);
+//        $groupSite->setImage($data['image'] ?? null);
         $groupSite->setLevel($data['level'] ?? 0);
         $groupSite->setName($data['name']);
         $groupSite->setAplId($data['aplId'] ?? 0);
         $groupSite->setSort($data['sort'] ?? 0);
-        $groupSite->setSlug($data['slug'] ?? null);
+//        $groupSite->setSlug($data['slug'] ?? null);
         $groupSite->setFullName($data['name']);
         $groupSite->setStatus($data['status'] ?? GroupSite::STATUS_ACTIVE);
         $groupSite->setHasChild($data['hasChild'] ?? GroupSite::HAS_NO_CHILD);
