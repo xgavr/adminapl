@@ -57,13 +57,14 @@
                      <th data-field="name" data-formatter="linkFormatter" data-sortable="true">Наименование</th>
                      <th data-field='goodCount' data-sortable="true">Товаров</th>
                      <th data-field='movement' data-sortable="true">Движений</th>
+                     <th data-field='saleMonth' data-sortable="true">Продажи</th>
                      <th data-field='unknownProducerCount' data-sortable="true">НП</th>
                      <th data-field='supplierCount' data-sortable="true">Постащиков</th>
                      <th data-field='rawpriceCount' data-sortable="true">Строк прайсов</th>
                      <th data-field="status" data-formatter="statusFormatter">
                          <span data-toggle="tooltip" data-original-title="Загружать товары производителя">Б</span>
                      </th>             
-                     <th data-field="" data-formatter="activeFormatter"></th>
+                     <th data-field="" data-formatter="activeFormatter" data-width="5"></th>
                  </tr>                
             </thead>
         </table>
@@ -144,6 +145,12 @@
         </div>
     </div>
 </div>    
+    
+<!-- Trumbowyg CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/ui/trumbowyg.min.css">
+
+<!-- Trumbowyg JS -->
+<script src="https://cdn.jsdelivr.net/npm/trumbowyg@2.27.0/dist/trumbowyg.min.js"></script>    
 
 <script type="text/javascript">
     var $table = $('#table');
@@ -154,6 +161,15 @@
     }
 
     $(function () {
+        $(document).on('click', '.producer-modal-show', function (e) {
+            var url = $(this).attr('modal-url');
+            showFormDialog({
+                id: 'producerModal',
+                url: url
+                //width: '1440px'
+            });
+        });        
+        
         $ok.click(function () {
             $table.bootstrapTable('refresh');
         });
@@ -206,15 +222,28 @@
     }    
     
     function activeFormatter(value, row){
-        var url = '/producer/delete-form/'+row.id;
-        btn = '<button';
+        var url = '/producer/edit-form/'+row.id;
+        var btnColor = 'btn-default';
+        if (row.description){
+            btnColor = 'btn-info';
+        }
+        btn = '<nobr><button';
         btn += ' type="button"';
-        btn += ' class="btn btn-danger btn-xs this-delete"';
+        btn += ' class="btn '+btnColor+' btn-xs producer-modal-show"';
         btn += ' aria-label="Left Align"'; 
-        btn += ' title="Удалить"'; 
-        btn += ' onclick="tableRowDelete(\''+url+'\')">';
-        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
-        btn += '</button>';
+        btn += ' modal-url="'+url+'">';
+        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
+        btn += '</button> ';
+        
+//        var url = '/producer/delete-form/'+row.id;
+//        btn += '<button';
+//        btn += ' type="button"';
+//        btn += ' class="btn btn-danger btn-xs this-delete"';
+//        btn += ' aria-label="Left Align"'; 
+//        btn += ' title="Удалить"'; 
+//        btn += ' onclick="tableRowDelete(\''+url+'\')">';
+//        btn += '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>';
+//        btn += '</button>';
         return btn;
     }    
     

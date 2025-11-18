@@ -19,7 +19,7 @@ use Doctrine\Common\Persistence\ObjectManager;
  *
  * @author Daddy
  */
-class ProducerForm extends Form implements ObjectManagerAwareInterface
+class ProducerForm extends Form
 {
     
     protected $objectManager;
@@ -61,36 +61,48 @@ class ProducerForm extends Form implements ObjectManagerAwareInterface
         ]);
         
         // Add "status" field
-        $this->add([            
-            'type'  => 'select',
-            'name' => 'status',
-            'options' => [
-                'label' => 'Статус',
-                'value_options' => [
-                    1 => 'Действующий',
-                    2 => 'В отключке',                    
-                ]
-            ],
-        ]);        
+//        $this->add([            
+//            'type'  => 'select',
+//            'name' => 'status',
+//            'options' => [
+//                'label' => 'Статус',
+//                'value_options' => [
+//                    1 => 'Действующий',
+//                    2 => 'В отключке',                    
+//                ]
+//            ],
+//        ]);        
         
         // Добавляем поле "country"
+//        $this->add([
+//            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+//            'name' => 'country',
+//            'attributes' => [                
+//                'id' => 'producercountry',
+//                'data-live-search'=> "true",
+//                'class' => "selectpicker",
+//            ],
+//            'options' => [
+//                'object_manager' => $this->entityManager,
+//                'target_class'   => 'Application\Entity\Country',
+//                'label' => 'Страна',
+//                'property'       => 'name',
+//                'display_empty_item' => true,
+//                'empty_item_label'   => '--выберете страну--',                 
+//            ],
+//       ]);
+        
         $this->add([
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'name' => 'country',
+            'type'  => 'textarea',
+            'name' => 'description',
             'attributes' => [                
-                'id' => 'producercountry',
-                'data-live-search'=> "true",
-                'class' => "selectpicker",
+                'id' => 'description',
+                'rows' => 6,
             ],
             'options' => [
-                'object_manager' => $this->entityManager,
-                'target_class'   => 'Application\Entity\Country',
-                'label' => 'Страна',
-                'property'       => 'name',
-                'display_empty_item' => true,
-                'empty_item_label'   => '--выберете страну--',                 
+                'label' => 'Описание',
             ],
-       ]);
+       ]);        
         
         // Добавляем кнопку отправки формы
         $this->add([
@@ -132,33 +144,52 @@ class ProducerForm extends Form implements ObjectManagerAwareInterface
             ]);
         
         // Add input for "status" field
-        $inputFilter->add([
-                'name'     => 'status',
-                'required' => true,
-                'filters'  => [                    
-                    ['name' => 'ToInt'],
-                ],                
-                'validators' => [
-                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
-                ],
-            ]);         
+//        $inputFilter->add([
+//                'name'     => 'status',
+//                'required' => true,
+//                'filters'  => [                    
+//                    ['name' => 'ToInt'],
+//                ],                
+//                'validators' => [
+//                    ['name'=>'InArray', 'options'=>['haystack'=>[1, 2]]]
+//                ],
+//            ]);         
         
         $inputFilter->add([
-                'name'     => 'country',
-                'required' => true,
-                'filters'  => [                    
+                'name'     => 'description',
+                'required' => false,
+                'filters'  => [
+                    ['name' => 'StringTrim'],
                     ['name' => 'StripTags'],
+                    ['name' => 'StripNewlines'],
                 ],                
                 'validators' => [
                     [
-                        'name'    => 'Float',
+                        'name'    => 'StringLength',
                         'options' => [
-                        'min' => 0,
-                        'locale' => 'ru-Ru'
+                            'min' => 1,
+                            'max' => 2048
                         ],
                     ],
                 ],
-            ]);          
+            ]);
+        
+//        $inputFilter->add([
+//                'name'     => 'country',
+//                'required' => true,
+//                'filters'  => [                    
+//                    ['name' => 'StripTags'],
+//                ],                
+//                'validators' => [
+//                    [
+//                        'name'    => 'Float',
+//                        'options' => [
+//                        'min' => 0,
+//                        'locale' => 'ru-Ru'
+//                        ],
+//                    ],
+//                ],
+//            ]);          
     }    
     
     

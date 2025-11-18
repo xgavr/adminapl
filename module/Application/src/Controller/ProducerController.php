@@ -184,7 +184,51 @@ class ProducerController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
         ]);  
-    }    
+    }   
+    
+    public function editFormAction()
+    {
+        $producerId = (int)$this->params()->fromRoute('id', -1);
+        
+        if ($producerId > 0){
+            $producer = $this->entityManager->getRepository(Producer::class)
+                    ->find($producerId);
+        }    
+        
+        $form = new ProducerForm($this->entityManager);
+        
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();   
+
+            $form->setData($data);
+            
+            if ($form->isValid()) {
+                        
+                if ($producer){
+                    $this->producerManager->updateProducerDescription($producer, $data['description'] ?? null);
+
+                }    
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            } else {
+                var_dump($form->getMessages());
+            }
+        } else {
+            if ($producer){
+                $form->setData($producer->toArray());
+            }    
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'producer' => $producer,
+        ]);        
+    }            
     
     public function deleteAction()
     {

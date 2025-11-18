@@ -85,6 +85,23 @@ class ProducerManager
     }    
     
     /**
+     * 
+     * @param Producer $producer
+     * @param string $description
+     * @return type
+     */
+    public function updateProducerDescription($producer, $description) 
+    {
+        $producer->setDescription($description);
+        
+        // Применяем изменения к базе данных.
+        $this->entityManager->persist($producer);
+        $this->entityManager->flush();
+        
+        return $producer;
+    }    
+    
+    /**
      * Удаление производителя
      * 
      * @param Producer $producer
