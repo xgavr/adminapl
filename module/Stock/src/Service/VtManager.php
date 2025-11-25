@@ -428,7 +428,7 @@ class VtManager
         }    
         
         $this->updateVtRetails($vt, $docStamp);
-        if ($vt->getOrder()->getLegal()){
+        if (!empty($vt->getOrder()->getLegal())){
             $this->updateVtMutuals($vt, $docStamp);
         } else {
             $this->entityManager->getRepository(Mutual::class)
