@@ -428,12 +428,14 @@ class VtManager
         }    
         
         $this->updateVtRetails($vt, $docStamp);
+        
         if (!empty($vt->getOrder()->getLegal())){
             $this->updateVtMutuals($vt, $docStamp);
         } else {
             $this->entityManager->getRepository(Mutual::class)
                     ->removeDocMutuals($vt->getLogKey());            
         }    
+        
         $this->updateVtMovement($vt, $docStamp);
         
         if ($vt->getDocDate() >= $this->getAllowDate()){
