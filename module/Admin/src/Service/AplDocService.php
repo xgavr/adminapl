@@ -1942,7 +1942,11 @@ class AplDocService {
 //            var_dump('body: '.$body);
 //            exit;
 //        }
-//        var_dump($result); exit;
+        
+        if($debug){
+            var_dump($result);
+        }
+
 
         if (is_array($result)){
             if (isset($result['type'])){
