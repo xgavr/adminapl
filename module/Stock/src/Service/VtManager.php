@@ -123,6 +123,10 @@ class VtManager
             }
         }
         
+        if ($vt->getStatus() == Vt::STATUS_RETIRED){
+            return;
+        }
+        
         $contractId = null;
         if ($vt->getOrder()->getLegal()){
             $orderRetail = $this->entityManager->getRepository(Mutual::class)
