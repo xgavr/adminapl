@@ -133,6 +133,7 @@ class VtManager
                 }    
             }    
         }
+        
         $data = [
             'doc_key' => $vt->getLogKey(),
             'doc_type' => Movement::DOC_VT,
@@ -148,8 +149,12 @@ class VtManager
             'doc_stamp' => $docStamp,
         ];
 
-        $this->entityManager->getRepository(Mutual::class)
-                ->insertMutual($data);
+        try{
+            $this->entityManager->getRepository(Mutual::class)
+                    ->insertMutual($data);
+        } catch (\Throwable $e){
+            var_dump($data);
+        }    
         
         return;
     }    
