@@ -147,7 +147,7 @@ class GroupSiteForm extends Form
                         'name'    => 'StringLength',
                         'options' => [
                             'min' => 1,
-                            'max' => 2048
+                            'max' => 4096
                         ],
                     ],
                 ],
