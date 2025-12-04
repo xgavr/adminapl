@@ -1416,7 +1416,11 @@ class NameManager
         foreach ($data as $row){
 
             if ($row['goodId']){
-                $this->addGroupTokenFromGood($row['goodId'], $row['tokenGroupId']);
+                if (empty($row['tokenGroupId'])){ 
+                // не обновлять группу наименований. 
+                // если уже есть - иначе будет изменено наименование в фасаде
+                    $this->addGroupTokenFromGood($row['goodId'], $row['tokenGroupId']);
+                }
             }    
 
             $this->entityManager->getRepository(Rawprice::class)
