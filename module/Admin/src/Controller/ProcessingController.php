@@ -1134,7 +1134,7 @@ class ProcessingController extends AbstractActionController
             $producers = $this->entityManager->getRepository(\Application\Entity\Producer::class)
                     ->findBy([]);
             foreach ($producers as $producer){
-                $this->producerManager->bestName($producer);
+                //$this->producerManager->bestName($producer); //отключил, чтобы не менялись ссылки в фасаде
             }    
         }    
                 

@@ -165,7 +165,7 @@ class JobManager
         return [
           501 => ['command' => 'fill-token-group-token',            'shedule' => '14 12 * * *', 'description' => 'Заполнение токенов групп наименований'],
           502 => ['command' => 'fill-token-group-bigram',           'shedule' => '14 13 * * *', 'description' => 'Заполнение биграм групп наименований'],
-          503 => ['command' => 'producer-best-name',                'shedule' => '14 14 * * *', 'description' => 'Обновление наименований производителей'],
+          //503 => ['command' => 'producer-best-name',                'shedule' => '14 14 * * *', 'description' => 'Обновление наименований производителей'], //отключил, чтобы не менялись ссылка в фасаде
           504 => ['command' => 'support-title-tokens',              'shedule' => '14 15 * * *', 'description' => 'Поддержка токенов описаний'],
           505 => ['command' => 'support-title-bigrams',             'shedule' => '14 16 * * *', 'description' => 'Поддержка биграм описаний'],
           506 => ['command' => 'unknown-producer-intersect',        'shedule' => '14 17 * * *', 'description' => 'Обновление пересечение производителей'],
