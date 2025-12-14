@@ -2822,14 +2822,16 @@ class GoodsRepository extends EntityRepository
                 
                 $token = $entityManager->getRepository(Token::class)
                         ->findOneBy(['lemma' => $lemma]);
+                
                 if ($token){
-                    if ($token->getCorrect()){
+                    if (!empty($token->getCorrect())){
                         $lemma = $token->getCorrect();
                     }
                 }    
                 
                 $goodToken = $entityManager->getRepository(GoodToken::class)
                         ->findOneBy(['good' => $good->getId(), 'lemma' => $lemma]);
+                
                 if (empty($goodToken)){
                     $entityManager->getConnection()
                             ->insert('good_token', [
