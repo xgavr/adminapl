@@ -30,6 +30,7 @@ use GoodMap\Filter\DecodeFoldCode;
 use Fasade\Entity\GroupSite;
 use Application\Entity\GoodRelated;
 use Application\Entity\Images;
+use Application\Entity\Token;
 
 /**
  * Description of GoodsRepository
@@ -2818,6 +2819,15 @@ class GoodsRepository extends EntityRepository
                     ->findBy(['article' => $article->getId()]);
             foreach ($articleTokens as $articleToken){
                 $lemma = $articleToken->getLemma();
+                
+                $token = $entityManager->getRepository(Token::class)
+                        ->findOneBy(['lemma' => $lemma]);
+                if ($token){
+                    if ($token->getCorrect()){
+                        $lemma = $token->getCorrect();
+                    }
+                }    
+                
                 $goodToken = $entityManager->getRepository(GoodToken::class)
                         ->findOneBy(['good' => $good->getId(), 'lemma' => $lemma]);
                 if (empty($goodToken)){
