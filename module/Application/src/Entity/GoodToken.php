@@ -138,4 +138,12 @@ class GoodToken {
         $this->good = $good;
     }           
         
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'lemma' => $this->getLemma(),
+            'status' => $this->getStatus(),
+        ];
+    }
 }

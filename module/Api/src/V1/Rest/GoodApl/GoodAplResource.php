@@ -219,6 +219,7 @@ class GoodAplResource extends AbstractResourceListener
                         $data = $good->toArray();
                         $data['available'] = $availableFilter->filter($good);
                         $data['categories'] = $good->getCategoryIdsAsArray();
+                        $data['tokens'] = $good->getTokensDictAsArray();
                         $data['lot'] = $this->entityManager->getRepository(Goods::class)->goodLot($good);
                         $data['attributes'] = $good->getAttributeValuesAsArray();
                         $data['in_store'] = $this->inStore($good);

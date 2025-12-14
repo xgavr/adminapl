@@ -9,6 +9,8 @@ use Laminas\Json\Encoder;
 use Application\Entity\Producer;
 use Application\Entity\Images;
 use Fasade\Entity\GroupSite;
+use Doctrine\Common\Collections\Criteria;
+use Application\Entity\Token;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -1629,7 +1631,24 @@ class Goods {
     public function getGoodTokens()
     {
         return $this->goodTokens;
-    }        
+    }       
+    
+    /**
+     * Returns the array of tokens assigned to this.
+     * @return array
+     */
+    public function getTokensDictAsArray()
+    {
+        $result = [];
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_DICT));
+        $goodTokens = $this->getGoodTokens()->matching($criteria);
+        foreach ($goodTokens as $goodToken){
+            $result[] = $goodToken->toArray();
+            
+        }
+        
+        return $result;
+    }    
         
     /**
      * Returns the array of good tokens assigned to this good.
