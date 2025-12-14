@@ -2817,14 +2817,15 @@ class GoodsRepository extends EntityRepository
             $articleTokens = $entityManager->getRepository(ArticleToken::class)
                     ->findBy(['article' => $article->getId()]);
             foreach ($articleTokens as $articleToken){
+                $lemma = $articleToken->getLemma();
                 $goodToken = $entityManager->getRepository(GoodToken::class)
-                        ->findOneBy(['good' => $good->getId(), 'lemma' => $articleToken->getLemma()]);
+                        ->findOneBy(['good' => $good->getId(), 'lemma' => $lemma]);
                 if (empty($goodToken)){
                     $entityManager->getConnection()
                             ->insert('good_token', [
                                 'good_id' => $good->getId(),
-                                'lemma' => $articleToken->getLemma(),
-                                'status' => 0,
+                                'lemma' => $lemma,
+                                'status' => $articleToken->getStatus(),
                             ]);
                 }
             }
