@@ -3163,15 +3163,19 @@ class GoodsRepository extends EntityRepository
                 ->from(GoodToken::class, 'gt')
                 ->where('gt.status = :status')
                 ->setParameter('status', Token::IS_DICT)
-                ->join('gt.good', 'g')
-                ->join('g.categories', 'c')
-                ->andWhere('c.code = :code')
-                ->setParameter('code', '115-132-134-135')
+//                ->join('gt.good', 'g')
+//                ->join('g.categories', 'c')
+//                ->andWhere('c.code = :code')
+//                ->setParameter('code', '115-132-134-135')
                 ;
         
         $limit = $params['limit'] ?? null;
+        $offset = $params['offset'] ?? null;
         if ($limit){
            $queryBuilder->setMaxResults($limit); 
+        }
+        if ($offset){
+           $queryBuilder->setFirstResult($offset); 
         }
         
         return $queryBuilder->getQuery()->getResult();        
