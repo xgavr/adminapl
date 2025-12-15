@@ -2832,19 +2832,20 @@ class GoodsRepository extends EntityRepository
                             $lemma = $token->getLemma();
                         }
                     }
+                    
+                    $goodToken = $entityManager->getRepository(GoodToken::class)
+                            ->findOneBy(['good' => $good->getId(), 'lemma' => $lemma]);
+
+                    if (empty($goodToken)){
+                        $entityManager->getConnection()
+                                ->insert('good_token', [
+                                    'good_id' => $good->getId(),
+                                    'lemma' => $lemma,
+                                    'status' => $token->getStatus(),
+                                ]);
+                    }
                 }    
                 
-                $goodToken = $entityManager->getRepository(GoodToken::class)
-                        ->findOneBy(['good' => $good->getId(), 'lemma' => $lemma]);
-                
-                if (empty($goodToken)){
-                    $entityManager->getConnection()
-                            ->insert('good_token', [
-                                'good_id' => $good->getId(),
-                                'lemma' => $lemma,
-                                'status' => $articleToken->getStatus(),
-                            ]);
-                }
             }
         }
         
