@@ -281,7 +281,7 @@ class EdoManager {
         $xml->startElement('Файл');
             $xml->writeAttribute('ИдФайл', $order->getEdoPresent('ТОРГ'));
             $xml->writeAttribute('ВерсПрог', self::VERSION);
-            $xml->writeAttribute('ВерсФорм', '5.01');
+            $xml->writeAttribute('ВерсФорм', '5.03');
             
             $xml->startElement('СвУчДокОбор');
                 $xml->writeAttribute('ИдОтпр', $order->getCompany()->getEdoAddress());
@@ -447,7 +447,8 @@ class EdoManager {
                 
                 $xml->startElement('СвПродПер');
                     $xml->startElement('СвПер');
-                        $xml->writeAttribute('СодОпер', 'Поступление товаров и услуг');
+                        $xml->writeAttribute('СодОпер', 'Товары переданы, работы сданы, услуги оказаны');
+                        $xml->writeAttribute('ДатаПер', strtotime($order->getDocDate()));
                         if ($order->getLegal()){
                             $contract = $order->getLegal()->getLastContract();
                             if ($contract){
