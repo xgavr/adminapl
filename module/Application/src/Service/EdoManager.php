@@ -487,14 +487,16 @@ class EdoManager {
         fwrite($fp, $xml->flush());
         fclose($fp);        
         
-        $filter = new Compress([
-            'adapter' => 'Zip',
-            'options' => [
-                'archive' => $outFileZip,
-            ],
-        ]);
-        $filter->filter($outFile);
+//        $filter = new Compress([
+//            'adapter' => 'Zip',
+//            'options' => [
+//                'archive' => $outFileZip,
+//            ],
+//        ]);
+//        $filter->filter($outFile);
         
-        return $outFileZip;
+//        return $outFileZip;
+        
+        return $outFile;
     }            
 }
