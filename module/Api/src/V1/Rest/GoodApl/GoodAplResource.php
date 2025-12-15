@@ -257,8 +257,9 @@ class GoodAplResource extends AbstractResourceListener
             return [$result];
         }
         if (!empty($paramsArray['tokens'])){
+            
             $tokens = $this->entityManager->getRepository(Goods::class)
-                    ->fasadeTokens();
+                    ->fasadeTokens($paramsArray);
             
             $result = [
                 'fasade' => $tokens,

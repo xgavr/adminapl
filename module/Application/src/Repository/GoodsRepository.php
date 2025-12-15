@@ -3148,7 +3148,12 @@ class GoodsRepository extends EntityRepository
         return $queryBuilder->getQuery()->getResult();        
     }
     
-    public function fasadeTokens()
+    /**
+     * 
+     * @param array $params
+     * @return type
+     */
+    public function fasadeTokens($params)
     {
        $entityManager = $this->getEntityManager();
 
@@ -3163,6 +3168,11 @@ class GoodsRepository extends EntityRepository
                 ->andWhere('c.code = :code')
                 ->setParameter('code', '115-132-134-135')
                 ;
+        
+        $limit = $params['limit'] ?? null;
+        if ($limit){
+           $queryBuilder->setMaxResults($limit); 
+        }
         
         return $queryBuilder->getQuery()->getResult();        
     }
