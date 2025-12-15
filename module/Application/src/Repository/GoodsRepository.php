@@ -3147,4 +3147,23 @@ class GoodsRepository extends EntityRepository
         
         return $queryBuilder->getQuery()->getResult();        
     }
+    
+    public function fasadeTokens()
+    {
+       $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $queryBuilder->select('identity(gt.good) as goodId, gt.lemma')
+                ->from(GoodToken::class, 'gt')
+                ->where('gt.status = :status')
+                ->setParameter('status', Token::IS_DICT)
+                ->join('gt.good', 'g')
+                ->join('g.categories', 'c')
+                ->andWhere('c.code = :code')
+                ->setParameter('code', '115-132-134-135')
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();        
+    }
 }

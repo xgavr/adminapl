@@ -256,6 +256,16 @@ class GoodAplResource extends AbstractResourceListener
             
             return [$result];
         }
+        if (!empty($paramsArray['tokens'])){
+            $tokens = $this->entityManager->getRepository(Goods::class)
+                    ->fasadeTokens();
+            
+            $result = [
+                'fasade' => $tokens,
+            ];
+            
+            return [$result];
+        }
         
         return new ApiProblem(404, 'Ничего не нашлось :(');
 //        return new ApiProblem(405, 'The GET method has not been defined for collections');
