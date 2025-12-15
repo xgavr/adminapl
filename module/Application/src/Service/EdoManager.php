@@ -448,7 +448,7 @@ class EdoManager {
                 $xml->startElement('СвПродПер');
                     $xml->startElement('СвПер');
                         $xml->writeAttribute('СодОпер', 'Товары переданы, работы сданы, услуги оказаны');
-                        $xml->writeAttribute('ДатаПер', strtotime($order->getDocDate()));
+                        $xml->writeAttribute('ДатаПер', date('d.m.Y', strtotime($order->getDocDate())));
                         if ($order->getLegal()){
                             $contract = $order->getLegal()->getLastContract();
                             if ($contract){
