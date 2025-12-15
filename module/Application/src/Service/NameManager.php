@@ -1038,12 +1038,12 @@ class NameManager
                         $this->entityManager->getRepository(Rawprice::class)
                                 ->updateRawpriceField($rawprice->getId(), ['status_token' => Rawprice::TOKEN_PARSED]);                        
                     }  
-                    
-                    $good = $article->getGood();
-                    if ($good){
-                        $this->entityManager->getRepository(Goods::class)
-                                ->updateGoodToken($good);                    
-                    }    
+//                    
+//                    $good = $article->getGood();
+//                    if ($good){
+//                        $this->entityManager->getRepository(Goods::class)
+//                                ->updateGoodToken($good);                    
+//                    }    
                 }    
                 
                 $this->entityManager->detach($rawprice);
