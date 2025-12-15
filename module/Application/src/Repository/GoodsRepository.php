@@ -2825,7 +2825,12 @@ class GoodsRepository extends EntityRepository
                 
                 if ($token){
                     if (!empty($token->getCorrect())){
-                        $lemma = $token->getCorrect();
+                        $correctLemma = $token->getCorrect();
+                        $token = $entityManager->getRepository(Token::class)
+                            ->findOneBy(['lemma' => $correctLemma]);
+                        if ($token){
+                            $lemma = $token->getLemma();
+                        }
                     }
                 }    
                 
