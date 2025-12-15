@@ -1648,6 +1648,24 @@ class Goods {
         }
         
         return $result;
+    } 
+    
+    /**
+     * Returns the array of tokens assigned to this.
+     * @return array
+     */
+    public function getArticleTokensDictAsArray()
+    {
+        $result = [];
+        foreach ($this->getArticles() as $article){
+            $criteria = Criteria::create()->where(Criteria::expr()->eq("status", Token::IS_DICT));
+            $articleTokens = $article->getArticleTokens()->matching($criteria);
+            foreach ($articleTokens as $articleToken){
+                $result[$articleToken->getLemma()] = $articleToken->toArray();
+
+            }
+        }    
+        return $result;
     }    
         
     /**

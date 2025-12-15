@@ -223,6 +223,14 @@ class ArticleToken {
 //    public function setToken($token) 
 //    {
 //        $this->token = mb_strcut(trim($token), 0, 64, 'UTF-8');
-//    }           
+//    }   
     
+    public function toArray()
+    {
+        return [
+            'id' => $this->getId(),
+            'lemma' => $this->getLemma(),
+            'status' => $this->getStatus(),
+        ];
+    }        
 }
