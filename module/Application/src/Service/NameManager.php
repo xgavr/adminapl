@@ -1393,8 +1393,14 @@ class NameManager
             
             if ($tokenGroup){
                 if ($tokenGroup->getGroupSite()){
-                    $this->entityManager->getRepository(Goods::class)
-                            ->addGoodCategory($goodId, $tokenGroup->getGroupSite());            
+                    
+                    $good = $this->entityManager->getRepository(Goods::class)
+                            ->find(['good' => $goodId]);
+                    
+                    if (empty($good->getCategories())){
+                        $this->entityManager->getRepository(Goods::class)
+                                ->addGoodCategory($goodId, $tokenGroup->getGroupSite());            
+                    }    
                 }    
             }    
         }    
