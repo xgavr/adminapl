@@ -1395,7 +1395,7 @@ class NameManager
                 if ($tokenGroup->getGroupSite()){
                     
                     $good = $this->entityManager->getRepository(Goods::class)
-                            ->find(['good' => $goodId]);
+                            ->find($goodId);
                     
                     if (empty($good->getCategories())){
                         $this->entityManager->getRepository(Goods::class)
