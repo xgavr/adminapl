@@ -39,6 +39,7 @@ class Payment {
     const NDS_7 = 7; // НДС 7%
     const NDS_10 = 10; // НДС 20%
     const NDS_20 = 20; // НДС 20%
+    const NDS_22 = 22; // НДС 22%
     
     const TAX_STATUS_01 = '01'; // КБК ЕНП
     const TAX_STATUS_02 = '02'; // Платежка-уведомление
@@ -770,6 +771,7 @@ class Payment {
             self::NDS_7 => 'в т.ч. НДС 7%',
             self::NDS_10 => 'в т.ч. НДС 10%',
             self::NDS_20 => 'в т.ч. НДС 20%',
+            self::NDS_22 => 'в т.ч. НДС 22%',
         ];
     }    
     
@@ -785,6 +787,7 @@ class Payment {
             self::NDS_7 => '7%',
             self::NDS_10 => '10%',
             self::NDS_20 => '20%',
+            self::NDS_22 => '22%',
         ];
     }    
 
@@ -804,6 +807,8 @@ class Payment {
                 return round($amount*10/110, 2);
             case Payment::NDS_20:
                 return round($amount*20/120, 2);
+            case Payment::NDS_22:
+                return round($amount*22/122, 2);
             default: return 0;    
         }
         

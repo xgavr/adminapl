@@ -409,6 +409,10 @@ $form->prepare();
         var ndsStr = '';
         if (amount){            
             switch ($('select[name="nds"]').val()){
+                case '<?= Payment::NDS_22?>': 
+                    var nds = Math.round(amount*22*100/122)/100; 
+                    ndsStr = ndsStr1 + ' 22% ' + nds;
+                    break
                 case '<?= Payment::NDS_20?>': 
                     var nds = Math.round(amount*20*100/120)/100; 
                     ndsStr = ndsStr1 + ' 20% ' + nds;
