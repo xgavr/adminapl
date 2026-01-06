@@ -178,7 +178,7 @@ class PaymentForm extends Form
             'type'  => 'select',
             'name' => 'nds',
             'attributes' => [                
-                'value' => Payment::NDS_20,
+                'value' => Payment::NDS_22,
             ],
             'options' => [
                 'label' => 'НДС',
