@@ -423,7 +423,7 @@ class Model {
      */
     public function addCar($car) 
     {
-        $this->models[] = $car;
+        $this->cars[] = $car;
     }
     
     /**

@@ -342,6 +342,14 @@ class Car {
         return $this->details;
     }
 
+    public function getDetailsAsArray() {
+        try{
+            return json_decode($this->details);
+        } catch(\Throwable $e){
+            return [];
+        }
+    }
+
     public function setDetails($details) {
         $this->details = $details;
     }

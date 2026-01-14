@@ -14,6 +14,7 @@ use Application\Entity\Make;
 use Application\Entity\Model;
 use Application\Entity\Car;
 use Application\Entity\Goods;
+use Application\Form\UploadForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -590,4 +591,38 @@ class CarController extends AbstractActionController
         ]);                  
     }
     
+    public function uploadCarFormAction()
+    {
+        $form = new UploadForm($this->carManager->getCarFolder());
+
+        if($this->getRequest()->isPost()) {
+            
+            $data = array_merge_recursive(
+                $this->params()->fromPost(),
+                $this->params()->fromFiles()
+            );            
+//            var_dump($data); exit;
+
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+//                var_dump($data); exit;
+                $this->carManager->importCars($data['name']['tmp_name']);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'form' => $form,
+        ]); 
+    }    
 }

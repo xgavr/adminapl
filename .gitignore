@@ -46,3 +46,4 @@ phpunit.xml
 /config/autoload/local.php.dist
 /public/users.htpasswd
 /data/users.htdigest
+/data/cars/

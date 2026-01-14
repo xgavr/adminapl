@@ -16,6 +16,8 @@ use Application\Entity\Model;
 use Application\Validator\IsEN;
 use Application\Entity\Goods;
 use Application\Entity\Oem;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Application\Entity\Make;
 
 /**
  * Description of CarService
@@ -24,6 +26,7 @@ use Application\Entity\Oem;
  */
 class CarManager
 {
+    const CAR_FOLDER       = './data/cars'; // папка с файлами
     
     /**
      * Doctrine entity manager.
@@ -42,8 +45,16 @@ class CarManager
     {
         $this->entityManager = $entityManager;
         $this->externalManager = $externalManager;
+        
+        if (!is_dir($this::CAR_FOLDER)){
+            mkdir($this::CAR_FOLDER);
+        }        
     }
     
+    public function getCarFolder()
+    {
+        return $this::CAR_FOLDER;
+    }    
     /**
      * Заполнить машины
      * 
@@ -460,5 +471,165 @@ class CarManager
         }
         
         return;
+    }
+    
+    private function getOrCreateMake($makeData)
+    {
+        $make = $this->entityManager->getRepository(Make::class)
+                ->findOneBy(['name' => $makeData['name']]);
+        
+        if (empty($make)){
+            $make = new Make();
+            $make->setAplId(0);
+            $make->setCommerc(Make::COMMERC_NO);
+            $make->setFullName($makeData['fullname']);
+            $make->setGoodCount(0);
+            $make->setMoto(Make::MOTO_NO);
+            $make->setName($makeData['name']);
+            $make->setNameRu($makeData['name_ru']);
+            $make->setPassenger(Make::PASSENGER_YES);
+            $make->setSaleCount(0);
+            $make->setSaleMonth(0);
+            $make->setStatus(Make::STATUS_ACTIVE);
+            $make->setTdId(random_int(100000, 200000));
+            
+            $this->entityManager->persist($make);
+            $this->entityManager->flush();
+        }
+        
+        return $make;
+    }
+    
+    public function getOrCreateModel($make, $modelData)
+    {
+        $model = $this->entityManager->getRepository(Model::class)
+                ->findOneBy(['make' => $make->getId(), 'name' => $modelData['model_name']]);
+        
+        if (empty($model)){
+            $model = new Model();
+            $model->setAplId(0);
+            $model->setCommerc(Model::COMMERC_NO);
+            $model->setConstructionFrom($modelData['construction_from']);
+            $model->setConstructionTo($modelData['construction_to']);
+            $model->setFullName($modelData['model_full_name']);
+            $model->setGoodCount(0);
+            $model->setInterval('');
+            $model->setMake($make);
+            $model->setMoto(Model::MOTO_NO);
+            $model->setName($modelData['model_name']);
+            $model->setNameRu($modelData['model_name_ru']);
+            $model->setPassenger(Model::PASSENGER_YES);
+            $model->setSaleCount(0);
+            $model->setSaleMonth(0);
+            $model->setStatus(Model::STATUS_ACTIVE);
+            $model->setTdId(random_int(100000, 200000));
+            $model->setTransferFlag(Model::TRANSFER_NO);
+            
+        }
+        
+        $interval = $modelData['construction_from'].'-';
+        if ($modelData['construction_to'] < 9999){
+            $interval .= $modelData['construction_to'];
+        }
+        $model->setInterval($interval);
+        
+        $this->entityManager->persist($model);
+        $this->entityManager->flush();            
+        
+        return $model;
+    }
+    
+    public function getOrCreateCar($model, $carData)
+    {
+        $car = $this->entityManager->getRepository(Car::class)
+                ->findOneBy(['model' => $model->getId(), 'name' => $carData['car_name']]);
+        
+        if (empty($car)){
+
+            $nameShort = trim(preg_replace('/\(.*?\)/', '', $carData['car_name']));
+
+            $car = new Car();
+            $car->setAplId(0);
+            $car->setCommerc(Car::COMMERC_NO);
+            $car->setDetails(json_encode([
+                    'powerHpFrom' => $carData['power_hp'], 
+                    'powerHpTo' => $carData['power_hp'], 
+                    'powerKwFrom' => $carData['power_kw'], 
+                    'powerKwTo' => $carData['power_kw'], 
+                    'yearOfConstrFrom' => $carData['year_from'], 
+                    'yearOfConstrTo' => $carData['year_to'], 
+                    'nameHP' => $nameShort.' '. $carData['year_from'], 
+                ]));
+            $car->setFillVolumesFlag(Car::FILL_VOLUMES_NO);
+            $car->setFullName($model->getMake()->getName(). ' ' . $model->getFullName() . ' ' . $nameShort . ' ' . $carData['power_hp'] . ' с ' . $carData['year_from']);
+            $car->setGoodCount(0);
+            $car->setModel($model);
+            $car->setMoto(Car::MOTO_NO);
+            $car->setName($carData['car_name']);
+            $car->setPassenger(Car::PASSENGER_NO);
+            $car->setSaleCount(0);
+            $car->setSaleMonth(0);
+            $car->setStatus(Car::STATUS_ACTIVE);
+            $car->setTdId(random_int(100000, 200000));
+            $car->setTransferFillVolumesFlag(Car::FILL_VOLUMES_TRANSFER_NO);
+            $car->setTransferFlag(Car::TRANSFER_NO);
+            $car->setUpdateFlag(0);
+            $car->setYearFrom($carData['year_from']);
+            $car->setYearTo($carData['year_to']);
+            
+        }
+        
+        $this->entityManager->persist($car);
+        $this->entityManager->flush();
+        
+        return $car;
+    }
+
+    public function importCars($filename)
+    {        
+        $spreadsheet = IOFactory::load($filename);
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = $worksheet->toArray(null, true, true, true);   
+        
+        // Пропускаем заголовок
+        array_shift($rows);
+
+        foreach ($rows as $row) {
+            // Проверяем, что строка не пустая
+            if (empty(trim($row['A'] ?? ''))) continue;
+
+            // --- MAKE ---
+            $makeData = [
+                'name'       => trim($row['A']),
+                'fullname'  => trim($row['B']),
+                'name_ru'    => trim($row['C']),
+            ];
+
+            $make = $this->getOrCreateMake($makeData);
+
+            // --- MODEL ---
+            $modelData = [
+                'make_id'              => $make->getId(),
+                'model_name'      => trim($row['D']),
+                'model_full_name'      => trim($row['E']),
+                'model_name_ru'        => trim($row['F']),
+                'construction_from'    => !empty($row['G']) ? (int)$row['G'] : 0,
+                'construction_to'      => !empty($row['H']) ? (int)$row['H'] : 9999,
+            ];
+
+            $model = $this->getOrCreateModel($make, $modelData);
+
+            // --- CAR ---
+            $carData = [
+                'model_id'     => $model->getId(),
+                'car_name'     => trim($row['I']),
+                'year_from'    => !empty($row['J']) ? (int)$row['J'] : 0,
+                'year_to'      => !empty($row['K']) ? (int)$row['K'] : 9999,
+                'power_hp'     => !empty($row['L']) ? (int)$row['L'] : null,
+                'power_kw'     => !empty($row['M']) ? (int)$row['M'] : null,
+            ];
+
+            $this->getOrCreateCar($model, $carData);
+        }        
     }
 }

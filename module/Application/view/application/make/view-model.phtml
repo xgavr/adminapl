@@ -98,12 +98,19 @@ $this->headScript()
                         <td colspan="9">
                             <div>
                                 <small>
-                                   <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
-                                        <?php if ($vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl()):?>
-                                            <span><?= $vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl(); ?></span>: 
-                                            <span><?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); ?></span>; 
-                                        <?php endif;?>
-                                    <?php endforeach;?>
+                                   <?php if (count($car->getVehicleDetailsCar())): ?> 
+                                        <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
+                                             <?php if ($vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl()):?>
+                                                 <span><?= $vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl(); ?></span>: 
+                                                 <span><?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); ?></span>; 
+                                             <?php endif;?>
+                                         <?php endforeach;?>
+                                    <?php else: ?>          
+                                        <?php foreach ($car->getDetailsAsArray() as $key => $value):?>                                            
+                                            <span><?= $key; ?></span>: 
+                                            <span><?= $value; ?></span>;                                              
+                                         <?php endforeach;?>
+                                    <?php endif ?>             
                                 </small>                                
                             </div>
                         </td>                    
