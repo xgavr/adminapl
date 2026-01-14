@@ -491,7 +491,7 @@ class CarManager
             $make->setSaleCount(0);
             $make->setSaleMonth(0);
             $make->setStatus(Make::STATUS_ACTIVE);
-            $make->setTdId(random_int(100000, 200000));
+            $make->setTdId(random_int(500000, 600000));
             
             $this->entityManager->persist($make);
             $this->entityManager->flush();
@@ -522,7 +522,7 @@ class CarManager
             $model->setSaleCount(0);
             $model->setSaleMonth(0);
             $model->setStatus(Model::STATUS_ACTIVE);
-            $model->setTdId(random_int(100000, 200000));
+            $model->setTdId(random_int(500000, 600000));
             $model->setTransferFlag(Model::TRANSFER_NO);
             
         }
