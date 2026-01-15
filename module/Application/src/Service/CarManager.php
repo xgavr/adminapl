@@ -630,22 +630,12 @@ class CarManager
         $car = $this->entityManager->getRepository(Car::class)
                 ->findOneBy(['model' => $model->getId(), 'name' => $carData['car_name']]);
         
+        $nameShort = trim(preg_replace('/\(.*?\)/', '', $carData['car_name']));
+        
         if (empty($car)){
-
-            $nameShort = trim(preg_replace('/\(.*?\)/', '', $carData['car_name']));
-
             $car = new Car();
             $car->setAplId(0);
             $car->setCommerc(Car::COMMERC_NO);
-            $car->setDetails(json_encode([
-                    'powerHpFrom' => $carData['power_hp'], 
-                    'powerHpTo' => $carData['power_hp'], 
-                    'powerKwFrom' => $carData['power_kw'], 
-                    'powerKwTo' => $carData['power_kw'], 
-                    'yearOfConstrFrom' => $carData['year_from'], 
-                    'yearOfConstrTo' => $carData['year_to'], 
-                    'nameHP' => $nameShort.' '. $carData['year_from'], 
-                ]));
             $car->setFillVolumesFlag(Car::FILL_VOLUMES_NO);
             $car->setFullName($model->getMake()->getName(). ' ' . $model->getFullName() . ' ' . $nameShort . ' ' . $carData['power_hp'] . ' с ' . $carData['year_from']);
             $car->setGoodCount(0);
@@ -664,6 +654,17 @@ class CarManager
             $car->setYearTo($carData['year_to']);
             
         }
+        
+        $car->setDetails(json_encode([
+                'powerHpFrom' => $carData['power_hp'], 
+                'powerHpTo' => $carData['power_hp'], 
+                'powerKwFrom' => $carData['power_kw'], 
+                'powerKwTo' => $carData['power_kw'], 
+                'yearOfConstrFrom' => $carData['year_from'], 
+                'yearOfConstrTo' => $carData['year_to'], 
+                'nameHP' => $nameShort.' '. $carData['year_from'], 
+                'typeName' => $carData['car_name'], 
+            ]));
         
         $this->entityManager->persist($car);
         $this->entityManager->flush();
