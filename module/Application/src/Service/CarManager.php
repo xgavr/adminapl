@@ -540,7 +540,7 @@ class CarManager
             if (empty(trim($row['A'] ?? ''))) continue;
             
             // --- Code ---
-            $data['good'] = $codeFilter->filter(trim($row['A']));
+            $data['code'] = $codeFilter->filter(trim($row['A']));
 
             // --- Oem ---
             $data['oem'] = $codeFilter->filter(trim($row['B']));
@@ -552,6 +552,8 @@ class CarManager
             $this->bindGoodCarData($car, $data);
             
             unset($data);
+            
+            break;
         }  
         
         return;
