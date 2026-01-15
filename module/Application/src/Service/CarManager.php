@@ -553,7 +553,7 @@ class CarManager
             
             unset($data);
             
-            break;
+//            break;
         }  
         
         return;
