@@ -271,7 +271,7 @@ class CarRepository extends EntityRepository
         $queryBuilder->select('m')
             ->from(Model::class, 'm')
             ->where('m.make = ?1')
-            ->setParameter('1', $model->getId())
+            ->setParameter('1', $make->getId())
             ;
                 
         $models = $queryBuilder->getQuery()->getResult();
