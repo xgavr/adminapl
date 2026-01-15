@@ -15,6 +15,7 @@ use Application\Entity\Model;
 use Application\Entity\Car;
 use Application\Entity\Goods;
 use Application\Form\UploadForm;
+use Application\Form\BindGoodForm;
 
 use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
@@ -624,5 +625,101 @@ class CarController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
         ]); 
-    }    
+    }  
+    
+    public function uploadGoodCarFormAction()
+    {
+        $carId = $this->params()->fromRoute('id', -1);
+
+        if ($carId < 0){
+            $this->getResponse()->setStatusCode(404);
+            return; 
+        }
+        
+        $car = $this->entityManager->getRepository(Car::class)
+                ->find($carId);
+
+        if (!$car){
+            $this->getResponse()->setStatusCode(404);
+            return;             
+        }                 
+        
+        $form = new UploadForm($this->carManager->getCarFolder());
+
+        if($this->getRequest()->isPost()) {
+            
+            $data = array_merge_recursive(
+                $this->params()->fromPost(),
+                $this->params()->fromFiles()
+            );            
+//            var_dump($data); exit;
+
+            // Заполняем форму данными.
+            $form->setData($data);
+            if($form->isValid()) {
+                                
+                // Получаем валадированные данные формы.
+                $data = $form->getData();
+//                var_dump($data); exit;
+                $this->carManager->importGoodCars($car, $data['name']['tmp_name']);
+                
+                return new JsonModel(
+                   ['ok']
+                );           
+            }
+            
+        }
+        
+        $this->layout()->setTemplate('layout/terminal');
+        
+        return new ViewModel([
+            'form' => $form,
+            'car' => $car,
+        ]); 
+    }  
+    
+    public function goodBindFormAction()
+    {
+        $carId = $this->params()->fromRoute('id', -1);
+
+        if ($carId < 0){
+            $this->getResponse()->setStatusCode(404);
+            return; 
+        }
+        
+        $car = $this->entityManager->getRepository(Car::class)
+                ->find($carId);
+
+        if (!$car){
+            $this->getResponse()->setStatusCode(404);
+            return;             
+        }                 
+        
+        $form = new BindGoodForm($this->entityManager);
+
+        if ($this->getRequest()->isPost()) {
+            
+            $data = $this->params()->fromPost();
+            $form->setData($data);
+
+            if ($form->isValid()) {
+                
+                $this->carManager->bindGoodCarData($car, $data);
+                
+                return new JsonModel(
+                   ['result' => 'ok']
+                );        
+            }
+        } else {
+   
+        }        
+
+        $this->layout()->setTemplate('layout/terminal');
+        // Render the view template.
+        return new ViewModel([
+            'form' => $form,
+            'car' => $car,
+        ]);        
+        
+    }
 }

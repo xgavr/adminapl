@@ -1,0 +1,133 @@
+<?php
+
+$form = $this->form;
+
+$form->get('goodInputName')->setAttributes([
+    'class'=>'form-control', 
+    'disabled' => true,
+    ]);
+
+$form->get('code')->setAttributes([
+    'class'=>'form-control', 
+    'data-provide' => "typeahead",
+    'autocomplete' => 'off',
+    ]);
+
+$form->get('good')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('oem')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('oem_brand')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary', 'value' => 'Сохранить', 'id' => 'bind-good-submit']);
+
+$form->prepare();
+
+?>
+            
+<?= $this->form()->openTag($form); ?>
+            
+<div class="modal-header">
+    <h5 class="modal-title" id="vtpGoodModalLabel">Привязка товара к машине <?= $car->getFullName()?></h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+            
+<div class="modal-body">
+    <div class="row">
+        <div class="col-xs-12">                        
+            <div class="form-group">
+<!--                            <?= $this->formLabel($form->get('goodInputName')); ?>
+                <em>(артикул;производитель;наименование)</em>-->
+                <?= $this->formElement($form->get('goodInputName')); ?>
+                <?= $this->formElementErrors($form->get('goodInputName')); ?>                  
+            </div>
+        </div>    
+    </div>
+    <div class="row">
+        <div class="col-xs-8">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('code')); ?>
+                <div class="btn-group">
+                    <?= $this->formElement($form->get('code')); ?>
+                    <span class="glyphicon glyphicon-remove-circle inputclear"></span>
+                </div>
+                <?= $this->formElementErrors($form->get('code')); ?>                  
+            </div>
+        </div>    
+    </div>    
+    <div class="row">
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('oem')); ?>
+                <?= $this->formElement($form->get('oem')); ?>
+                <?= $this->formElementErrors($form->get('oem')); ?>                  
+            </div>
+        </div>    
+        <div class="col-xs-6">                        
+            <div class="form-group">
+                <?= $this->formLabel($form->get('oem_brand')); ?>
+                <?= $this->formElement($form->get('oem_brand')); ?>
+                <?= $this->formElementErrors($form->get('oem_brand')); ?>                  
+            </div>
+        </div>
+    </div>    
+
+    <?= $this->formElement($form->get('good')); ?>
+    <?= $this->formElement($form->get('csrf')); ?>
+</div>    
+                
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+    <button type="button" class="btn btn-primary" id="bind-good-submit">Сохранить</button>
+</div>
+            
+<?= $this->form()->closeTag(); ?>
+            
+<script  type="text/javascript">
+    $('#bind-good-submit').on('click', function() {
+        $.ajax({
+            type: 'POST',
+            url: '/car/good-bind-form/<?= $car->getId()?>',
+            data: $('#bind-good-form').serialize()
+        })
+            .done(function (answer) {
+//                console.log(answer);
+                if (answer.result == 'ok'){                       
+                    $('#bindGoodModal').modal('hide');
+//                    window.location.reload();
+                } else {
+                    $('#bindGoodModal .modal-content').html(answer);
+                }    
+            })
+            .fail(function () {
+                alert("Ошибка при открытии формы.");
+
+            });
+    });   
+    
+    $( document ).ready(function() {
+        
+        $('#code').typeahead({
+            source: function(query, process) {
+                return $.get("/ptu/autocomplete-good?q="+query, function (data) {
+                    return process(data);
+                });
+            },
+            changeInputOnSelect: false,
+            afterSelect: function(data) {
+                $('#good').val(data.id);
+                $('#code').val(data.code);
+                $('#goodInputName').val(data.name);
+            }
+        });
+        
+    });    
+</script>

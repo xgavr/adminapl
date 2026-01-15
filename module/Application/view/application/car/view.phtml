@@ -166,6 +166,28 @@ $this->headScript()
                             </button>                             
                         </div>
                     </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Привязать товар
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/update-available/<?= $car->getId()?>" class="btn btn-info btn-xs bind-good"
+                                    title="Добавить товар">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>                             
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="pull-left">
+                            Привязать товары
+                        </div>
+                        <div class="pull-right">
+                            <button value="/car/upload-good-car-form/<?= $car->getId()?>" class="btn btn-default btn-xs"
+                                     data-toggle="modal" data-target="#modal-dialog" title="Загрузить файл">
+                                 <span class="glyphicon glyphicon-import" ></span>
+                             </button>                            
+                        </div>
+                    </div>
 <!--                    <div class="panel-body">
                         <div class="pull-left">
                             Исправить модель
@@ -192,7 +214,7 @@ $this->headScript()
                             </button>                             
                         </div>
                     </div>-->
-                    <div class="panel-body">
+<!--                    <div class="panel-body">
                         <div class="pull-left">
                             Выгрузить товары
                         </div>
@@ -203,7 +225,7 @@ $this->headScript()
                                 <span class="glyphicon glyphicon-download" ></span>
                             </button>                             
                         </div>
-                    </div>
+                    </div>-->
                 </div>    
             </div>
         </div>
@@ -263,5 +285,14 @@ $this->headScript()
                 dialog.modal('hide');
             }
         });
-    });        
+    }); 
+    
+    $(document).on('click', '.bind-good', function (e) {
+        var url = '/car/good-bind-form/<?= $car->getId()?>';
+        showFormDialog({
+            id: 'bindGoodModal',
+            url: url
+//                width: '1440px'
+        });
+    });    
 </script>

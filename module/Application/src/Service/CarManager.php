@@ -18,6 +18,7 @@ use Application\Entity\Goods;
 use Application\Entity\Oem;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Application\Entity\Make;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of CarService
@@ -472,6 +473,89 @@ class CarManager
         
         return;
     }
+    
+    /**
+     * 
+     * @param Car $car
+     * @param array $data
+     */
+    public function bindGoodCarData($car, $data)
+    {
+//        var_dump($data);
+        if (!empty($data['code'])){
+            $codeFilter = new ArticleCode();
+            $goods = $this->entityManager->getRepository(Goods::class)
+                    ->findBy(['code' => $codeFilter->filter($data['code'])]);  
+
+            if (count($goods) === 1){
+                
+                $good = $goods[0];
+                
+                try{
+                    $this->entityManager->getRepository(Goods::class)
+                            ->addGoodCar($good, $car);
+                } catch (\Throwable $ex) {
+
+                }
+
+                if(!empty($data['oem'])){
+                    $this->entityManager->getRepository(Oem::class)
+                            ->addOemToGood($good->getId(), [
+                                'oeNumber' => $data['oem'],
+                                'brandName' => $data['oem_brand'] ?? null,
+                            ], Oem::SOURCE_MAN);
+                            
+                }
+                
+                $this->entityManager->getRepository(Goods::class)
+                        ->updateGoodId($good->getId(), ['fasade_ex' => Goods::FASADE_EX_NEW]);                
+            }    
+        }          
+
+        
+        return;
+    }
+    
+    /**
+     * Привязать список товаров к машине
+     * @param Car $car
+     * @param string $filename
+     */
+    public function importGoodCars($car, $filename)
+    {        
+        $spreadsheet = IOFactory::load($filename);
+        $worksheet = $spreadsheet->getActiveSheet();
+        $rows = $worksheet->toArray(null, true, true, true);   
+        
+        // Пропускаем заголовок
+        array_shift($rows);
+        array_shift($rows);
+        array_shift($rows);
+        array_shift($rows);
+
+        $codeFilter = new ArticleCode();
+        
+        foreach ($rows as $row) {
+            // Проверяем, что строка не пустая
+            if (empty(trim($row['A'] ?? ''))) continue;
+            
+            // --- Code ---
+            $data['good'] = $codeFilter->filter(trim($row['A']));
+
+            // --- Oem ---
+            $data['oem'] = $codeFilter->filter(trim($row['B']));
+
+            // --- Oem brand ---
+            $data['oem_brand'] = trim($row['C']);
+
+
+            $this->bindGoodCarData($car, $data);
+            
+            unset($data);
+        }  
+        
+        return;
+    }    
     
     private function getOrCreateMake($makeData)
     {
