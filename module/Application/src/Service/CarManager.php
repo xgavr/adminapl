@@ -493,6 +493,8 @@ class CarManager
                 
                 try{
                     $this->entityManager->getRepository(Goods::class)
+                            ->removeGoodCar($good, $car);
+                    $this->entityManager->getRepository(Goods::class)
                             ->addGoodCar($good, $car);
                 } catch (\Throwable $ex) {
 
@@ -642,7 +644,7 @@ class CarManager
             $car->setModel($model);
             $car->setMoto(Car::MOTO_NO);
             $car->setName($carData['car_name']);
-            $car->setPassenger(Car::PASSENGER_NO);
+            $car->setPassenger(Car::PASSENGER_YES);
             $car->setSaleCount(0);
             $car->setSaleMonth(0);
             $car->setStatus(Car::STATUS_ACTIVE);

@@ -2297,6 +2297,19 @@ class GoodsRepository extends EntityRepository
     }
 
     /**
+     * Удаления машины товара
+     * 
+     * @param Goods $good
+     * @param Car $car
+     * @return integer
+     */
+    public function removeGoodCar($good, $car)
+    {
+        $deleted = $this->getEntityManager()->getConnection()->delete('good_car', ['good_id' => $good->getId(), 'car_id' => $car->getId()]);
+        return $deleted;        
+    }
+    
+    /**
      * Удаления машин товара
      * 
      * @param Goods $good

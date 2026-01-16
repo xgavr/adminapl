@@ -133,7 +133,7 @@ $this->headScript()
                         </div>
                         <div class="pull-right">
                             <button value="/apl/model-apl-id/<?= $model->getId()?>" class="btn btn-info btn-xs refresh-table-button"
-                                    title="Обновить АПЛ Ид">
+                                    title="Обновить АПЛ Ид" disabled="">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>
@@ -144,7 +144,7 @@ $this->headScript()
                         </div>
                         <div class="pull-right">
                             <button value="/car/fill-cars/<?= $model->getId();?>" class="btn btn-info btn-xs refresh-table-button"
-                                    title="Заполнить модификации">
+                                    title="Заполнить модификации" disabled="">
                                 <span class="glyphicon glyphicon-refresh" ></span>
                             </button>                             
                         </div>
@@ -167,7 +167,7 @@ $this->headScript()
                         <div class="pull-right">
                             <button value="/car/download-car-goods?model=<?= $model->getId()?>" 
                                     class="btn btn-info btn-xs download-csv"
-                                    title="Выгрузить товары">
+                                    title="Выгрузить товары" disabled="">
                                 <span class="glyphicon glyphicon-download" ></span>
                             </button>                             
                         </div>

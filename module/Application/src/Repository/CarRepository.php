@@ -194,7 +194,7 @@ class CarRepository extends EntityRepository
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('count(g.id) as goodCount')
+        $queryBuilder->select('c.id, count(g.id) as goodCount')
             ->from(Car::class, 'c')
             ->leftJoin('c.goods', 'g')
             ->groupBy('c.id')    
@@ -203,11 +203,12 @@ class CarRepository extends EntityRepository
             ;
                 
         $data = $queryBuilder->getQuery()->getResult();
-        
-        $result = false;
+//        var_dump($car->getId(), $queryBuilder->getQuery()->getSQL()); exit;
+        $result = 0;
         foreach ($data as $row){
+            $result += $row['goodCount'];
             switch ($row['goodCount']){
-                case 0: $result = true; $status = Car::STATUS_RETIRED; break;
+                case 0: $status = Car::STATUS_RETIRED; break;
                 default: $status = Car::STATUS_ACTIVE; break;
             }
             
@@ -236,24 +237,21 @@ class CarRepository extends EntityRepository
             ;
                 
         $cars = $queryBuilder->getQuery()->getResult();
-        
-        $modelResult = false;
+
+        $modelResult = 0;
         foreach ($cars as $car){
-            $carResult = $this->updateAvailable($car);
-            if ($carResult){
-                $modelResult = true;
-            }
+            $modelResult += $this->updateAvailable($car);
         }      
-        
-        $result = false;
-        switch ($modelResult){
-            case true: $result = true; $status = Model::STATUS_RETIRED; break;
-            default: $status = Model::STATUS_ACTIVE; break;
+
+        if ($modelResult > 0){
+            $status = Model::STATUS_ACTIVE;
+        } else {
+            $status = Model::STATUS_RETIRED;
         }
             
-        $this->getEntityManager()->getConnection()->update('model', ['status' => $status], ['id' => $model->getId()]);
+        $this->getEntityManager()->getConnection()->update('model', ['status' => $status, 'good_count' => $modelResult], ['id' => $model->getId()]);
         
-        return $result;
+        return $modelResult;
     }    
     
     /**
@@ -276,9 +274,18 @@ class CarRepository extends EntityRepository
                 
         $models = $queryBuilder->getQuery()->getResult();
         
+        $result = 0;
         foreach ($models as $model){
-            $this->updateAvailableModel($model);
-        }      
+            $result += $this->updateAvailableModel($model);
+        }    
+        
+        if ($result > 0){
+            $status = Make::STATUS_ACTIVE;
+        } else {
+            $status = Make::STATUS_RETIRED;
+        }        
+        
+        $this->getEntityManager()->getConnection()->update('make', ['status' => $status, 'good_count' => $result], ['id' => $make->getId()]);
         
         return;
     }    
