@@ -1,5 +1,6 @@
 <?php
 use Application\Entity\Make;
+use Application\Entity\Model;
 
 $this->headTitle($make->getName());
 
@@ -45,6 +46,13 @@ $this->pageBreadcrumbs()->setItems([
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>
             </div>
+            <div class="form-group">
+                <select id="modelStatusSelect" name="status" class="form-control cookie-control">
+                    <?php foreach (Model::getStatusList() as $key=>$value):?>
+                        <option value="<?= $key?>"><?= $value?></option>
+                    <?php endforeach;?>
+                </select>                    
+            </div>    
         </div>
         <table id="table" 
             data-toggle="table" 
@@ -229,10 +237,17 @@ $this->pageBreadcrumbs()->setItems([
         $ok.click(function () {
             $table.bootstrapTable('refresh');
         });
+        
+       $(document).on('change', '#modelStatusSelect', function (e) {
+            refreshTable();
+        });                
     });
     
     function queryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
+            params[$(this).attr('name')] = $(this).val();
+        });
+        $('#toolbar').find('select[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
         limit = $('.page-size').html();
