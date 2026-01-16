@@ -63,7 +63,7 @@ $this->headScript()
                 </td>
             </tr>
             <?php foreach($model->getCars() as $car):?>
-                <?php //if ($car->getStatus() == $car::STATUS_ACTIVE):?>
+                <? //if ($car->getStatus() == $car::STATUS_ACTIVE):?>
                     <tr>
                         <td>
                             <?= $car->getId()?>
@@ -115,7 +115,7 @@ $this->headScript()
                             </div>
                         </td>                    
                     </tr>
-                <?php// endif;?>    
+                <?// endif;?>    
             <?php endforeach;?>    
         </table>
     </div>
