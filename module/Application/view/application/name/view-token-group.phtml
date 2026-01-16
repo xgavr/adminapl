@@ -443,6 +443,7 @@ $this->pageBreadcrumbs()->setItems([
         $.getJSON('/name/update-token-group-category/'+<?= $tokenGroup->getId()?>+'?groupSite='+groupSiteId, function( data ) {
         if (data.row && data.id){
             $('.category_name').html(data.categoryName);
+            dialog.hide();
         }
     });                            
     }
