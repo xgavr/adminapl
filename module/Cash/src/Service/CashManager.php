@@ -1318,6 +1318,39 @@ class CashManager {
     }
     
     /**
+     * Зарплата
+     * @param Statement $statement
+     * @param array $data
+     * 
+     * @return CashDoc
+     */
+    private function zpCashDocFromStatement($statement, $data)
+    {
+        $cashDoc = $statement->getCashDoc();
+        
+        if ($cashDoc){
+            if ($cashDoc->getStatement()){
+                if ($cashDoc->getStatement()->getId() != $statement->getId()){
+                    $cashDoc = null;
+                }
+            }
+        }    
+        
+        if ($statement->getAmount() > 0){
+        } else {
+            $data['kind'] = CashDoc::KIND_OUT_SALARY;
+        }
+
+        if ($cashDoc){
+            $this->updateCashDoc($cashDoc, $data);
+        } else {
+            $cashDoc = $this->addCashDoc($data);
+        }
+                
+        return $cashDoc;
+    }
+    
+    /**
      * Оплата/возврат от покупателея
      * @param Statement $statement
      * @param array $data
@@ -1381,6 +1414,7 @@ class CashManager {
      * Создать платеж из выписки
      * оплата/возврат поставщику
      * поступление/возврат от покупателя
+     * зп сотруднику
      * 
      * @param Statement $statement
      * @param Legal $legal Description
@@ -1389,7 +1423,10 @@ class CashManager {
     public function cashDocFromStatement($statement, $legal=null)
     {
         $legalInn = $cash = $company = null;
+        $zp = $statement->getKind() === Statement::KIND_OUT_ZP_USER;
         $cashDoc = $statement->getCashDoc();
+        
+        
         $data = [
             'amount' => abs($statement->getAmount()),
             'status' => CashDoc::STATUS_ACTIVE,
@@ -1414,7 +1451,7 @@ class CashManager {
             $cash = $companyAccount->getCash();
             $company = $companyAccount->getLegal();
         }    
-        if ($cash && $company && $legal){
+        if ($cash && $company && ($legal || $zp)){
             
             if ($company->getInn() == $legalInn){ 
                 return $cashDoc;
@@ -1427,19 +1464,26 @@ class CashManager {
             $data['legal'] = $legal;
             $data['statement'] = $statement;
 
-            $contract = $this->entityManager->getRepository(Office::class)
-                        ->findCurrentContract($company, $legal, $statement->getChargeDate(), Contract::PAY_CASHLESS);
-        
-            if ($contract){
-                if ($legal->getSupplier() && $contract->getKind() == Contract::KIND_SUPPLIER){
-                    return $this->supplierCashDocFromStatement($statement, $data);
-                }   
-            }    
+            if ($legal){
+                $contract = $this->entityManager->getRepository(Office::class)
+                            ->findCurrentContract($company, $legal, $statement->getChargeDate(), Contract::PAY_CASHLESS);
 
-            if ($legal->getClientContact()){
+                if ($contract){
+                    if ($legal->getSupplier() && $contract->getKind() == Contract::KIND_SUPPLIER){
+                        return $this->supplierCashDocFromStatement($statement, $data);
+                    }   
+                }    
+
+                if ($legal->getClientContact()){
+                    $data['comment'] = $statement->getPaymentPurpose();
+                    return $this->clientCashDocFromStatement($statement, $data);
+                }    
+            }  
+            
+            if ($zp){
                 $data['comment'] = $statement->getPaymentPurpose();
-                return $this->clientCashDocFromStatement($statement, $data);
-            }    
+                return $this->zpCashDocFromStatement($statement, $data);                
+            }
         }
         
         return $cashDoc;
@@ -1555,6 +1599,11 @@ class CashManager {
                 }
             }
             
+        }
+        
+        //зарплата
+        if ($statement->getKind() === Statement::KIND_OUT_ZP_USER){
+            $cashDoc = $this->cashDocFromStatement($statement);
         }
         
         $statement->setCashDoc($cashDoc);
