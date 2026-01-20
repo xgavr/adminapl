@@ -1451,7 +1451,7 @@ class CashManager {
             $cash = $companyAccount->getCash();
             $company = $companyAccount->getLegal();
         }    
-        if ($cash && $company && ($legal || $zp)){
+        if ($cash && $company && $legal){
             
             if ($company->getInn() == $legalInn){ 
                 return $cashDoc;
@@ -1480,10 +1480,10 @@ class CashManager {
                 }    
             }  
             
-            if ($zp){
-                $data['comment'] = $statement->getPaymentPurpose();
-                return $this->zpCashDocFromStatement($statement, $data);                
-            }
+//            if ($zp){
+//                $data['comment'] = $statement->getPaymentPurpose();
+//                return $this->zpCashDocFromStatement($statement, $data);                
+//            }
         }
         
         return $cashDoc;
