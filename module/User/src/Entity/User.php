@@ -81,6 +81,16 @@ class User
     protected $passwordResetTokenCreationDate;
     
     /**
+     * @ORM\Column(name="zp_rs")  
+     */
+    protected $zpRs;
+    
+    /**
+     * @ORM\Column(name="zp_bik")  
+     */
+    protected $zpBik;
+        
+    /**
      * @ORM\ManyToMany(targetEntity="User\Entity\Role")
      * @ORM\JoinTable(name="user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -255,6 +265,22 @@ class User
     public function setFullName($fullName) 
     {
         $this->fullName = $fullName;
+    }
+    
+    public function getZpRs() {
+        return $this->zpRs;
+    }
+
+    public function setZpRs($zpRs) {
+        $this->zpRs = $zpRs;
+    }
+
+    public function getZpBik() {
+        return $this->zpBik;
+    }
+
+    public function setZpBik($zpBik) {
+        $this->zpBik = $zpBik;
     }
     
     /**

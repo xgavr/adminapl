@@ -93,6 +93,8 @@ class UserManager
         $user = new User();
         $user->setEmail($data['email']);
         $user->setFullName($data['full_name']);        
+        $user->setZpBik($data['zpBik'] ?? null);  
+        $user->setZpRs($data['zpRs'] ?? null);  
 
         // Encrypt password and store the password in encrypted state.
         $bcrypt = new Bcrypt();
@@ -196,6 +198,7 @@ class UserManager
         
         $user->setEmail($data['email']);
         $user->setFullName($data['full_name']);  
+
         if (!empty($data['status'])){
             $user->setStatus($data['status']);
         }    
@@ -205,6 +208,14 @@ class UserManager
         $user->setBirthday(null);
         if (!empty($data['birthday'])){
             $user->setBirthday($data['birthday']);
+        } 
+        
+        if (!empty($data['zpBik'])){
+            $user->setZpBik($data['zpBik']);  
+        }    
+        
+        if (!empty($data['zpRs'])){
+            $user->setZpRs($data['zpRs']);  
         }    
         
         $office = null;

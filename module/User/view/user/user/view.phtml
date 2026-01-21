@@ -66,6 +66,12 @@ $legalContact = $user->getLegalContact();
                 </td>
             </tr>
             <tr>
+                <th>БИК банка/счет ЗП</th>
+                <td>
+                    <?= $user->getZpBik() . '/' . $user->getZpRs()?> 
+                </td>
+            </tr>
+            <tr>
                 <th>Роли:</th>
                 <td><?= $this->escapeHtml($user->getRolesAsString()) ?></td>
             </tr>
@@ -82,7 +88,7 @@ $legalContact = $user->getLegalContact();
             <tr>
                 <th>В подотчете:</th>
                 <td>
-                    <?= round($balance, 2) ?>
+                    <?= round($balance ?? 0, 2) ?>
                 </td>
             </tr>
             <tr>

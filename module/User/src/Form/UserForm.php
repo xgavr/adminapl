@@ -111,6 +111,22 @@ class UserForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'zpRs',            
+            'options' => [
+                'label' => 'Счет для получения ЗП',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'zpBik',            
+            'options' => [
+                'label' => 'БИК банка для получения ЗП',
+            ],
+        ]);
+        
         if ($this->scenario == 'create') {
         
             // Add "password" field
@@ -254,6 +270,40 @@ class UserForm extends Form
                 'filters'  => [                    
                 ],                
                 'validators' => [
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'zpRs',
+                'required' => false,
+                'filters'  => [  
+                    ['name' => 'StringTrim'],  
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 20,
+                            'max' => 20
+                        ],
+                    ],                
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'zpBik',
+                'required' => false,
+                'filters'  => [  
+                    ['name' => 'StringTrim'],  
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 9,
+                            'max' => 9
+                        ],
+                    ],                
                 ],
             ]);
         
