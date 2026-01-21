@@ -800,6 +800,9 @@ class ExternalManager
                         ->findGoodCar($good, $car);
                 if (count($goodCar) == 0){
                     $this->entityManager->getRepository(Goods::class)
+                            ->removeGoodCar($good, $car);
+                    
+                    $this->entityManager->getRepository(Goods::class)
                             ->addGoodCar($good, $car);
                 }    
             }                    

@@ -424,6 +424,10 @@ class CarManager
             foreach ($goodsWithCars as $goodsWithCar){
 //                var_dump($oem['oe'], $goodsWithCar->getCode());
                 foreach ($goodsWithCar->getCars() as $car){
+                    
+                    $this->entityManager->getRepository(Goods::class)
+                            ->removeGoodCar($good, $car);
+                    
                     $this->entityManager->getRepository(Goods::class)
                             ->addGoodCar($good, $car);
                 }
