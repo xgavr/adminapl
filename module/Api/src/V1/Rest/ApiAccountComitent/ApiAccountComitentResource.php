@@ -18,6 +18,7 @@ use Stock\Entity\Mutual;
 use Company\Entity\Contract;
 use Company\Entity\BankAccount;
 use Application\Entity\Supplier;
+use User\Entity\User;
 
 class ApiAccountComitentResource extends AbstractResourceListener
 {
@@ -188,6 +189,14 @@ class ApiAccountComitentResource extends AbstractResourceListener
                     ->findBy(['statusAccount' => Statement::STATUS_ACCOUNT_NO]);
             foreach ($statements as $statement){
                 $row = $statement->toArray();
+                if ($statement->getKind() === Statement::KIND_OUT_ZP_USER){
+                    $user = $this->entityManager->getRepository(User::class)
+                            ->findOneBy(['zpRs' => $statement->getZpRs()]);
+                    if ($user){
+                        $row['zpUser'] = $user->toArray();
+                    }
+                            
+                }
                 $result[] = $row;
                 
             }
