@@ -11,6 +11,7 @@ use Stock\Entity\St;
 use Zp\Entity\Accrual;
 use Zp\Entity\Position;
 use Zp\Entity\PersonalRevise;
+use Bank\Entity\Statement;
 
 /**
  * This class represents a position accrual.
@@ -227,6 +228,19 @@ class PersonalMutual
     {
         switch ($cashDoc->getStatus()){
             case CashDoc::STATUS_ACTIVE: return self::STATUS_ACTIVE;
+            default: return self::STATUS_RETIRED;    
+        }
+    }    
+
+    /**
+     * Returns possible Statement status.
+     * @param Statement $statement
+     * @return integer
+     */
+    public static function getStatusFromStatement($statement) 
+    {
+        switch ($statement->getStatus()){
+            case Statement::STATUS_ACTIVE: return self::STATUS_ACTIVE;
             default: return self::STATUS_RETIRED;    
         }
     }    

@@ -26,6 +26,7 @@ use Cash\Entity\CashDoc;
 use Stock\Entity\St;
 use Company\Entity\TaxMutual;
 use Zp\Entity\PersonalRevise;
+use Bank\Entity\Statement;
 
 /**
  * Description of ZpCalculator
@@ -355,6 +356,59 @@ class ZpCalculator {
                             ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]));
 
                     $this->entityManager->persist($personalMutual);
+
+                    break;                
+            }    
+        }    
+        
+        $this->entityManager->flush();
+        
+        return $personalMutual;
+    }
+    
+    /**
+     * Провести оплату на карту
+     * @param Statement $statement
+     * @param float $docStamp
+     * 
+     * @return PersonalMutual
+     */
+    public function repostStatement($statement, $docStamp)
+    {
+        $this->removePersonalMutual(Movement::DOC_BANK, $statement->getId());
+        
+        if ($statement->getStatus() == Statement::STATUS_RETIRED){
+            return;
+        }        
+        
+        $personalMutual = null;
+        
+        if ($statement->getDateOper() >= date('2024-01-01')){
+            switch ($statement->getKind()){
+                
+                case Statement::KIND_OUT_ZP_USER:
+                    
+                    $user = $this->entityManager->getRepository(User::class)
+                        ->findOneBy(['zpRs' => $statement->getCounterpartyAccountNumber()]);
+                    
+                    if ($user){
+                        // выплата
+                        $personalMutual = new PersonalMutual();
+                        $personalMutual->setAmount(abs($statement->getAmount()));
+                        $personalMutual->setCompany($statement->getCompany());
+                        $personalMutual->setDateOper($statement->getDateOper());
+                        $personalMutual->setDocId($statement->getId());
+                        $personalMutual->setDocKey($statement->getLogKey());
+                        $personalMutual->setDocStamp($docStamp);
+                        $personalMutual->setDocType(Movement::DOC_BANK);
+                        $personalMutual->setStatus(PersonalMutual::getStatusFromStatement($statement));
+                        $personalMutual->setUser($user);
+                        $personalMutual->setKind(PersonalMutual::KIND_PAYMENT);
+                        $personalMutual->setAccrual($this->entityManager->getRepository(Accrual::class)
+                                ->findOneBy(['payment' => Accrual::PAYMENT_PAYMENT]));
+
+                        $this->entityManager->persist($personalMutual);
+                    }
 
                     break;                
             }    

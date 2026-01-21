@@ -547,6 +547,15 @@ class Statement {
         return $this->chargeDate;
     }
 
+    /**
+     * Возвращает дату операции.
+     * @return date
+     */
+    public function getDateOper() 
+    {
+        return $this->chargeDate;
+    }
+
     public function getDocDateAtomFormat() {
         $datetime = new \DateTime($this->chargeDate);
         return $datetime->format(\DateTime::ATOM);

@@ -67,13 +67,19 @@ class BankManager
     private $gigaManager;
     
     /**
+     * ZpCalculator manager
+     * @var \Zp\Service\ZpCalculator
+     */
+    private $zpCalculator;
+    
+    /**
      * Дата запрета
      * @var string
      */
     private $allowDate;    
 
     public function __construct($entityManager, $tochkaStatement, $adminManager, 
-            $postManager, $costManager, $gigaManager)
+            $postManager, $costManager, $gigaManager, $zpCalculator)
     {
         $this->entityManager = $entityManager;
         $this->tochkaStatement = $tochkaStatement;    
@@ -81,6 +87,7 @@ class BankManager
         $this->postManager = $postManager;
         $this->costManager = $costManager;
         $this->gigaManager = $gigaManager;
+        $this->zpCalculator = $zpCalculator;
         
         if (!is_dir(self::STATEMENTS_DIR)){
             mkdir(self::STATEMENTS_DIR);
@@ -260,7 +267,11 @@ class BankManager
      */
     public function repostStatement($statement)
     {
+        $docStamp = $this->entityManager->getRepository(Register::class)
+                ->statementRegister($statement);
+        
         $this->costManager->repostStatement($statement);
+        $this->zpCalculator->repostStatement($statement, $docStamp);
 
         return;
     }
