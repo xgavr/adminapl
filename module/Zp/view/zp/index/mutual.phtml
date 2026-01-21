@@ -217,6 +217,8 @@ use Stock\Entity\Movement;
                 return "<a href='#' class='st-modal-show' modal-url='/st/edit-form/"+docId+"'>Списание в ЗП №"+docId+"</a>";
             case <?= Movement::DOC_CASH?>:
                 return 'Выдано из кассы/подотчета';        
+            case <?= Movement::DOC_BANK?>:
+                return 'Перевод на карту';        
             default: return docId;            
         }
     }

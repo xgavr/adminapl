@@ -1055,6 +1055,9 @@ class ZpCalculator {
                 case Movement::DOC_CASH: 
                     $docName = 'Выдано из кассы/подотчета №'.$mutual->getDocId();
                     break;
+                case Movement::DOC_BANK: 
+                    $docName = 'Перевод на карту №'.$mutual->getDocId();
+                    break;
                 case Movement::DOC_ST: 
                     $docName = 'Списание товаров №'.$mutual->getDocId();
                     break;
