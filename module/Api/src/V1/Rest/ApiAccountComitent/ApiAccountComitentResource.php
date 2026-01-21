@@ -191,7 +191,7 @@ class ApiAccountComitentResource extends AbstractResourceListener
                 $row = $statement->toArray();
                 if ($statement->getKind() === Statement::KIND_OUT_ZP_USER){
                     $user = $this->entityManager->getRepository(User::class)
-                            ->findOneBy(['zpRs' => $statement->getZpRs()]);
+                            ->findOneBy(['zpRs' => $statement->getCounterpartyAccountNumber()]);
                     if ($user){
                         $row['zpUser'] = $user->toArray();
                     }
