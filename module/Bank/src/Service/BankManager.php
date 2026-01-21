@@ -19,6 +19,7 @@ use Bank\Entity\Acquiring;
 use Bank\Entity\AplPayment;
 use Application\Filter\ToFloat;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Stock\Entity\Register;
 
 /**
  * Description of BankManager
