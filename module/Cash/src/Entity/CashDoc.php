@@ -1255,7 +1255,9 @@ class CashDoc {
             'orderApl' => ($this->order) ? $this->order->getAplId():null,
             'status' => $this->status,
             'user' => ($this->user) ? $this->user->getId():null,
+            'userData' => ($this->user) ? $this->user->toArray():null,
             'userRefill' => ($this->userRefill) ? $this->userRefill->getId():null,
+            'userRefillData' => ($this->userRefill) ? $this->userRefill->toArray():null,
             'vt' => ($this->vt) ? $this->vt->getId():null,
         ];
         
