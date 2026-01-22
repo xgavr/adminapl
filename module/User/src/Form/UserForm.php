@@ -82,7 +82,7 @@ class UserForm extends Form
             'type'  => 'text',
             'name' => 'full_name',            
             'options' => [
-                'label' => 'ФИО',
+                'label' => 'Имя',
             ],
         ]);
         
@@ -132,6 +132,14 @@ class UserForm extends Form
             'name' => 'inn',            
             'options' => [
                 'label' => 'ИНН',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'fio',            
+            'options' => [
+                'label' => 'ФИО',
             ],
         ]);
         
@@ -329,6 +337,16 @@ class UserForm extends Form
                             'max' => 12
                         ],
                     ],                
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'fio',
+                'required' => false,
+                'filters'  => [  
+                    ['name' => 'StringTrim'],  
+                ],                
+                'validators' => [               
                 ],
             ]);
         

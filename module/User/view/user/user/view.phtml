@@ -66,6 +66,10 @@ $legalContact = $user->getLegalContact();
                 </td>
             </tr>
             <tr>
+                <th>ФИО:</th>
+                <td><?= $this->escapeHtml($user->getFio()) ?></td>
+            </tr>
+            <tr>
                 <th>ИНН</th>
                 <td>
                     <?= $user->getInn()?> 
@@ -108,6 +112,8 @@ $legalContact = $user->getLegalContact();
                 </td>
             </tr>
         </table>
+    </div>
+    <div class="col-md-6">    
         <div class="panel panel-success">
             <div class="panel-heading">Контакты</div>
             <div class="panel-body">

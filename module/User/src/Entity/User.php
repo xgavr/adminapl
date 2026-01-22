@@ -96,6 +96,11 @@ class User
     protected $inn;
         
     /**
+     * @ORM\Column(name="fio")  
+     */
+    protected $fio;
+        
+    /**
      * @ORM\ManyToMany(targetEntity="User\Entity\Role")
      * @ORM\JoinTable(name="user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -294,6 +299,14 @@ class User
 
     public function setInn($inn) {
         $this->inn = $inn;
+    }
+    
+    public function getFio() {
+        return $this->fio;
+    }
+
+    public function setFio($fio) {
+        $this->fio = $fio;
     }
 
     /**

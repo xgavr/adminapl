@@ -47,13 +47,17 @@ $form->get('inn')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('fio')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control'
     ]);
 
 $form->get('roles')->setAttributes([
     'class'=>'form-control',
-    'rows' => 20,
+    'rows' => 10,
     ]);
 
 $form->get('office')->setAttributes([
@@ -67,11 +71,13 @@ $form->get('submit')
 $form->prepare();
 ?>
 
+
 <h1>Edit User <?= $this->escapeHtml($user->getEmail()) ?></h1>
+
+<?= $this->form()->openTag($form); ?>
 
 <div class="row">
     <div class="col-md-6">
-        <?= $this->form()->openTag($form); ?>
         
         <div class="form-group">
             <?= $this->formLabel($form->get('aplId')); ?>
@@ -101,6 +107,37 @@ $form->prepare();
             <?= $this->formElement($form->get('office')); ?>
             <?= $this->formElementErrors($form->get('office')); ?>                  
         </div>
+        
+        <div class="form-group form-inline">
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formElementErrors($form->get('email')); ?>                  
+
+            <?= $this->formLabel($form->get('mailPassword')); ?>
+            <?= $this->formElementErrors($form->get('mailPassword')); ?>                  
+            <div class="input-group">
+                <?= $this->formElement($form->get('mailPassword')); ?>
+                <span class="input-group-btn">
+                    <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
+                        <span class="glyphicon glyphicon-qrcode"></span>
+                    </button>
+                </span>                                                            
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('sign')); ?>
+            <?= $this->formElement($form->get('sign')); ?>
+            <?= $this->formElementErrors($form->get('sign')); ?>                  
+        </div>
+        
+    </div>    
+    <div class="col-md-6">    
+        <div class="form-group">
+            <?= $this->formLabel($form->get('fio')); ?>
+            <?= $this->formElement($form->get('fio')); ?>
+            <?= $this->formElementErrors($form->get('fio')); ?>                  
+        </div>
 
         <div class="form-group">
             <?= $this->formLabel($form->get('inn')); ?>
@@ -129,40 +166,19 @@ $form->prepare();
         <?= $this->formElement($form->get('submit')); ?>
         
     </div>
-    <div class="col-md-6">
-        
-        <div class="form-group form-inline">
-            <?= $this->formLabel($form->get('email')); ?>
-            <?= $this->formElement($form->get('email')); ?>
-            <?= $this->formElementErrors($form->get('email')); ?>                  
+    <div class="row">
+        <div class="col-md-12">
 
-            <?= $this->formLabel($form->get('mailPassword')); ?>
-            <?= $this->formElementErrors($form->get('mailPassword')); ?>                  
-            <div class="input-group">
-                <?= $this->formElement($form->get('mailPassword')); ?>
-                <span class="input-group-btn">
-                    <button class="btn btn-default password-generator" type="button" data-toggle="tooltip" data-placement="top" title="Генератор пароля">
-                        <span class="glyphicon glyphicon-qrcode"></span>
-                    </button>
-                </span>                                                            
-            </div>
-        </div>
-        
-        <div class="form-group">
-            <?= $this->formLabel($form->get('sign')); ?>
-            <?= $this->formElement($form->get('sign')); ?>
-            <?= $this->formElementErrors($form->get('sign')); ?>                  
-        </div>
-        
-        <?= $this->form()->closeTag(); ?>
+        </div>    
     </div>    
 </div>   
+<?= $this->form()->closeTag(); ?>
 
 <script>
     $( document ).ready(function() {
         $('textarea[name="sign"]').summernote({
             lang: 'ru-RU', // default: 'en-US'
-            height: 200
+            height: 100
         });
         
     });
