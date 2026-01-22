@@ -174,7 +174,7 @@ class PaymentController extends AbstractActionController
                             ->find($data['supplier']);
                     $data['supplier'] = $supplier;                    
                 }
-                
+                var_dump($data);
                 if ($payment){
                     $this->paymentManager->updatePayment($payment, $data);
                 } else {
