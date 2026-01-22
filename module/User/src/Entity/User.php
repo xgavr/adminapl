@@ -91,6 +91,11 @@ class User
     protected $zpBik;
         
     /**
+     * @ORM\Column(name="inn")  
+     */
+    protected $inn;
+        
+    /**
      * @ORM\ManyToMany(targetEntity="User\Entity\Role")
      * @ORM\JoinTable(name="user_role",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -283,6 +288,14 @@ class User
         $this->zpBik = $zpBik;
     }
     
+    public function getInn() {
+        return $this->inn;
+    }
+
+    public function setInn($inn) {
+        $this->inn = $inn;
+    }
+
     /**
      * Returns status.
      * @return int     

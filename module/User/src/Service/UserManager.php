@@ -95,6 +95,7 @@ class UserManager
         $user->setFullName($data['full_name']);        
         $user->setZpBik($data['zpBik'] ?? null);  
         $user->setZpRs($data['zpRs'] ?? null);  
+        $user->setInn($data['inn'] ?? null);  
 
         // Encrypt password and store the password in encrypted state.
         $bcrypt = new Bcrypt();
@@ -216,6 +217,10 @@ class UserManager
         
         if (!empty($data['zpRs'])){
             $user->setZpRs($data['zpRs']);  
+        } 
+        
+        if (!empty($data['inn'])){
+            $user->setInn($data['inn']);  
         }    
         
         $office = null;

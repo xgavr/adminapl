@@ -43,6 +43,10 @@ $form->get('zpBik')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('inn')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('status')->setAttributes([
     'class'=>'form-control'
     ]);
@@ -96,6 +100,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('office')); ?>
             <?= $this->formElement($form->get('office')); ?>
             <?= $this->formElementErrors($form->get('office')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('inn')); ?>
+            <?= $this->formElement($form->get('inn')); ?>
+            <?= $this->formElementErrors($form->get('inn')); ?>                  
         </div>
 
         <div class="form-group">

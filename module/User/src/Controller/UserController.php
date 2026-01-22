@@ -275,6 +275,7 @@ class UserController extends AbstractActionController
                     'birthday' => $user->getBirthday(),
                     'zpRs' => $user->getZpRs(),
                     'zpBik' => $user->getZpBik(),
+                    'inn' => $user->getInn(),
                     'email'=>$user->getEmail(),
                     'sign' => $user->getSign(),
                     'mailPassword' => $this->userManager->userMailPassword($user),

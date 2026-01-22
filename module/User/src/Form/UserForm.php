@@ -127,6 +127,14 @@ class UserForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'inn',            
+            'options' => [
+                'label' => 'ИНН',
+            ],
+        ]);
+        
         if ($this->scenario == 'create') {
         
             // Add "password" field
@@ -302,6 +310,23 @@ class UserForm extends Form
                         'options' => [
                             'min' => 9,
                             'max' => 9
+                        ],
+                    ],                
+                ],
+            ]);
+        
+        $inputFilter->add([
+                'name'     => 'inn',
+                'required' => false,
+                'filters'  => [  
+                    ['name' => 'StringTrim'],  
+                ],                
+                'validators' => [
+                    [
+                        'name'    => 'StringLength',
+                        'options' => [
+                            'min' => 10,
+                            'max' => 12
                         ],
                     ],                
                 ],

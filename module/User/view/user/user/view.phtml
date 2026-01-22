@@ -66,6 +66,12 @@ $legalContact = $user->getLegalContact();
                 </td>
             </tr>
             <tr>
+                <th>ИНН</th>
+                <td>
+                    <?= $user->getInn()?> 
+                </td>
+            </tr>
+            <tr>
                 <th>БИК банка/счет ЗП</th>
                 <td>
                     <?= $user->getZpBik() . '/' . $user->getZpRs()?> 
