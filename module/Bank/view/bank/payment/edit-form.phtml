@@ -444,6 +444,9 @@ $form->prepare();
         if ($('select[name="paymentType"]').val() === '<?= Payment::PAYMENT_TYPE_TAX?>'){
             $('input[name="purpose"]').val(purpose);
         }    
+        if ($('select[name="paymentType"]').val() === '<?= Payment::PAYMENT_TYPE_PRIVATE?>'){
+            $('input[name="purpose"]').val(purpose);
+        }    
     }
     
     function changeBankAccount(){

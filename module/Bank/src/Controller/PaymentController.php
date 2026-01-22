@@ -165,6 +165,9 @@ class PaymentController extends AbstractActionController
                 if (!empty($data['taxInfoOkato']) && $data['paymentType'] != Payment::PAYMENT_TYPE_TAX){
                     $data['taxInfoOkato'] = '';
                 }
+                if ($data['paymentType'] === Payment::PAYMENT_TYPE_PRIVATE){
+                    $data['purposeCode'] = 1;
+                }
                 
                 if (is_numeric($data['supplier'])){
                     $supplier = $this->entityManager->getRepository(Supplier::class)

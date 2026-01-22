@@ -136,7 +136,7 @@ class Payment {
             "paymentNumber": "9195", Номер платежа
             "paymentPriority": "5", Приоритет платежа
             "paymentPurpose": "Оплата по счету № 1 от 01.01.2021. Без НДС", Назначение платежа
-            "codePurpose": "1", Поле 20 Заполняется только при платеже физ лицам
+            "codePurpose": "1", Поле 20 Заполняется только при платеже физ лицам на счета:('40810', '40817', '40823', '40824', '40826', '423', '30232', '40803', '40813', '40820', '426'). Допустимые значения 1,2,3,4,5 и пусто
             "supplierBillId": "1", Код УИН (поле 22)
             "taxInfoDocumentDate": "2018-03-29", Дата документа (поле 109). Используется стандарт ISO8601. Допустимо значение "0"
             "taxInfoDocumentNumber": "12", Номера документа (поле 108)
@@ -174,7 +174,7 @@ class Payment {
         if ($response->isOk()){
             return Decoder::decode($response->getBody(), \Laminas\Json\Json::TYPE_ARRAY);            
         }
-        var_dump($response->getBody());
+//        var_dump($response->getBody());
         return $this->auth->exception($response);
         
     }

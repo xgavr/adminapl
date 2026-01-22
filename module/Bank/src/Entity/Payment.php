@@ -33,6 +33,7 @@ class Payment {
     
     const PAYMENT_TYPE_NORMAL = 1; //обычный платеж
     const PAYMENT_TYPE_TAX = 2; // налог
+    const PAYMENT_TYPE_PRIVATE = 3; // физ лицу
     
     const NDS_NO = 1; //без НДС
     const NDS_5 = 5; // НДС 5%
@@ -430,6 +431,9 @@ class Payment {
 
     /**
      * Возвращает опциональное поле.
+     * Заполняется только при платеже физ лицам на счета:('40810', '40817', '40823', 
+     * '40824', '40826', '423', '30232', '40803', '40813', '40820', '426'). 
+     * Допустимые значения 1,2,3,4,5 и пусто
      * @return string
      */
     public function getPaymentPurposeCode() 
@@ -725,6 +729,7 @@ class Payment {
         return [
             self::PAYMENT_TYPE_NORMAL => 'Обычный',
             self::PAYMENT_TYPE_TAX => 'Налог',
+            self::PAYMENT_TYPE_PRIVATE => 'Физ.лицам',
         ];
     }    
     
