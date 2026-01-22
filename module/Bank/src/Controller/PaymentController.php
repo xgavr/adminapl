@@ -165,7 +165,7 @@ class PaymentController extends AbstractActionController
                 if (!empty($data['taxInfoOkato']) && $data['paymentType'] != Payment::PAYMENT_TYPE_TAX){
                     $data['taxInfoOkato'] = '';
                 }
-                if ($data['paymentType'] === Payment::PAYMENT_TYPE_PRIVATE){
+                if ($data['paymentType'] == Payment::PAYMENT_TYPE_PRIVATE){
                     $data['purposeCode'] = 1;
                 }
                 
@@ -174,7 +174,7 @@ class PaymentController extends AbstractActionController
                             ->find($data['supplier']);
                     $data['supplier'] = $supplier;                    
                 }
-                var_dump($data);
+                
                 if ($payment){
                     $this->paymentManager->updatePayment($payment, $data);
                 } else {
