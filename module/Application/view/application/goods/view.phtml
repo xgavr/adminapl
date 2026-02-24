@@ -190,7 +190,7 @@
                     <tr>
                         <td colspan="3">
                             <?php if ($goods->getTokenGroup()):?>
-                                <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId() ?>" target="_blank"><?= $goods->getTokenGroup()->getName() ?? 'Нет наименования' ?></a>
+                                <a href="/name/view-token-group/<?= $goods->getTokenGroup()->getId() ?>" target="_blank"><?= empty($goods->getTokenGroup()->getName()) ? 'Нет наименования':$goods->getTokenGroup()->getName() ?></a>
                             <?php else:?>
                                 <i>Нет группы наименования</i>
                             <?php endif?>  
