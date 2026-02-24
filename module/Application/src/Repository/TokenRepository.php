@@ -379,10 +379,10 @@ class TokenRepository  extends EntityRepository
             }
             if (isset($params['withGroupSite'])){
                 if ($params['withGroupSite'] == 1){
-                    $queryBuilder->andWhere('tg.groupSite is not null');
+                    $queryBuilder->andWhere('gs.id is not null');
                 }                                
                 if ($params['withGroupSite'] == 2){
-                    $queryBuilder->andWhere('tg.groupSite is null');
+                    $queryBuilder->andWhere('gs.id is null');
                 }                                
             }
             if (isset($params['withGenericGroup'])){
