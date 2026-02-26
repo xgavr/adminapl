@@ -243,10 +243,8 @@ $this->pageBreadcrumbs()->setItems([
         }
         
        return [
-            '<nobr>',
             '<a href="/name/view-token-group/' + row.tokenGroupId + '" class="btn btn-link btn-xs" title="Перейти на страницу группы" target="_blank">',
-            '<span class="glyphicon glyphicon-link"></span></a>'+name,
-            '</nobr>'
+            '<span class="glyphicon glyphicon-link"></span></a>'+name
         ].join('');        
     }        
     
