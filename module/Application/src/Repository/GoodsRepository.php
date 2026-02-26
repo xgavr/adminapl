@@ -1959,6 +1959,7 @@ class GoodsRepository extends EntityRepository
                 ->addSelect('g.checkOem, g.checkDescription, g.checkImage, g.checkCar, g.fasadeEx')
                 ->addSelect('p.name as producerName')
                 ->addSelect('tg.name as tokenGroupName')
+                ->addSelect('tg.id as tokenGroupId')
                 ->addSelect('gs.code as categoryCode')
                 ->addSelect('gs.name as categoryName')
                 ->addSelect('gs.fullName as categoryFullName')
