@@ -2000,6 +2000,10 @@ class GoodsRepository extends EntityRepository
                     ->setParameter('checkCar', $params['checkCar'])    
                     ;
             }
+            if (!empty($params['checkTgName'])){
+                $queryBuilder->andWhere('tg.name = ""')
+                    ;
+            }
             if (!empty($params['categoryId'])){
                 $queryBuilder->andWhere('gs.id = :category')
                     ->setParameter('category', $params['categoryId'])    

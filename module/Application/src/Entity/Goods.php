@@ -1545,6 +1545,7 @@ class Goods {
     public static function getCheckList()
     {
         return[
+          'checkTgName_1' => 'Без наименования группы',  
           'checkOem_'.self::CHECK_OEM_NO => self::getCheckOemList()[self::CHECK_OEM_NO],  
           'checkOem_'.self::CHECK_OEM_OK => self::getCheckOemList()[self::CHECK_OEM_OK],  
           'checkDescription_'.self::CHECK_DESCRIPTION_NO => self::getCheckDescriptionList()[self::CHECK_DESCRIPTION_NO],  
