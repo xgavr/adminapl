@@ -2001,7 +2001,8 @@ class GoodsRepository extends EntityRepository
                     ;
             }
             if (!empty($params['checkTgName'])){
-                $queryBuilder->andWhere('tg.name = ""')
+                $queryBuilder->andWhere('tg.name = :emptyName')
+                        ->setParameter('emptyName', '') 
                     ;
             }
             if (!empty($params['categoryId'])){
