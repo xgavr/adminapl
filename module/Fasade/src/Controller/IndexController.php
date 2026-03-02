@@ -86,7 +86,8 @@ class IndexController extends AbstractActionController
             'accurate' => $accurate,            
             'retailCount' => $retailCount,            
             'withImage' => $withImage,            
-            'categoryId' => ($categotyId > 0) ? $categotyId:null,            
+//            'categoryId' => ($categotyId > 0) ? $categotyId:null,            
+            'categoryId' => $categotyId,            
         ];
         
         if (!empty($checks)){
