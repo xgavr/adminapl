@@ -2012,7 +2012,7 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('category', $params['categoryId'])    
                         ;
                 } elseif ($params['categoryId'] === -2) {
-                   $queryBuilder->andWhere('gs.id is null');         
+                   $queryBuilder->andWhere('gs.code is null');         
                 }    
             }
             if (!empty($params['withImage'])){
@@ -2168,7 +2168,7 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('category', $params['categoryId'])    
                         ;
                 } elseif ($params['categoryId'] === -2) {
-                   $queryBuilder->andWhere('gs.id is null');         
+                   $queryBuilder->andWhere('gs.code is null');         
                 }    
             }
             if (!empty($params['withImage'])){
