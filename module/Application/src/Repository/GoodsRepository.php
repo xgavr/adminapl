@@ -2007,9 +2007,13 @@ class GoodsRepository extends EntityRepository
                     ;
             }
             if (!empty($params['categoryId'])){
-                $queryBuilder->andWhere('gs.id = :category')
-                    ->setParameter('category', $params['categoryId'])    
-                    ;
+                if ($params['categoryId'] > 0){
+                    $queryBuilder->andWhere('gs.id = :category')
+                        ->setParameter('category', $params['categoryId'])    
+                        ;
+                } elseif ($params['categoryId'] === -2) {
+                   $queryBuilder->andWhere('gs.id is null');         
+                }    
             }
             if (!empty($params['withImage'])){
                 if ($params['withImage'] == 1){
@@ -2159,9 +2163,13 @@ class GoodsRepository extends EntityRepository
                     ;
             }
             if (!empty($params['categoryId'])){
-                $queryBuilder->andWhere('gs.id = :category')
-                    ->setParameter('category', $params['categoryId'])    
-                    ;
+                if ($params['categoryId'] > 0){
+                    $queryBuilder->andWhere('gs.id = :category')
+                        ->setParameter('category', $params['categoryId'])    
+                        ;
+                } elseif ($params['categoryId'] === -2) {
+                   $queryBuilder->andWhere('gs.id is null');         
+                }    
             }
             if (!empty($params['withImage'])){
                 if ($params['withImage'] == 1){
