@@ -37,7 +37,14 @@ $this->pageBreadcrumbs()->setItems([
     <button class="btn btn-default btn-xs include-in-category"
             title="Включить в категорию">
         <span class="glyphicon glyphicon-plus"></span>
-    </button>    
+    </button>
+    <?php if($tokenGroup->getGroupSite()): ?>
+        <button class="btn btn-default btn-xs update-in-category"
+                data-category-id="<?= $tokenGroup->getGroupSite()->getId() ?>"
+                title="Обновить в категории">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button> 
+    <?php endif ?>
 </div>
 <div>
     <?= $tokenGroup->getLemms()?> (<?= $meanFrequency['mean']; ?>)
@@ -470,5 +477,11 @@ $this->pageBreadcrumbs()->setItems([
             });
         }); 
         return;            
+    });    
+    
+    $('.update-in-category').click(function (){
+        var groupSiteId = $(this).data('category-id');
+        console.log(groupSiteId);
+        //updateTokenGroupGroupSite(groupSiteId);            
     });    
 </script>
