@@ -32,8 +32,8 @@ $this->pageBreadcrumbs()->setItems([
     </button> 
 
 </h1>
-<div class="category_name">
-    Категория: <?= $tokenGroup->getGroupSite() ? $tokenGroup->getGroupSite()->getFullName():'нет'?>
+<div>
+    Категория: <span class="category_name"><?= $tokenGroup->getGroupSite() ? $tokenGroup->getGroupSite()->getFullName():'нет'?></span>
     <button class="btn btn-default btn-xs include-in-category"
             title="Включить в категорию">
         <span class="glyphicon glyphicon-plus"></span>
