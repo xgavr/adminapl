@@ -1274,7 +1274,7 @@ class PrintManager {
                 ->setTitle('Акт сверки')
                 ;
         $sheet = $spreadsheet->setActiveSheetIndex(0)
-                ->setCellValue('B3', "взатимных расчетов за период ".
+                ->setCellValue('B3', "взаимных расчетов за период ".
                         date('d.m.Y', strtotime($dateStart))." - ".date('d.m.Y', strtotime($dateEnd)).
                         " между ".$company->getName()." и ".$legal->getName())
                 ->setCellValue('B5', "Мы, нижеподписавшиеся, Генеральный директор ".
@@ -1387,7 +1387,7 @@ class PrintManager {
         $endTotal = round($startTotal + $dTotal - $cTotal, 2);
         
         $row++;
-        $resumeRow = $row+3;
+        $resumeRow = $row+4;
         $sheet->setCellValue("B$resumeRow", "На ".date('d.m.Y', strtotime($dateEnd))." задолженность отсутствует.");
         
         if ($endTotal > 0){
