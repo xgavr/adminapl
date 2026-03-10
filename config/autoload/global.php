@@ -6,19 +6,30 @@ return [
     'session_config' => [
         'cookie_lifetime' => 0,
         'gc_maxlifetime' => 2592000,
-        'savePath' => './data/session',
-//        'savePath' => './data/session1',
+//        'savePath' => './data/session',
+//        'savePath' => './data/session1',      
     ],
     'session_manager' => [
         'validators' => [
             0 => \Laminas\Session\Validator\RemoteAddr::class,
             1 => \Laminas\Session\Validator\HttpUserAgent::class,
         ],
+        'save_handler' => 'Laminas\Session\SaveHandler\Cache',
     ],
     'session_storage' => [
         'type' => \Laminas\Session\Storage\SessionArrayStorage::class,
     ],
     'caches' => [
+        'session_cache' => [
+            'adapter' => 'redis', // или 'memcached'
+            'options' => [
+                'server' => [
+                    'host' => '127.0.0.1',
+                    'port' => 6379,
+                ],
+                'ttl' => 2592000,
+            ],
+        ],        
         'memcache' => [
             'adapter' => [
                 'name' => 'Laminas\\Cache\\Storage\\Adapter\\Memcache',
