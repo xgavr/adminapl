@@ -43,6 +43,7 @@ return [
     'Laminas\\ApiTools\\Admin',
     'Laminas\\Cache\\Storage\\Adapter\\Memcached',
     'Laminas\\Cache\\Storage\\Adapter\\Filesystem',
+    'Laminas\\Cache\\Storage\\Adapter\\Redis',
     'Admin',
     'Company',
     'User',

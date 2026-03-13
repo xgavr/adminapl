@@ -70,6 +70,22 @@ return [
                 ],
             ],
         ],
+        
+        'default_cache' => [ // Или используйте имя, которое было вместо \memcached::class
+            'adapter' => 'redis',
+            'options' => [
+                'ttl' => 3600,
+                'server' => [
+                    'host' => '127.0.0.1',
+                    'port' => 6379,
+                ],
+                'database' => 1, // Та же база, что и в фабрике Doctrine
+                'namespace' => 'AdmAPL',
+                'lib_options' => [
+                    \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_PHP,
+                ],
+            ],
+        ],        
         'FilesystemCache' => [
             'adapter' => \Laminas\Cache\Storage\Adapter\Filesystem::class,
             'options' => [

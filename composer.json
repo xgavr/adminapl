@@ -77,7 +77,8 @@
         "kilylabs/upd-parser-php": "^0.2.0",
         "laximo/guayaquillib": "^3.0",
         "cocur/slugify": "^3.2",
-        "laximo/search": "^1.1"
+        "laximo/search": "^1.1",
+        "laminas/laminas-cache-storage-adapter-redis": "^2.10"
     },
     "autoload": {
         "psr-4": {
