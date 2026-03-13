@@ -18,20 +18,20 @@ class DoctrineCacheFactory
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {        
-//        if (extension_loaded('redis')) {
-//            $redis = new \Redis();
-//            $redis->connect('127.0.0.1', 6379);
-//            // Важно: выбираем БД, отличную от сессий (например, 1), 
-//            // чтобы очистка кэша не удалила сессии пользователей
-//            $redis->select(1); 
-//            
-//            $cache = new RedisCache();
-//            $cache->setRedis($redis);
-//            // Добавляем префикс, как было в Memcached
-//            $cache->setNamespace('_admin_apl_');
-//            
-//            return $cache;
-//        }
+        if (extension_loaded('redis')) {
+            $redis = new \Redis();
+            $redis->connect('127.0.0.1', 6379);
+            // Важно: выбираем БД, отличную от сессий (например, 1), 
+            // чтобы очистка кэша не удалила сессии пользователей
+            $redis->select(1); 
+            
+            $cache = new RedisCache();
+            $cache->setRedis($redis);
+            // Добавляем префикс, как было в Memcached
+            $cache->setNamespace('_admin_apl_');
+            
+            return $cache;
+        }
         
         if (extension_loaded('memcached')){ //если отладка не на локальной машине
            $memcached = new \Memcached();
