@@ -1844,7 +1844,9 @@ class Goods {
         ];
         
         foreach ($this->getCategories() as $groupSite){
-            return in_array($groupSite->getCode(), $markedCategory);
+            if (in_array($groupSite->getCode(), $markedCategory)){
+                return true;
+            }
         }
         
         return false;
