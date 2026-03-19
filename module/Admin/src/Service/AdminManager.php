@@ -162,6 +162,10 @@ class AdminManager {
         
         $writer->toFile(self::SETTINGS_FILE, $config);
         
+        if (function_exists('opcache_invalidate')) {
+            opcache_invalidate(self::SETTINGS_FILE, true);
+        }        
+        
         $registerVariable = $this->entityManager->getRepository(RegisterVariable::class)
                 ->findOneBy([]);
         if ($registerVariable){
