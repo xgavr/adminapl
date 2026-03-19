@@ -105,8 +105,12 @@ class GoodAplResource extends AbstractResourceListener
                 $good = $this->entityManager->getRepository(Goods::class)
                     ->findOneBy(['aplId' => $goodAplId]);               
                 if ($good) {
-                    $qstr = "startdebitingoil_{$orderAplId}_{$good->getAplId()}_{$good->getCode()}_{$good->getProducer()->getName()}_enddebitingoil";
-                    return ['img' => QRCode::svg($qstr)];                
+                    if ($good->inMarkedCategory()){
+                        $qstr = "startdebitingoil_{$orderAplId}_{$good->getAplId()}_{$good->getCode()}_{$good->getProducer()->getName()}_enddebitingoil";
+                        return ['img' => QRCode::svg($qstr)];                
+                    } else {
+                        return ['img' => null]; 
+                    }
                 }
             }
         } elseif (is_numeric($id)) {
