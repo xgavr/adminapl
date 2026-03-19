@@ -10,6 +10,7 @@ use Application\Filter\ArticleCode;
 use Application\Entity\GoodRelated;
 use Application\Entity\Oem;
 use Application\Filter\GoodAvailable;
+use splitbrain\phpQRCode\QRCode;
 
 class GoodAplResource extends AbstractResourceListener
 {
@@ -93,6 +94,19 @@ class GoodAplResource extends AbstractResourceListener
                     ->findOneBy(['code' => $code, 'producer' => $producerId]);
                 if ($good) {
                     return $good->toLog();                
+                }
+            }
+        } elseif (is_string($id) && strpos($id, 'Q') === 0) {
+            // Извлекаем после 'Q'
+            
+            list($goodAplId, $orderAplId) = explode('_', substr($id, 1));
+            
+            if ($goodAplId && $orderAplId) {
+                $good = $this->entityManager->getRepository(Goods::class)
+                    ->findOneBy(['aplId' => $goodAplId]);               
+                if ($good) {
+                    $qstr = "startdebitingoil_{$orderAplId}_{$goodAplId}_enddebitingoil";
+                    return ['img' => base64_encode(QRCode::svg($qstr))];                
                 }
             }
         } elseif (is_numeric($id)) {
