@@ -1842,7 +1842,7 @@ class Goods {
             '115-143-290', //антифриз
             '115-132-133', //тормозная жидкость
         ];
-        
+        var_dump($this->getCategoriesCodeAsArray());
         return in_array($this->getCategoriesCodeAsArray(), $markedCategory);
         
     }
