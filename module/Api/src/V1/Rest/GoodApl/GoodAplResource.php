@@ -106,7 +106,7 @@ class GoodAplResource extends AbstractResourceListener
                     ->findOneBy(['aplId' => $goodAplId]);               
                 if ($good) {
                     $qstr = "startdebitingoil_{$orderAplId}_{$goodAplId}_enddebitingoil";
-                    return ['img' => base64_encode(QRCode::svg($qstr))];                
+                    return ['img' => QRCode::svg($qstr)];                
                 }
             }
         } elseif (is_numeric($id)) {
