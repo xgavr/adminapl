@@ -1818,6 +1818,31 @@ class Goods {
             $result[] = $groupSite->getId();
         }    
         return $result;
+    } 
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getCategoriesCodeAsArray() 
+    {
+        $result = [];
+        foreach ($this->categories as $groupSite){
+            $result[] = $groupSite->getCode();
+        }    
+        return $result;
+    }    
+    
+    public function inMarkedCategory()
+    {
+        $markedCategory = [
+            '272-273', //шины
+            '187-244', //Трансмиссионное масло
+            '187-188', //Моторное масло
+        ];
+        
+        return in_array($this->getCategoriesCodeAsArray(), $markedCategory);
+        
     }
     
       
