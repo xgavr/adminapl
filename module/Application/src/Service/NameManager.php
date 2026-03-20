@@ -1375,7 +1375,7 @@ class NameManager
                         $titlesMd5[] = $groupTitle['tokenGroupTitleMd5'];
                     }
                     
-                    var_dump($titlesMd5);
+//                    var_dump($titlesMd5);
                     
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->selectTokenGroupByTitle($titlesMd5);
