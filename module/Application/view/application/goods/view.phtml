@@ -806,7 +806,7 @@
         
         $('.update-token-group').click(function (){
             $.getJSON('/name/goods-token-group/<?= $goods->getId()?>', function( data ) {
-                if (data == 'ok-reload'){
+                if (data){
                     window.location.href = '/goods/view/<?= $goods->getId()?>?tab=home-tab';
                 }
             });    
