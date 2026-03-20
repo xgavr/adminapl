@@ -1347,7 +1347,7 @@ class NameManager
             if (count($groupTitles)){
                 $groupTitle0 = $groupTitles[0];
                 
-                var_dump($groupTitle0);
+//                var_dump($groupTitle0);
                 
                 if (($groupTitle0['titleCount'] > 1 && $groupTitle0['tokenGroupTitle']) 
                         || ($groupTitle0['titleCount'] == 1 && count($groupTitles) == 1)){
@@ -1374,6 +1374,9 @@ class NameManager
                     foreach ($groupTitles as $groupTitle){
                         $titlesMd5[] = $groupTitle['tokenGroupTitleMd5'];
                     }
+                    
+                    var_dump($titlesMd5);
+                    
                     $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->selectTokenGroupByTitle($titlesMd5);
                 }
