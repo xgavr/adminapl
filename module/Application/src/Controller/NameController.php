@@ -1305,7 +1305,7 @@ class NameController extends AbstractActionController
         }
         
         $good = $this->entityManager->getRepository(Goods::class)
-                ->findOneById($goodId);
+                ->find($goodId);
         
         if ($good == null) {
             $this->getResponse()->setStatusCode(404);
