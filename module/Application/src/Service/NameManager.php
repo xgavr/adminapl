@@ -1341,6 +1341,8 @@ class NameManager
 
         $tokenGroup = null;
         
+        var_dump($groupTitles);
+        
         if (is_array($groupTitles)){
             if (count($groupTitles)){
                 $groupTitle0 = $groupTitles[0];
