@@ -115,6 +115,15 @@ class Goods {
     const REST_ALL = 1; //все
     const REST_REST = 2; //есть остаток
     const REST_AVIALABLE = 3; //доступные
+        
+    const MARKED_CATEGORIES = [
+        '272-273'     => true, // шины
+        '187-244'     => true, // Трансмиссионное масло
+        '187-188'     => true, // Моторное масло
+        '115-143-290' => true, // антифриз
+        '115-132-133' => true, // тормозная жидкость
+    ];    
+    
     
     /**
      * @ORM\Id
@@ -1835,22 +1844,13 @@ class Goods {
     
     public function inMarkedCategory()
     {
-        $markedCategory = [
-            '272-273', //шины
-            '187-244', //Трансмиссионное масло
-            '187-188', //Моторное масло
-            '115-143-290', //антифриз
-            '115-132-133', //тормозная жидкость
-        ];
-        
-        foreach ($this->getCategories() as $groupSite){
-            if (in_array($groupSite->getCode(), $markedCategory)){
+        foreach ($this->getCategories() as $groupSite) {
+            if (isset(self::MARKED_CATEGORIES[$groupSite->getCode()])) {
                 return true;
             }
         }
         
         return false;
-        
     }
     
       
