@@ -47,22 +47,24 @@ $this->pageBreadcrumbs()->setItems([
         <div class="row">
             <div class="col-md-12">
                 <?php foreach($intersects as $intrsect):?>
-                    <? 
-                        $diff = 0;
-                        if ($unknownProducer->getRawpriceCount()){
-                            $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount());
-                        } else {
-                            continue;
-                        }            
-                    ?>
-                    <span>
-                        <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
-                            <?= $intrsect['unknown_producer_name']?>
-                        </a>
-                    </span>    
-                    <span>
-                        (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
-                    </span>
+                    <?php if (!empty($intrsect['unknown_producer_id'])): ?>
+                        <? 
+                            $diff = 0;
+                            if ($unknownProducer->getRawpriceCount()){
+                                $diff = $intrsect['countCode']/($unknownProducer->getRawpriceCount());
+                            } else {
+                                continue;
+                            }            
+                        ?>
+                        <span>
+                            <a href="<?= $this->url('producer', ['action' => 'unknown-view', 'id' => $intrsect['unknown_producer_id']])?>">
+                                <?= $intrsect['unknown_producer_name']?>
+                            </a>
+                        </span>    
+                        <span>
+                            (<?= $intrsect['countCode']?>/<?= round($diff, 2)?>)
+                        </span>
+                    <?php endif ?>    
                 <?php endforeach;?>    
             </div>
             <table class="table table-striped">
