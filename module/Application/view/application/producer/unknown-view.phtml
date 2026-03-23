@@ -134,15 +134,17 @@ $this->pageBreadcrumbs()->setItems([
                         <div class="form-inline" role="form">
                             <select style="width: 400px" class="form-control" id='intersectSelect'>
                                 <?php foreach ($intersects as $key => $value):?>
-                                <? 
-                                    $diff = 0;
-                                    if ($unknownProducer->getRawpriceCount()){
-                                        $diff = $value['countCode']/($unknownProducer->getRawpriceCount());
-                                    } else {
-                                        continue;
-                                    }            
-                                ?>
-                                <option value="<?= $value['unknown_producer_id']?>" <?= ($key === 0) ? 'selected':''?>><?= $value['unknown_producer_name'].' ('.$value['countCode'].'/'.round($diff, 2).')' ?></option>
+                                    <?php if (!empty($value['unknown_producer_id'])): ?>
+                                        <? 
+                                            $diff = 0;
+                                            if ($unknownProducer->getRawpriceCount()){
+                                                $diff = $value['countCode']/($unknownProducer->getRawpriceCount());
+                                            } else {
+                                                continue;
+                                            }            
+                                        ?>
+                                        <option value="<?= $value['unknown_producer_id']?>" <?= ($key === 0) ? 'selected':''?>><?= $value['unknown_producer_name'].' ('.$value['countCode'].'/'.round($diff, 2).')' ?></option>
+                                    <?php endif ?>    
                                 <?php endforeach;?>
                             </select>
                         </div>
