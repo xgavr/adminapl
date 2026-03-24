@@ -1429,6 +1429,7 @@ class ProcessingController extends AbstractActionController
 
     /**
      * Обновление картинок товаров
+     * отключено
      * 
      * @return JsonModel
      */
@@ -1437,7 +1438,7 @@ class ProcessingController extends AbstractActionController
         $settings = $this->adminManager->getAplExchangeSettings();
         
         if ($settings['image'] == 1){            
-            $this->aplService->updateGoodsImg();            
+            //$this->aplService->updateGoodsImg();            
         }    
         
         return new JsonModel([
