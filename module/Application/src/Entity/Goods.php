@@ -117,11 +117,11 @@ class Goods {
     const REST_AVIALABLE = 3; //доступные
         
     const MARKED_CATEGORIES = [
-        '272-273'     => true, // шины
-        '187-244'     => true, // Трансмиссионное масло
-        '187-188'     => true, // Моторное масло
-        '115-143-290' => true, // антифриз
-        '115-132-133' => true, // тормозная жидкость
+        '272-273'     => '4011', // шины
+        '187-244'     => '2710', // Трансмиссионное масло
+        '187-188'     => '2710', // Моторное масло
+//        '115-143-290' => true, // антифриз
+//        '115-132-133' => true, // тормозная жидкость
     ];    
     
     
@@ -1842,11 +1842,15 @@ class Goods {
         return $result;
     }    
     
+    /**
+     * Возвращает тип марки по Честному знаку или ложь
+     * @return str|bool
+     */
     public function inMarkedCategory()
     {
         foreach ($this->getCategories() as $groupSite) {
             if (isset(self::MARKED_CATEGORIES[$groupSite->getCode()])) {
-                return true;
+                return self::MARKED_CATEGORIES[$groupSite->getCode()];
             }
         }
         
