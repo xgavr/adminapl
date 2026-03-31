@@ -376,7 +376,7 @@ class ProducerRepository  extends EntityRepository{
         
         if (is_array($params)){
             if (isset($params['q'])){
-                $queryBuilder->where('p.name like :search or up.name like :search')
+                $queryBuilder->where('p.name like :search or up.name like :search or p.aplId = :search')
                     ->setParameter('search', '%' . $params['q'] . '%')
                         ;
             }
