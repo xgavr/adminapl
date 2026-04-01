@@ -9,6 +9,7 @@ $form->get('oeNumber')->setAttributes([
 
 $form->get('brandName')->setAttributes([
     'class'=>'form-control',
+    'onfocus' => "this.select();"
     ]);
 
 $form->get('source')->setAttributes([
@@ -88,6 +89,8 @@ $form->prepare();
     $(document).ready(function() {
         // Получаем значение из вашей функции
         var savedBrand = getOemBrandCookie(); 
+        
+        $('#oeNumber').focus();
 
         // Если значение есть, записываем его в поле
         if (savedBrand) {
