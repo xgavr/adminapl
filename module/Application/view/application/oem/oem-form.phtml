@@ -7,7 +7,7 @@ $form->get('oeNumber')->setAttributes([
     ]);
 
 $form->get('brandName')->setAttributes([
-    'class'=>'form-control', 
+    'class'=>'form-control',
     ]);
 
 $form->get('source')->setAttributes([
@@ -52,13 +52,23 @@ $form->prepare();
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('oeNumber')); ?>
-                            <?= $this->formElement($form->get('oeNumber')); ?>
+                            <div>
+                                <div class="btn-group" style="width: 100%">
+                                    <?= $this->formElement($form->get('oeNumber')); ?>
+                                    <span class="glyphicon glyphicon-remove-circle inputclear inputclear_oe_number"></span>
+                                </div>                                    
+                            </div>                            
                             <?= $this->formElementErrors($form->get('oeNumber')); ?>                  
                         </div>
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('brandName')); ?>
-                            <?= $this->formElement($form->get('brandName')); ?>
+                            <div>
+                                <div class="btn-group" style="width: 100%">
+                                    <?= $this->formElement($form->get('brandName')); ?>
+                                    <span class="glyphicon glyphicon-remove-circle inputclear inputclear_brand_name"></span>
+                                </div>                                    
+                            </div>
                             <?= $this->formElementErrors($form->get('brandName')); ?>                  
                         </div>
 
@@ -74,7 +84,28 @@ $form->prepare();
             <?= $this->form()->closeTag(); ?>
             
 <script>    
+    $(document).ready(function() {
+        // Получаем значение из вашей функции
+        var savedBrand = getOemBrandCookie(); 
+
+        // Если значение есть, записываем его в поле
+        if (savedBrand) {
+            $('#brandName').val(savedBrand);
+        }
+                
+        $(".inputclear_oe_number").click(function(){
+            $("#oeNumber").val('');
+        });        
+        $(".inputclear_brand_name").click(function(){
+            $("#brandName").val('');
+        });        
+    });
+    
     $('#oem-submit').on('click', function() {
+        
+        var brandName = $('#brandName').val();
+        setOemBrandCookie(brandName);
+        
         $.ajax({
             type: 'POST',
             url: '/oem/oem-form/<?= $good->getId() ?>?oem=<?= ($oem) ? $oem->getId():'';?>',
