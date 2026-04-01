@@ -689,8 +689,19 @@
     var $balanceTable = $('#balanceTable');
 
     var $optsTable = $('#optsTable');
+    
+    
+    function setOemBrandCookie(oemBrand){
+        let expires = 30;
+        Cookies.set('selectedOemBrand', oemBrand, { expires: expires});        
+    }
+    
+    function getOemBrandCookie(){
+        return Cookies.get('selectedOemBrand');
+    }     
 
     $(function () {
+        
         $(window).on('load', function() {
             <?php if (!empty($tab)):?>
                 $('.nav-tabs #<?= $tab ?>').tab('show');
