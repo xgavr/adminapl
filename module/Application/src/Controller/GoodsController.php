@@ -739,7 +739,9 @@ class GoodsController extends AbstractActionController
         
         $tokens = $this->entityManager->getRepository(GoodToken::class)
                 ->findBy(['good' => $goods->getId()]);
-//        $tokens = [];
+        
+        $tdOems = $this->entityManager->getRepository(Oem::class)
+                ->findGoodsTdOem($goods);
 
         // Render the view template.
         return new ViewModel([
@@ -762,6 +764,7 @@ class GoodsController extends AbstractActionController
             'tokens' => $tokens,
             'rbacManager' => $this->rbacManager,
             'tab' => $tab,
+            'tdOems' => $tdOems,
         ]);
     }      
 
