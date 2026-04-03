@@ -980,4 +980,31 @@ class OemRepository  extends EntityRepository{
         
         return $queryBuilder->getQuery()->getResult();
     }
+    
+    /**
+     * Найти оригинальные номера 
+     * @param Goods $good
+     * @return array
+     */
+    public function findGoodsTdOem($good)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MAN));
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD));        
+        
+        $queryBuilder->select('o')
+                ->from(Oem::class, 'o')
+                ->distinct()
+                ->andWhere('o.good = :good')
+                ->setParameter('good', $good->getId())
+                ->andWhere('o.status = :status')
+                ->setParameter('status', Oem::STATUS_ACTIVE)
+                ->andWhere($orX)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
