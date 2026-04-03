@@ -123,43 +123,60 @@ class OemRepository  extends EntityRepository{
             $this->getEntityManager()->getRepository(Goods::class)
                     ->updateGoodId($goodId, $upd);            
         } else {
-            if ($source == Oem::SOURCE_MY_CODE && $oem->getSource() != Oem::SOURCE_MY_CODE){
-                $this->getEntityManager()->getConnection()->update('oem', 
-                        [
-                            'oe' => $oe, 
-                            'oe_number' => $oems['oeNumber'],
-                            'brand_name' => $brandName,
-                            'source' => Oem::SOURCE_MY_CODE,
-                            'status' => Oem::STATUS_ACTIVE,                            
-                            'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
-                        ], 
-                        ['id' => $oem->getId()]);
-                
-                $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
-                
-            } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MY_CODE){
-                $this->getEntityManager()->getConnection()->update('oem', 
-                        [
-                            'oe' => $oe, 
-                            'oe_number' => $oems['oeNumber'],
-                            'brand_name' => $brandName,
-                            'status' => Oem::STATUS_ACTIVE,                            
-                            'source' => Oem::SOURCE_TD,
-                            'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
-                        ], 
-                        ['id' => $oem->getId()]);
-            } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MY_CODE){
-                $this->getEntityManager()->getConnection()->update('oem', 
-                        [
-                            'oe' => $oe, 
-                            'oe_number' => $oems['oeNumber'],
-                            'brand_name' => $brandName,
-                            'status' => Oem::STATUS_ACTIVE,                            
-                            'source' => Oem::SOURCE_CROSS,
-                            'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
-                        ], 
-                        ['id' => $oem->getId()]);
-            }
+            if ($oem->getSource() != Oem::SOURCE_MY_CODE){
+                if ($source == Oem::SOURCE_MY_CODE){
+                    //заменить источник если номер = артикулу
+                    $this->getEntityManager()->getConnection()->update('oem', 
+                            [
+                                'oe' => $oe, 
+                                'oe_number' => $oems['oeNumber'],
+                                'brand_name' => $brandName,
+                                'source' => Oem::SOURCE_MY_CODE,
+                                'status' => Oem::STATUS_ACTIVE,                            
+                                'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                            ], 
+                            ['id' => $oem->getId()]);
+
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+
+                } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
+                    //заменить источник если новый источник текдок
+                    $this->getEntityManager()->getConnection()->update('oem', 
+                            [
+                                'oe' => $oe, 
+                                'oe_number' => $oems['oeNumber'],
+                                'brand_name' => $brandName,
+                                'status' => Oem::STATUS_ACTIVE,                            
+                                'source' => Oem::SOURCE_TD,
+                                'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                            ], 
+                            ['id' => $oem->getId()]);
+                } elseif ($source == Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN){
+                    //заменить источник если новый источник кросс и старый источник не текдок, не ручной
+                    $this->getEntityManager()->getConnection()->update('oem', 
+                            [
+                                'oe' => $oe, 
+                                'oe_number' => $oems['oeNumber'],
+                                'brand_name' => $brandName,
+                                'status' => Oem::STATUS_ACTIVE,                            
+                                'source' => Oem::SOURCE_MAN,
+                                'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                            ], 
+                            ['id' => $oem->getId()]);
+                } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_CROSS){
+                    //заменить источник если новый источник кросс и старый источник не текдок, не ручной
+                    $this->getEntityManager()->getConnection()->update('oem', 
+                            [
+                                'oe' => $oe, 
+                                'oe_number' => $oems['oeNumber'],
+                                'brand_name' => $brandName,
+                                'status' => Oem::STATUS_ACTIVE,                            
+                                'source' => Oem::SOURCE_CROSS,
+                                'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                            ], 
+                            ['id' => $oem->getId()]);
+                }
+            }    
         }
         
         return $oem;
