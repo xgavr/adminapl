@@ -286,6 +286,30 @@ class AplExchangeForm extends Form
             ],
         ]);
         
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'till_ftp',
+            'options' => [
+                'label' => 'ФТП касса Перово',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'till_ftp_login',
+            'options' => [
+                'label' => 'Логин ФТП касса Перово',
+            ],
+        ]);
+        
+        $this->add([            
+            'type'  => 'text',
+            'name' => 'till_ftp_passw',
+            'options' => [
+                'label' => 'Пароль ФТП касса Перово',
+            ],
+        ]);
+        
         // Добавляем кнопку отправки формы
         $this->add([
             'type'  => 'submit',
@@ -532,6 +556,36 @@ class AplExchangeForm extends Form
         
         $inputFilter->add([
                 'name'     => 'reports_ftp_passw',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'StringTrim'],
+                ],                
+                'validators' => [
+                ],
+            ]);   
+        
+        $inputFilter->add([
+                'name'     => 'till_ftp',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'StringTrim'],
+                ],                
+                'validators' => [
+                ],
+            ]);         
+        
+        $inputFilter->add([
+                'name'     => 'till_ftp_login',
+                'required' => false,
+                'filters'  => [                    
+                    ['name' => 'StringTrim'],
+                ],                
+                'validators' => [
+                ],
+            ]);         
+        
+        $inputFilter->add([
+                'name'     => 'till_ftp_passw',
                 'required' => false,
                 'filters'  => [                    
                     ['name' => 'StringTrim'],
