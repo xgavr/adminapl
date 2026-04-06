@@ -103,6 +103,18 @@ $form->get('reports_ftp_passw')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('till_ftp')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('till_ftp_login')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('till_ftp_passw')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
@@ -165,15 +177,15 @@ $form->prepare();
             <?= $this->formElement($form->get('oem')); ?>
             <?= $this->formElementErrors($form->get('oem')); ?>                  
         </div>
-    </div>   
-    <div class="col-md-3">
-                        
+
         <div class="form-group">
             <?= $this->formLabel($form->get('image')); ?>
             <?= $this->formElement($form->get('image')); ?>
             <?= $this->formElementErrors($form->get('image')); ?>                  
         </div>
-
+    </div>   
+    <div class="col-md-3">
+                        
         <div class="form-group">
             <?= $this->formLabel($form->get('group')); ?>
             <?= $this->formElement($form->get('group')); ?>
@@ -210,14 +222,14 @@ $form->prepare();
             <?= $this->formElementErrors($form->get('market')); ?>                  
         </div>
 
-    </div>
-    <div class="col-md-3">
-                        
         <div class="form-group">
             <?= $this->formLabel($form->get('ptu')); ?>
             <?= $this->formElement($form->get('ptu')); ?>
             <?= $this->formElementErrors($form->get('ptu')); ?>                  
         </div>
+    </div>
+    <div class="col-md-3">
+                        
         <div class="form-group">
             <?= $this->formLabel($form->get('cash')); ?>
             <?= $this->formElement($form->get('cash')); ?>
@@ -242,6 +254,21 @@ $form->prepare();
             <?= $this->formLabel($form->get('reports_ftp_passw')); ?>
             <?= $this->formElement($form->get('reports_ftp_passw')); ?>
             <?= $this->formElementErrors($form->get('reports_ftp_passw')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('till_ftp')); ?>
+            <?= $this->formElement($form->get('till_ftp')); ?>
+            <?= $this->formElementErrors($form->get('till_ftp')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('till_ftp_login')); ?>
+            <?= $this->formElement($form->get('till_ftp_login')); ?>
+            <?= $this->formElementErrors($form->get('till_ftp_login')); ?>                  
+        </div>
+        <div class="form-group">
+            <?= $this->formLabel($form->get('till_ftp_passw')); ?>
+            <?= $this->formElement($form->get('till_ftp_passw')); ?>
+            <?= $this->formElementErrors($form->get('till_ftp_passw')); ?>                  
         </div>
     </div>    
     <div class="col-md-3" id="side-nav" >
