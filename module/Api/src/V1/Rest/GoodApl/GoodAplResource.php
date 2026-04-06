@@ -108,7 +108,7 @@ class GoodAplResource extends AbstractResourceListener
                     $tm = $good->inMarkedCategory();
                     if ($tm !== false){
                         $qstr = "startdebitingoil_{$orderAplId}_{$good->getAplId()}_{$good->getCode()}_{$good->getProducer()->getName()}_{$tm}_enddebitingoil";
-                        return ['img' => '<div style="width: 50px; height: 50px;">' . QRCode::svg($qstr) . '</div>'];                
+                        return ['img' => QRCode::svg($qstr)];                
                     } else {
                         return ['img' => null]; 
                     }
