@@ -359,6 +359,9 @@ class AdminManager {
         $config->apl_exchange->bank = $data['bank']; //обмен а АПЛ
         $config->apl_exchange->reports_ftp_login = $data['reports_ftp_login']; //отчеты а АПЛ
         $config->apl_exchange->reports_ftp_passw = $data['reports_ftp_passw']; //отчеты а АПЛ
+        $config->apl_exchange->till_ftp = $data['till_ftp']; //фтп кассы в офисе Перово
+        $config->apl_exchange->till_ftp_login = $data['till_ftp_login']; //логин кассы в офисе Перово
+        $config->apl_exchange->till_ftp_passw = $data['till_ftp_passw']; //пароль кассы в офисе перово
         
         $writer = new PhpArray();
         
