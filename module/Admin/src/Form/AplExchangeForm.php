@@ -250,7 +250,7 @@ class AplExchangeForm extends Form
             'type'  => 'select',
             'name' => 'market',
             'options' => [
-                'label' => 'Выгружать парйс листы в ТП',
+                'label' => 'Выгружать прайс листы в ТП',
                 'value_options' => [
                     1 => 'Делать',
                     2 => 'Не делать',                    
