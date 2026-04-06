@@ -1821,6 +1821,7 @@ class GoodsRepository extends EntityRepository
             if (!empty($params['sort'])){
                 $queryBuilder->addOrderBy('g.'.$params['sort'], $params['order']);
             }
+            $queryBuilder->addOrderBy('g.id', 'ASC');
         }
         
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
