@@ -395,14 +395,14 @@ class CarManager
      * Обновить машина товара по товару с тем же номером
      * @param Goods $good
      */
-    public function updateCarsByOem($good)
+    public function updateCarsByOem($good, $force = false)
     {
         
 //        if ($good->getCheckCar() === Goods::CHECK_CAR_OE){
 //            $this->entityManager->getRepository(Goods::class)
 //                ->removeGoodCars($good);
 //        } else {        
-            if ($good->getCars()->count()){
+            if ($good->getCars()->count() && $force === false){
                 return; //уже есть машины
             }
 //        }    
