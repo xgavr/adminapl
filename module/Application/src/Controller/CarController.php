@@ -549,7 +549,7 @@ class CarController extends AbstractActionController
             return;                        
         }        
         
-        $this->carManager->updateCarsByOem($good);
+        $this->carManager->updateCarsByOem($good, true);
 
         return new JsonModel([
             'result' => 'ok-reload',
