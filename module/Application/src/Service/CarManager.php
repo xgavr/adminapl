@@ -399,11 +399,11 @@ class CarManager
     {
         
 //        if ($good->getCheckCar() === Goods::CHECK_CAR_OE){
-            $this->entityManager->getRepository(Goods::class)
-                ->removeGoodCars($good);
+//            $this->entityManager->getRepository(Goods::class)
+//                ->removeGoodCars($good);
 //        } else {        
             if ($good->getCars()->count()){
-                //return; //уже есть машины
+                return; //уже есть машины
             }
 //        }    
         
