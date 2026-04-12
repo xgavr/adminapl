@@ -21,6 +21,7 @@
 <div class="row">
     <div class="col-md-3">
         <h3>
+            <?= $goods->getNameShort() ?>
             <?= $goods->getCode()?>
             <?= $goods->getProducer()->getName()?>
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
@@ -42,9 +43,9 @@
             <?= $goods->getAplIdLinkId('old'); ?>
             <?= $goods->getFasadeLinkId('new'); ?>
         </h5>
-        <h3>
+<!--        <h3>
             <?= $goods->getNameShort() ?>
-        </h3>
+        </h3>-->
         <?php if ($goods->getDescription()): ?>
         
         <?php endif;?>                    
