@@ -506,8 +506,8 @@ class CashDoc {
     public static function getCheckStatusList() 
     {
         return [
-            self::CHECK_ACTIVE => 'Напечатан',
-            self::CHECK_RETIRED => 'Не напечатан',
+            self::CHECK_ACTIVE => 'Чек пробит',
+            self::CHECK_RETIRED => 'Чек не предусмотрен',
             self::CHECK_FALL => 'Чек с ошибкой',
         ];
     }    
