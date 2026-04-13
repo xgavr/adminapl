@@ -1141,4 +1141,15 @@ class AplController extends AbstractActionController
         ]);
     }
     
+    public function processChecksAction()
+    {
+        
+        $result = $this->aplCashService->processChecks();
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+            'data' => $result,
+        ]);
+    }
+    
 }
