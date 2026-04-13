@@ -179,7 +179,8 @@
     }
     
     function refreshTable(){
-        $table.bootstrapTable('selectPage', 1);
+//        $table.bootstrapTable('selectPage', 1);
+        $table.bootstrapTable('refresh');
     }
 
     function officeChange(){
@@ -445,6 +446,12 @@
             }        
             if (row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>){
                retired += ' retired-muted';
+            }        
+            if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_ACTIVE?>){
+               retired += ' success';
+            }        
+            if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>){
+               retired += ' warning';
             }        
         }    
         return {classes: retired};    
