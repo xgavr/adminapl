@@ -75,6 +75,7 @@ class TillController extends AbstractActionController
         $officeId = $this->params()->fromQuery('office');
         $cashId = $this->params()->fromQuery('cash');
         $kind = $this->params()->fromQuery('kind');
+        $checkStatus = $this->params()->fromQuery('checkStatus');
         $dateStart = $this->params()->fromQuery('dateStart');
         $period = $this->params()->fromQuery('period', 'date');
         
@@ -97,7 +98,7 @@ class TillController extends AbstractActionController
         
         $params = [
             'sort' => $sort, 'order' => $order, 'office' => $officeId,
-            'cashId' => $cashId, 'kind' => $kind,
+            'cashId' => $cashId, 'kind' => $kind, 'checkStatus' => $checkStatus,
         ];
         
         $query = $this->entityManager->getRepository(CashDoc::class)
