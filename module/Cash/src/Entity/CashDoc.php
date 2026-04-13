@@ -509,7 +509,7 @@ class CashDoc {
         return [
             self::CHECK_ACTIVE => 'Чек пробит',
             self::CHECK_RETIRED => 'Чек не предусмотрен',
-            self::CHECK_IGNORE => 'Чек не предусмотрен',
+            self::CHECK_IGNORE => 'Чек не нужен',
             self::CHECK_FALL => 'Чек с ошибкой',
         ];
     }    
