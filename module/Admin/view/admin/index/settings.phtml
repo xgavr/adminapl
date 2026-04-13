@@ -26,6 +26,18 @@ $form->get('wamm_api_id')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('wamm_telegram_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('wamm_max_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
+$form->get('wamm_max_apl_id')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 $form->get('wamm_read')->setAttributes([
     'class'=>'form-control', 
     ]);
@@ -187,27 +199,36 @@ $form->prepare();
         </div>                
 
         <div class="form-group">
+            <?= $this->formLabel($form->get('wamm_telegram_id')); ?>
+            <?= $this->formElement($form->get('wamm_telegram_id')); ?>
+            <?= $this->formElementErrors($form->get('wamm_telegram_id')); ?>                  
+        </div>                
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('wamm_max_id')); ?>
+            <?= $this->formElement($form->get('wamm_max_id')); ?>
+            <?= $this->formElementErrors($form->get('wamm_max_id')); ?>                  
+        </div>                
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('wamm_max_apl_id')); ?>
+            <?= $this->formElement($form->get('wamm_max_apl_id')); ?>
+            <?= $this->formElementErrors($form->get('wamm_max_apl_id')); ?>                  
+        </div>                
+
+        <div class="form-group">
             <?= $this->formLabel($form->get('wamm_read')); ?>
             <?= $this->formElement($form->get('wamm_read')); ?>
             <?= $this->formElementErrors($form->get('wamm_read')); ?>                  
         </div>                
 
         <div class="form-group">
-            <?= $this->formLabel($form->get('dadata_api_key')); ?>
-            <?= $this->formElement($form->get('dadata_api_key')); ?>
-            <?= $this->formElementErrors($form->get('dadata_api_key')); ?>                  
-        </div>
-
-        <div class="form-group">
-            <?= $this->formLabel($form->get('dadata_standart_key')); ?>
-            <?= $this->formElement($form->get('dadata_standart_key')); ?>
-            <?= $this->formElementErrors($form->get('dadata_standart_key')); ?>                  
-        </div>                
-        <div class="form-group">
             <?= $this->formLabel($form->get('turbo_passphrase')); ?>
             <?= $this->formElement($form->get('turbo_passphrase')); ?>
             <?= $this->formElementErrors($form->get('turbo_passphrase')); ?>                  
-        </div>        
+        </div> 
+        
+        
     </div>   
 <!--    <div class="col-md-3">
         
@@ -244,6 +265,18 @@ $form->prepare();
     </div>   -->
     <div class="col-md-3">
         
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dadata_api_key')); ?>
+            <?= $this->formElement($form->get('dadata_api_key')); ?>
+            <?= $this->formElementErrors($form->get('dadata_api_key')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('dadata_standart_key')); ?>
+            <?= $this->formElement($form->get('dadata_standart_key')); ?>
+            <?= $this->formElementErrors($form->get('dadata_standart_key')); ?>                  
+        </div>                
+               
         <div class="form-group">
             <?= $this->formLabel($form->get('hello_check')); ?>
             <?= $this->formElement($form->get('hello_check')); ?>
