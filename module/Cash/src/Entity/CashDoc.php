@@ -37,7 +37,8 @@ class CashDoc {
     
     const CHECK_ACTIVE     = 1; // чек печатать.
     const CHECK_RETIRED    = 2; // не печатать.
-    const CHECK_FALL    = 3; // чек с ошибкой.
+    const CHECK_IGNORE    = 3; // не предусмотрен.
+    const CHECK_FALL    = 9; // чек с ошибкой.
     
      // Status doc constants.
     const STATUS_EX_NEW  = 1; // Не отправлено.
@@ -508,6 +509,7 @@ class CashDoc {
         return [
             self::CHECK_ACTIVE => 'Чек пробит',
             self::CHECK_RETIRED => 'Чек не предусмотрен',
+            self::CHECK_IGNORE => 'Чек не предусмотрен',
             self::CHECK_FALL => 'Чек с ошибкой',
         ];
     }    
@@ -534,6 +536,7 @@ class CashDoc {
         return [
             self::CHECK_ACTIVE => 1,
             self::CHECK_RETIRED => 0,
+            self::CHECK_IGNORE => 3,
             self::CHECK_FALL => 0,
         ];
     }    
