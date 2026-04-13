@@ -207,7 +207,7 @@ $this->pageBreadcrumbs()->setItems([
                             title="Импорт платежей из АПЛ">
                         <span class="glyphicon glyphicon-refresh" ></span>
                     </button> 
-                    <button value="/vt/fix-user-retail" class="btn btn-default btn-xs refresh-button"
+                    <button value="/vt/fix-user-retail" class="btn btn-default btn-xs refresh-button" disabled
                             title="Испраить отгрузки и оплаты сотрудников">
                         <span class="glyphicon glyphicon-ruble" ></span>
                     </button> 
@@ -215,12 +215,16 @@ $this->pageBreadcrumbs()->setItems([
                             title="Испраить отгрузки">
                         <span class="glyphicon glyphicon-ruble" ></span>
                     </button> -->
-                    <button value="/order/fix-order-movement" class="btn btn-default btn-xs refresh-button"
+                    <button value="/order/fix-order-movement" class="btn btn-default btn-xs refresh-button" disabled
                             title="Исправить движения заказов">
                         <span class="glyphicon glyphicon-wrench" ></span>
                     </button> 
-                    <button value="/vt/fix-vt-movement" class="btn btn-default btn-xs refresh-button"
+                    <button value="/vt/fix-vt-movement" class="btn btn-default btn-xs refresh-button" disabled
                             title="Исправить движения возвратов">
+                        <span class="glyphicon glyphicon-wrench" ></span>
+                    </button> 
+                    <button value="/apl/process-checks" class="btn btn-default btn-xs refresh-button"
+                            title="Проверка чеков">
                         <span class="glyphicon glyphicon-wrench" ></span>
                     </button> 
                 </div>
