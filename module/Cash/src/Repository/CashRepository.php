@@ -133,6 +133,13 @@ class CashRepository extends EntityRepository
                             ;
                 }            
             }    
+            if (!empty($params['checkStatus'])){
+                if (is_numeric($params['checkStatus'])){
+                    $queryBuilder->andWhere('cashDoc.checkStatus = :checkStatus')
+                        ->setParameter('checkStatus', $params['checkStatus'])
+                            ;
+                }            
+            }    
             if (!empty($params['cashDocId'])){
                 if (is_numeric($params['cashDocId'])){
                     $queryBuilder->andWhere('cashDoc.id = :id')
@@ -200,6 +207,13 @@ class CashRepository extends EntityRepository
                             ;
                 }            
             }    
+            if (!empty($params['checkStatus'])){
+                if (is_numeric($params['checkStatus'])){
+                    $queryBuilder->andWhere('cashDoc.checkStatus = :checkStatus')
+                        ->setParameter('checkStatus', $params['checkStatus'])
+                            ;
+                }            
+            }                
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
