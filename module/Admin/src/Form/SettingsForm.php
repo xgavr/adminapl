@@ -77,6 +77,39 @@ class SettingsForm extends Form
 
         $this->add([           
             'type'  => 'text',
+            'name' => 'wamm_telegram_id',
+            'attributes' => [
+                'id' => 'wamm_telegram_id'
+            ],
+            'options' => [
+                'label' => 'WAMM Telegram токен',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'wamm_max_id',
+            'attributes' => [
+                'id' => 'wamm_max_id'
+            ],
+            'options' => [
+                'label' => 'WAMM Max токен',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'wamm_max_apl_id',
+            'attributes' => [
+                'id' => 'wamm_max_apl_id'
+            ],
+            'options' => [
+                'label' => 'WAMM Max Апл телефон',
+            ],
+        ]);
+
+        $this->add([           
+            'type'  => 'text',
             'name' => 'wamm_api_id',
             'attributes' => [
                 'id' => 'wamm_api_id'
