@@ -114,6 +114,9 @@ class AdminManager {
         $config->admin->sms_ru_api_id = $data['sms_ru_api_id'];
 //        $config->admin->wamm_url = $data['wamm_url'];
         $config->admin->wamm_api_id = $data['wamm_api_id'];
+        $config->admin->wamm_telegram_id = $data['wamm_telegram_id'];
+        $config->admin->wamm_max_id = $data['wamm_max_id'];
+        $config->admin->wamm_max_apl_id = $data['wamm_max_apl_id'];
         $config->admin->wamm_read = $data['wamm_read'];
                 
         $config->admin->dadata_api_key = $data['dadata_api_key'];
