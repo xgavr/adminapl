@@ -68,7 +68,7 @@ class TelegrammManager
         return;
     } 
     
-    public function __construct($entityManager, $adminManager, $smsMaanger)
+    public function __construct($entityManager, $adminManager, $smsManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
