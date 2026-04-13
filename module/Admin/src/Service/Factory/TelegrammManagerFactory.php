@@ -12,6 +12,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\TelegrammManager;
 use Admin\Service\AdminManager;
+use Admin\Service\SmsManager;
 
 /**
  * Description of ShopManagerFactory
@@ -26,8 +27,9 @@ class TelegrammManagerFactory  implements FactoryInterface
     {
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
+        $smsManager = $container->get(SmsManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new TelegrammManager($entityManager, $adminManager);
+        return new TelegrammManager($entityManager, $adminManager, $smsManager);
     }
 }
