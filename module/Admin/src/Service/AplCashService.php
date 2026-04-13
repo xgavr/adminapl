@@ -22,6 +22,9 @@ use Company\Entity\Cost;
 use Laminas\Validator\Date;
 use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
+use DateTime;
+use DateInterval;
+use DatePeriod;
 
 
 /**
@@ -607,4 +610,70 @@ class AplCashService {
         }    
         return;
     }    
+    
+    /**
+     * Проверка кассового чека
+     */
+    public function processChecks(int $daysBack = 30)
+    {
+        $settings = $this->adminManager->getAplExchangeSettings();
+        
+        $conn = ftp_connect($settings['till_ftp']);
+        if (!$conn || !ftp_login($conn, $settings['till_ftp_login'], $settings['till_ftp_passw'])) {
+            throw new \Exception("Не удалось подключиться к FTP кассы Перово");
+        }
+        
+        ftp_pasv($conn, true); // Включаем пассивный режим
+
+        $endDate = new DateTime();
+        $beginDate = new DateTime();
+        $beginDate->setDate(2026, 4, 1);
+        $startDate = (new DateTime())->sub(new DateInterval("P{$daysBack}D"));
+        $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
+
+        $results = [];
+
+        foreach ($period as $date) {
+            
+            if ($date < $beginDate){
+                continue;
+            }
+            
+            $dateFolder = $date->format('Y_m_d');
+            
+            $remoteDir = "/ErrorCheck/{$dateFolder}/";
+
+            // Пробуем зайти в папку
+            if (@ftp_chdir($conn, $remoteDir)) {
+                $files = ftp_nlist($conn, ".");
+                
+                if ($files) {
+                    foreach ($files as $filename) {
+                        // Регулярка для извлечения ID из формата check435102_133434.txt
+                        if (preg_match('/check(\d+)_/', $filename, $matches)) {
+                            $checkId = $matches[1];
+                            
+                            // 1. Здесь выполняете логику обновления БД (Laminas\Db\Sql или Doctrine)
+                            $cashDoc = $this->entityManager->getRepository(CashDoc::class)
+                                    ->findOneBy(['aplId' => $checkId]);
+                            if (!$cashDoc){
+                                throw new \Exception("Не найден документ aplId: $checkId");
+                            }
+                             $this->cashManager->updateCashDocCheckStatus($cashDoc, CashDoc::CHECK_FALL);
+                            
+                            // 2. Переименовываем файл, чтобы не обрабатывать повторно
+                            $newName = "processed_" . $filename;
+                            if (ftp_rename($conn, $filename, $newName)) {
+                                $results[] = "ID {$checkId}: обработан и переименован.";
+                            }
+                        }
+                    }
+                }
+                ftp_chdir($conn, "/"); // Возвращаемся в корень
+            }
+        }
+
+        ftp_close($conn);
+        return $results;
+    }
 }
