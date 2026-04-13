@@ -43,6 +43,13 @@ class TelegrammManager
      */
     private $adminManager;   
     
+    /**
+     * Менеджер sms
+     * 
+     * @var \Admin\Service\SmsManager
+     */
+    private $smsManager;   
+    
     protected function removeOldLog()
     {    
         $check_time = 60*60*24*7; //Неделя
@@ -61,10 +68,11 @@ class TelegrammManager
         return;
     } 
     
-    public function __construct($entityManager, $adminManager)
+    public function __construct($entityManager, $adminManager, $smsMaanger)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
+        $this->smsManager = $smsManager;
 
         if (!is_dir($this::LOG_FOLDER)){
             mkdir($this::LOG_FOLDER);
@@ -288,9 +296,8 @@ class TelegrammManager
         
         file_put_contents(self::POSTPONE_MSG_FILE, \Laminas\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
         
-//        $client = new Client();
-//        $promise = $client->requestAsync('GET', 'http://'.$_SERVER['HTTP_HOST'].'/telegramm/postpone');
-//        $promise->wait();
+        //Послать в группу Апл в Мах
+        $this->smsManager->wammToMax($params);
                 
         return;
     }
