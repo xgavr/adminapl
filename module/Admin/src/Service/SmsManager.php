@@ -193,7 +193,7 @@ class SmsManager {
     {
         $settings = $this->adminManager->getSettings();
         $response = false;
-        var_dump($settings, $options, self::WAMM_API.'/msg_to/'.$settings['wamm_max_id'].'/?phone='.$settings['wamm_max_apl_id'].'&text='. urlencode($options['text']));
+        //var_dump($settings, $options, self::WAMM_API.'/msg_to/'.$settings['wamm_max_id'].'/?phone='.$settings['wamm_max_apl_id'].'&text='. urlencode($options['text']));
         if (self::WAMM_API && !empty($settings['wamm_max_id']) && !empty($settings['wamm_max_apl_id'])){
             $response = file_get_contents(self::WAMM_API.'/msg_to/'.$settings['wamm_max_id'].'/?phone='.$settings['wamm_max_apl_id'].'&text='. urlencode($options['text']));
         } 
