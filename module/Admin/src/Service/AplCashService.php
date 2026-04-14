@@ -650,7 +650,7 @@ class AplCashService {
                 if ($files) {
                     foreach ($files as $filename) {
                         // Регулярка для извлечения ID из формата check435102_133434.txt
-                        if (preg_match('/check(\d+)_/', $filename, $matches)) {
+                        if (preg_match('/^check(\d+)_/', $filename, $matches)) {
                             $checkId = $matches[1];
                             
                             // 1. Здесь выполняете логику обновления БД (Laminas\Db\Sql или Doctrine)
