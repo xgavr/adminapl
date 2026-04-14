@@ -533,11 +533,11 @@
                     changeCheckStatus(row);
                 },
                 isShown: function(row) {
-                  return row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?> && (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>);
+                  return row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>;
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?> && (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>)){
+                        if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>){
                             return true;
                         }
                     }
