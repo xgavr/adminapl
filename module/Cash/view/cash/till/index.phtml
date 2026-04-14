@@ -215,6 +215,17 @@
         }         
     }
 
+    function changeCheckStatus(row){
+        if (row.cashDoc){
+            if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>){
+                status = <?= CashDoc::CHECK_ACTIVE?>;
+                $.get( "/till/check-status/"+row.cashDoc.id+'?status='+status, function(data){
+                    $table.bootstrapTable('refresh', {silent: true});
+                });        
+            }
+        }         
+    }
+
     $(function () {   
         $balanceTable.bootstrapTable();
         $userBalanceTable.bootstrapTable();
@@ -509,6 +520,24 @@
                 isEnabled: function(row) {
                     if (row.cashDoc){
                         if (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>){
+                            return true;
+                        }
+                    }
+                    return false;
+                }                
+            }, 
+            statusCheckOk: {
+                name: 'Чек пробит',
+                iconClass: 'glyphicon glyphicon-checked',
+                onClick: function(row) {
+                    changeCheckStatus(row);
+                },
+                isShown: function(row) {
+                  return row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?> && (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>);
+                },
+                isEnabled: function(row) {
+                    if (row.cashDoc){
+                        if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?> && (row.cashDoc.status === <?= CashDoc::STATUS_ACTIVE?> || row.cashDoc.status === <?= CashDoc::STATUS_CORRECT?>)){
                             return true;
                         }
                     }
