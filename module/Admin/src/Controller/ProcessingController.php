@@ -1775,6 +1775,8 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['cash'] == 1){
             $this->aplCashService->unloadPayments();
+            
+            $this->aplCashService->processChecks();
         }    
         
         return new JsonModel([
