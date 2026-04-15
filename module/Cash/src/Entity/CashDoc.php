@@ -537,7 +537,7 @@ class CashDoc {
             self::CHECK_ACTIVE => 1,
             self::CHECK_RETIRED => 0,
             self::CHECK_IGNORE => 3,
-            self::CHECK_FALL => 0,
+            self::CHECK_FALL => 1,
         ];
     }    
     
