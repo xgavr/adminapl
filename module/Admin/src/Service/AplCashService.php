@@ -641,6 +641,8 @@ class AplCashService {
             
             $dateFolder = $date->format('Y_m_d');
             
+            var_dump($dateFolder);
+            
             $remoteDir = "/ErrorCheck/{$dateFolder}/";
 
             // Пробуем зайти в папку
