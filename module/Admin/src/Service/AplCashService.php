@@ -630,6 +630,8 @@ class AplCashService {
         $beginDate->setDate(2026, 4, 1);
         $startDate = (new DateTime())->sub(new DateInterval("P{$daysBack}D"));
         $period = new DatePeriod($startDate, new DateInterval('P1D'), $endDate);
+        
+        var_dump($endDate->format('Y_m_d'));
 
         $results = [];
 
