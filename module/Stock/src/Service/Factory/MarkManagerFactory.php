@@ -21,6 +21,6 @@ class MarkManagerFactory
         $logManager = $container->get(LogManager::class);
         $adminManager = $container->get(AdminManager::class);
                         
-        return new OtManager($entityManager, $logManager, $adminManager);
+        return new MarkManager($entityManager, $logManager, $adminManager);
     }
 }
