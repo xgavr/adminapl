@@ -52,8 +52,7 @@ class MarkManager
      * @return integer
      */
     public function addMark($data)
-    {        
-        var_dump($data); exit;
+    {                
         
         $good = $this->entityManager->getRepository(Goods::class)
                 ->findOneBy(['aplId' => $data['parent']]);
@@ -62,7 +61,7 @@ class MarkManager
                 ->findOneBy(['aplId' => $data['publish']]); 
         
         if ($good && $order){
-            
+            var_dump($data); exit;
             $mark = $this->entityManager->getRepository(Mark::class)
                     ->findOneBy(['mark' => $data['type']]);
             
