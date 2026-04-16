@@ -1152,4 +1152,13 @@ class AplController extends AbstractActionController
         ]);
     }
     
+        public function unloadMarksAction()
+    {                
+        $this->aplCashService->unloadMarks(true);
+        
+        return new JsonModel([
+            'result' => 'ok',
+        ]);
+    }    
+
 }
