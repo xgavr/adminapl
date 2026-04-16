@@ -14,6 +14,7 @@ use Admin\Service\AdminManager;
 use Company\Service\LegalManager;
 use Cash\Service\CashManager;
 use Admin\Service\AplCashService;
+use Stock\Service\MarkManager;
 
 /**
  * Description of AplCashService
@@ -30,10 +31,11 @@ class AplCashServiceFactory  implements FactoryInterface
         $adminManager = $container->get(AdminManager::class); 
         $legalManager = $container->get(LegalManager::class);
         $cashManager = $container->get(CashManager::class);
+        $markManager = $container->get(MarkManager::class);
         
         
         // Инстанцируем сервис и внедряем зависимости.
         return new AplCashService($entityManager, $adminManager,
-                $legalManager, $cashManager);
+                $legalManager, $cashManager, $markManager);
     }
 }
