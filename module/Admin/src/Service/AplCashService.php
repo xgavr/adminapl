@@ -713,12 +713,13 @@ class AplCashService {
 //        var_dump($result); exit;
         
         if ($debug){
-            var_dump($result);
+            //var_dump($result);
         }
 
         if (is_array($result)){
             foreach ($result as $data){
                 if ($this->markManager->addMark($data)){ 
+                    var_dump($data['id']);
                     $this->unloadedMark($data['id']);
                 }    
             }    
