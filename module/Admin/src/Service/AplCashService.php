@@ -22,6 +22,7 @@ use Company\Entity\Cost;
 use Laminas\Validator\Date;
 use Cash\Entity\Cash;
 use Cash\Entity\CashDoc;
+use Stock\Entity\Mark;
 use DateTime;
 use DateInterval;
 use DatePeriod;
@@ -58,13 +59,20 @@ class AplCashService {
      */
     private $cashManager;  
     
+    /**
+     * Mark manager.
+     * @var \Stock\Service\MarkManager
+     */
+    private $markManager;  
+    
     public function __construct($entityManager, $adminManager,  
-            $legalManager, $cashManager)
+            $legalManager, $cashManager, $markManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->legalManager = $legalManager;
         $this->cashManager = $cashManager;
+        $this->markManager = $markManager;
     }
     
     protected function aplApi()
@@ -676,4 +684,88 @@ class AplCashService {
         ftp_close($conn);
         return $results;
     }
+    
+    /**
+     * Загрузить маркировку из Апл
+     * @param bool $debug
+     * @return 
+     */
+    public function unloadMarks($debug = false)
+    {
+        $url = $this->aplApi().'unload-marks?api='.$this->aplApiKey();
+
+        $client = new Client();
+        $client->setUri($url);
+        $client->setMethod('GET');
+        $client->setOptions(['timeout' => 60]);
+
+        $response = $client->send();
+        $body = $response->getBody();
+
+//        var_dump($body); exit;
+        try{
+            $result = json_decode($body, true);
+        } catch (\Laminas\Json\Exception\RuntimeException $ex) {
+            var_dump($ex->getMessage());
+            var_dump($body);
+            exit;
+        }
+//        var_dump($result); exit;
+        
+        if ($debug){
+            var_dump($result);
+        }
+
+        if (is_array($result)){
+            foreach ($result as $data){
+                if ($this->markManager->addMark($data)){ 
+                    $this->unloadedMark($result['id']);
+                }    
+            }    
+        } 
+        
+        return;
+    }
+    
+    /**
+     * Обновить статус загруженной маркировки
+     * @param integer $aplMarkId
+     * @return boolean
+     */
+    public function unloadedMark($aplMarkId)
+    {
+        $result = true;
+        if (is_numeric($aplMarkId)){
+            $url = $this->aplApi().'aa-mark?api='.$this->aplApiKey();
+
+            $post = [
+                'markId' => $aplMarkId,
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $result = $ok = FALSE;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = TRUE;
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                $ok = true;
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+            
+            if ($ok){
+            }
+
+            unset($post);
+        }    
+        return $result;        
+    }
+    
 }
