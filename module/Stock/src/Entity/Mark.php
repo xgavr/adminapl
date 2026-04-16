@@ -15,7 +15,7 @@ use Application\Entity\Order;
 
 /**
  * Description of Mark - коды маркировки
- * @ORM\Entity(repositoryClass="\Stock\Repository\MarksRepository")
+ * @ORM\Entity(repositoryClass="\Stock\Repository\MarkRepository")
  * @ORM\Table(name="marks")
  * @author Daddy
  */
