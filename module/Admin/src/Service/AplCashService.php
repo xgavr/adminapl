@@ -719,7 +719,7 @@ class AplCashService {
         if (is_array($result)){
             foreach ($result as $data){
                 if ($this->markManager->addMark($data)){ 
-                    $this->unloadedMark($result['id']);
+                    $this->unloadedMark($data['id']);
                 }    
             }    
         } 
