@@ -61,7 +61,7 @@ class MarkManager
                 ->findOneBy(['aplId' => $data['publish']]); 
         
         if ($good && $order){
-            var_dump($data); exit;
+            
             $mark = $this->entityManager->getRepository(Mark::class)
                     ->findOneBy(['mark' => $data['type']]);
             
