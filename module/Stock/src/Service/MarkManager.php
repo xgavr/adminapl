@@ -53,6 +53,8 @@ class MarkManager
      */
     public function addMark($data)
     {        
+        var_dump($data); exit;
+        
         $good = $this->entityManager->getRepository(Goods::class)
                 ->findOneBy(['aplId' => $data['parent']]);
         
