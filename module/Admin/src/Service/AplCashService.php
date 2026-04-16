@@ -720,7 +720,7 @@ class AplCashService {
             foreach ($result as $data){
                 $mark = $this->markManager->addMark($data);
                 if ($mark){ 
-                    var_dump($mark->getAplId());
+//                    var_dump($mark->getAplId());
                     $this->unloadedMark($mark->getAplId());
                 }    
             }    
