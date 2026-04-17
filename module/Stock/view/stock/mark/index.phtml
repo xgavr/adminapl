@@ -117,8 +117,8 @@ $this->pageBreadcrumbs()->setItems([
     function linkFormatter(value, row){
         return [
             '<nobr>',
-            '<a href="/goods/view/' + row.id + '" class="btn btn-link btn-xs" title="Перейти на страницу товара" target="_blank">',
-            '<span class="glyphicon glyphicon-link"></span></a>'+value,
+            '<a href="/goods/view/' + row.good.id + '" class="btn btn-link btn-xs" title="Перейти на страницу товара" target="_blank">',
+            '<span class="glyphicon glyphicon-link"></span></a>'+row.good.code,
             '</nobr>'
         ].join(''); 
     }    
