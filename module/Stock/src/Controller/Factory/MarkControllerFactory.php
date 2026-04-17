@@ -27,6 +27,6 @@ class MarkControllerFactory implements FactoryInterface {
         $markManager = $container->get(MarkManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new OtController($entityManager, $markManager);
+        return new MarkController($entityManager, $markManager);
     }
 }
