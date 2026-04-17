@@ -152,7 +152,7 @@ class MarkManager
 
             $data = $this->jwt_public_key;
             
-            var_dump($data); exit;
+//            var_dump($data); exit;
 
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
