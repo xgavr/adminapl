@@ -46,7 +46,7 @@ class MarkRepository extends EntityRepository{
                 }    
             }
             
-            if (isset($params['search'])){                
+            if (!empty($params['search'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['search']);
 
@@ -97,7 +97,7 @@ class MarkRepository extends EntityRepository{
                 }    
             }      
             
-            if (isset($params['search'])){                
+            if (!empty($params['search'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['search']);
 
