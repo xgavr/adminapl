@@ -21,7 +21,7 @@ $this->pageBreadcrumbs()->setItems([
                 </div>
                 <button id="ok" type="submit" class="btn btn-default">OK</button>                                               
                 <div class="form-group">
-                    <select class="form-control cookie-control" name="markStatus">
+                    <select class="form-control cookie-control refresh-table" name="markStatus">
                         <option value="-2">все</option>
                         <?php foreach(Mark::getMarkStatusList() as $key=>$value):?>
                             <option value="<?= $key?>"><?= $value?></option>
@@ -76,8 +76,9 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     $(function () {
-        
-
+        $(document).on('change', '.refresh-table', function (e) {
+            refreshTable();
+        });        
     });    
     
     function queryParams(params) {
