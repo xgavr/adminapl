@@ -92,7 +92,7 @@ class MarkController extends AbstractActionController
             return;                        
         }        
         
-        $data = $this->markManager->signQr($mark->getMark());
+        $data = $this->markManager->signQr($mark->getMark31());
         
         $query = $this->entityManager->getRepository(Mark::class)
                 ->queryAllMark(['markId' => $mark->getId()]);
