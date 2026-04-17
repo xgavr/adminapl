@@ -73,8 +73,12 @@ $this->pageBreadcrumbs()->setItems([
 
 <script type="text/javascript">
     var $table = $('#table'),
-        $ok = $('#ok');
-
+        $ok = $('#ok'),
+        curentRowIndex = -1;
+    
+    function setCurrentIndex(index){
+        curentRowIndex = index;
+    }
     
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
