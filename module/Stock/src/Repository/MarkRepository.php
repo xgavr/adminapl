@@ -48,7 +48,7 @@ class MarkRepository extends EntityRepository{
             
             if (isset($params['search'])){                
                 $codeFilter = new ArticleCode();
-                $q = $codeFilter->filter($params['q']);
+                $q = $codeFilter->filter($params['search']);
 
                 if ($q){
                     $orX = $queryBuilder->expr()->orX();
@@ -97,7 +97,7 @@ class MarkRepository extends EntityRepository{
             
             if (isset($params['search'])){                
                 $codeFilter = new ArticleCode();
-                $q = $codeFilter->filter($params['q']);
+                $q = $codeFilter->filter($params['search']);
 
                 if ($q){
                     $orX = $queryBuilder->expr()->orX();
