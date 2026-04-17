@@ -45,6 +45,7 @@ $this->pageBreadcrumbs()->setItems([
             data-toolbar="#toolbar"
             data-show-refresh="true"
             data-query-params="queryParams"
+            data-unique-id="id"
             data-sort-name="aplId"
             data-sort-order="desc"  
             data-response-handler="responseHandler"
@@ -78,6 +79,12 @@ $this->pageBreadcrumbs()->setItems([
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
+    
+    function checkMarkStatus(row){
+        $.get( "/mark/mark-status/"+row.id, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
+        });        
+    }    
     
     $(function () {
         $table.on('load-success.bs.table', function (e, res) {
@@ -153,33 +160,27 @@ $this->pageBreadcrumbs()->setItems([
         ].join(''); 
     }    
     
-  
+      var menu = new BootstrapMenu('.tablerow', {
+        fetchElementData: function(rowElem) {
+            setCurrentIndex($(rowElem).attr('data-index'));
+            return $table.bootstrapTable('getData')[getCurrentIndex()];
+        },
+        actionsGroups: [
+//           ['statusActiv', 'statusRetired', 'repostEx'], ['history']
+        ],      
+        actions: {
+            markStatus: {
+                name: 'Проверить состояние кода',
+                onClick: function(row) {
+                    checkMarkStatus(row);
+                },
+                isEnabled: function(row) {
+                    return true;
+                }                
+            } 
+        }
+    });    
     
-    function markActiveFormatter(value, row){
-//        var url = '/group-site/edit-form/'+row.id;
-//        if (row.pid){
-//            url = url + '?parent=' + row.pid;
-//        }
-//        btn = '<nobr><button';
-//        btn += ' type="button"';
-//        btn += ' class="btn btn-default btn-xs group-site-modal-show"';
-//        btn += ' aria-label="Left Align"'; 
-//        btn += ' modal-url="'+url+'">';
-//        btn += '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>';
-//        btn += '</button> ';
-//
-//        url = '/group-site/delete/'+row.id;
-//        var disabled = (row.hasChild === ) ? 'disabled="true"':''; 
-//        btn += '<button '+disabled;
-//        btn += ' type="button" title="Удалить '+row.name+'"';
-//        btn += ' class="btn btn-default btn-xs del-group-site"';
-//        btn += ' aria-label="Left Align"'; 
-//        btn += ' del-url="'+url+'" del-name="'+row.name+'">';
-//        btn += '<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>';
-//        btn += '</button></nobr>';
-//        
-//        return btn;
-    }    
     
     function responseHandler(res) {
         return res;
