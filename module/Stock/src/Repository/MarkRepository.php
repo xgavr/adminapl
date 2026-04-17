@@ -38,7 +38,7 @@ class MarkRepository extends EntityRepository{
         
         if (is_array($params)){
             if (!empty($params['markStatus'])){
-                if (is_numeric($params['markStatus'])){
+                if ($params['markStatus'] > 0){
                     $queryBuilder->andWhere('m.markStatus = :markStatus')
                         ->setParameter('markStatus', $params['markStatus'])
                      ;
@@ -72,7 +72,7 @@ class MarkRepository extends EntityRepository{
         
         if (is_array($params)){
             if (!empty($params['markStatus'])){
-                if (is_numeric($params['markStatus'])){
+                if ($params['markStatus'] > 0){
                     $queryBuilder->andWhere('m.markStatus = :markStatus')
                         ->setParameter('markStatus', $params['markStatus'])
                      ;
