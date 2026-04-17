@@ -53,7 +53,7 @@ class MarkRepository extends EntityRepository{
                 if ($q){
                     $orX = $queryBuilder->expr()->orX();
                     
-                    $orX->add($queryBuilder->expr()->eq('g.code', $q));
+                    $orX->add($queryBuilder->expr()->like('g.code', $q));
                     if (is_numeric($q)){
                         $orX->add($queryBuilder->expr()->eq('o.aplId', $q));
                     }
@@ -104,7 +104,7 @@ class MarkRepository extends EntityRepository{
                 if ($q){
                     $orX = $queryBuilder->expr()->orX();
                     
-                    $orX->add($queryBuilder->expr()->eq('g.code', $q));
+                    $orX->add($queryBuilder->expr()->like('g.code', $q));
                     if (is_numeric($q)){
                         $orX->add($queryBuilder->expr()->eq('o.aplId', $q));
                     }
