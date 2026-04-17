@@ -80,6 +80,10 @@ $this->pageBreadcrumbs()->setItems([
         curentRowIndex = index;
     }
     
+    function getCurrentIndex(){
+        return curentRowIndex;
+    }    
+    
     function refreshTable(){
         $('#table').bootstrapTable('refresh');
     }
