@@ -79,6 +79,9 @@ $this->pageBreadcrumbs()->setItems([
     }
     
     $(function () {
+        $table.on('load-success.bs.table', function (e, res) {
+            tableRowClick();  
+        });        
         
         $(".inputclear").click(function(){
             $("#searchinput").val('');
@@ -87,7 +90,8 @@ $this->pageBreadcrumbs()->setItems([
         
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
-        });        
+        });  
+                        
     });    
     
     function queryParams(params) {
