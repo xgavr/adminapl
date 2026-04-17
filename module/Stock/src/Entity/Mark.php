@@ -108,6 +108,10 @@ class Mark {
         return $this->mark;
     }
 
+    public function getMark31() {
+        return substr($this->mark, 0, 31);
+    }
+
     public function setMark($mark) {
         $this->mark = $mark;
     }
