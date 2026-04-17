@@ -54,10 +54,10 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="aplId" data-sortable="true" data-width="5">AId</th>
                      <th data-field="created" data-sortable="true" data-width="10" data-formatter="dateFormatter">Дата</th>             
                      <th data-field="order" data-sortable="false" data-width="10" data-formatter="orderFormatter">Заказ</th>             
-                     <th data-field="good" data-sortable="false" data-width="20" data-formatter="linkFormatter">Артикул</th>             
+                     <th data-field="good" data-sortable="false" data-width="20" data-formatter="markLinkFormatter">Артикул</th>             
                      <!--<th data-field="markGroup" data-sortable="false">Группа ЧЗ</th>-->             
                      <th data-field="mark" data-sortable="false">Код со сканера</th>
-                     <th data-field="" data-formatter="activeFormatter" data-width="10"></th>
+                     <th data-field="" data-formatter="markActiveFormatter" data-width="10"></th>
                  </tr>                
             </thead>
         </table>
@@ -114,7 +114,7 @@ $this->pageBreadcrumbs()->setItems([
         return $.format.date(date, "dd.MM.yyyy");
     }     
     
-    function linkFormatter(value, row){
+    function markLinkFormatter(value, row){
         return [
             '<nobr>',
             '<a href="/goods/view/' + row.good.id + '" class="btn btn-link btn-xs" title="Перейти на страницу товара" target="_blank">',
@@ -133,7 +133,7 @@ $this->pageBreadcrumbs()->setItems([
     
   
     
-    function activeFormatter(value, row){
+    function markActiveFormatter(value, row){
 //        var url = '/group-site/edit-form/'+row.id;
 //        if (row.pid){
 //            url = url + '?parent=' + row.pid;
