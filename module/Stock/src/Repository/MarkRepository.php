@@ -58,7 +58,9 @@ class MarkRepository extends EntityRepository{
                         $orX->add($queryBuilder->expr()->eq('o.aplId', $q));
                     }
                             
-                    $queryBuilder->andWhere($orX);
+                    if ($orX->count()){
+                        $queryBuilder->andWhere($orX);
+                    }
                 }   
             }
             
@@ -109,7 +111,9 @@ class MarkRepository extends EntityRepository{
                         $orX->add($queryBuilder->expr()->eq('o.aplId', $q));
                     }
                             
-                    $queryBuilder->andWhere($orX);
+                    if ($orX->count()){
+                        $queryBuilder->andWhere($orX);
+                    }
                 }   
             }
         }
