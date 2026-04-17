@@ -27,6 +27,7 @@ class Mark {
     const MARK_ACTIVE       = 1; // В обороте.
     const MARK_RETIRED      = 2; // Выбыл.
     const MARK_UNKNOWN      = 3; // Неизвестно.
+    const MARK_NOT_LISTED      = 4; // Не числится за нами.
     
     /**
      * @ORM\Id
@@ -191,6 +192,7 @@ class Mark {
         return [
             self::MARK_ACTIVE => 'В обороте',
             self::MARK_RETIRED => 'Выбыл',
+            self::MARK_NOT_LISTED => 'Не числятся',
             self::MARK_UNKNOWN => 'Не известно',
         ];
     }    
