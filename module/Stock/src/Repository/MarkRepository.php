@@ -38,6 +38,13 @@ class MarkRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
+            if (!empty($params['markId'])){
+                if ($params['markId'] > 0){
+                    $queryBuilder->andWhere('m.id = :markId')
+                        ->setParameter('markId', $params['markId'])
+                     ;
+                }    
+            }            
             if (!empty($params['markStatus'])){
                 if ($params['markStatus'] > 0){
                     $queryBuilder->andWhere('m.markStatus = :markStatus')
@@ -92,6 +99,13 @@ class MarkRepository extends EntityRepository{
                 ;
         
         if (is_array($params)){
+            if (!empty($params['markId'])){
+                if ($params['markId'] > 0){
+                    $queryBuilder->andWhere('m.id = :markId')
+                        ->setParameter('markId', $params['markId'])
+                     ;
+                }    
+            }                        
             if (!empty($params['markStatus'])){
                 if ($params['markStatus'] > 0){
                     $queryBuilder->andWhere('m.markStatus = :markStatus')
