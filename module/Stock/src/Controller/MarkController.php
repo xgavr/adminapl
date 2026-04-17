@@ -80,21 +80,22 @@ class MarkController extends AbstractActionController
     }        
     
         
-    public function statusAction()
+    public function markStatusAction()
     {
-        $otId = $this->params()->fromRoute('id', -1);
-        $status = $this->params()->fromQuery('status', Ot::STATUS_ACTIVE);
-        $ot = $this->entityManager->getRepository(Ot::class)
-                ->find($otId);        
+        $markId = $this->params()->fromRoute('id', -1);
+        
+        $mark = $this->entityManager->getRepository(Mark::class)
+                ->find($markId);        
 
-        if ($ot == null) {
+        if ($mark == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
         }        
         
-        $this->otManager->updateOtStatus($ot, $status);
-        $query = $this->entityManager->getRepository(Ot::class)
-                ->findAllOt(['otId' => $ot->getId()]);
+        $data = $this->markManager->signQr($mark->getMark());
+        
+        $query = $this->entityManager->getRepository(Mark::class)
+                ->queryAllMark(['markId' => $mark->getId()]);
         $result = $query->getOneOrNullResult(2);
         
         return new JsonModel(
