@@ -201,7 +201,7 @@ class MarkManager
         $resp = curl_exec($curl);
         curl_close($curl);
         
-        echo json_encode($resp);
+        echo $resp;
         exit;        
     }
     
