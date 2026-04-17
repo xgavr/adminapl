@@ -10,6 +10,7 @@ namespace Stock\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Stock\Entity\Mark;
+use Application\Filter\ArticleCode;
 
 /**
  * Description of MarkRepository
@@ -44,9 +45,24 @@ class MarkRepository extends EntityRepository{
                      ;
                 }    
             }
+            
+            if (isset($params['search'])){                
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+
+                if ($q){
+                    $orX = $queryBuilder->expr()->orX();
+                    
+                    $orX->add($queryBuilder->expr()->eq('g.code', $q));
+                    $orX->add($queryBuilder->expr()->eq('o.aplId', $q));
+                            
+                    $queryBuilder->andWhere($orX);
+                }   
+            }
+            
             if (isset($params['sort'])){
                 $queryBuilder->orderBy('m.'.$params['sort'], $params['order']);
-            }            
+            }                 
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
@@ -66,8 +82,8 @@ class MarkRepository extends EntityRepository{
 
         $queryBuilder->select('count(m.id) as countMark')
             ->from(Mark::class, 'm')
-//            ->join('m.order', 'o')    
-//            ->join('m.good', 'g')    
+            ->join('m.order', 'o')    
+            ->join('m.good', 'g')    
                 ;
         
         if (is_array($params)){
@@ -77,7 +93,21 @@ class MarkRepository extends EntityRepository{
                         ->setParameter('markStatus', $params['markStatus'])
                      ;
                 }    
-            }          
+            }      
+            
+            if (isset($params['search'])){                
+                $codeFilter = new ArticleCode();
+                $q = $codeFilter->filter($params['q']);
+
+                if ($q){
+                    $orX = $queryBuilder->expr()->orX();
+                    
+                    $orX->add($queryBuilder->expr()->eq('g.code', $q));
+                    $orX->add($queryBuilder->expr()->eq('o.aplId', $q));
+                            
+                    $queryBuilder->andWhere($orX);
+                }   
+            }
         }
         
         $result = $queryBuilder->getQuery()->getOneOrNullResult();
