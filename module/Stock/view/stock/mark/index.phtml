@@ -59,6 +59,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="order" data-sortable="false" data-width="10" data-formatter="orderFormatter">Заказ</th>             
                      <th data-field="good" data-sortable="false" data-width="20" data-formatter="markLinkFormatter">Артикул</th>             
                      <!--<th data-field="markGroup" data-sortable="false">Группа ЧЗ</th>-->             
+                     <th data-field="mark" data-sortable="false" data-formatter="markFormatter">КM</th>
                      <th data-field="mark" data-sortable="false">Код со сканера</th>
                      <th data-field="" data-formatter="markActiveFormatter" data-width="10"></th>
                  </tr>                
@@ -140,6 +141,14 @@ $this->pageBreadcrumbs()->setItems([
         return [
             '<nobr>',
             "<a href='#' class='order-view-show' modal-url='/order/view/"+row.order.id+"'>" + row.order.aplId+"</a>",
+            '</nobr>'
+        ].join(''); 
+    }    
+    
+    function markFormatter(value, row){
+        return [
+            '<nobr>',
+            value.slice(0, 31),
             '</nobr>'
         ].join(''); 
     }    
