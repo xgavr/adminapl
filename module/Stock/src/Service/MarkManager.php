@@ -1,11 +1,6 @@
 <?php
 namespace Stock\Service;
 
-use Stock\Entity\Ot;
-use Stock\Entity\OtGood;
-use Admin\Entity\Log;
-use Stock\Entity\Movement;
-use Stock\Entity\Comiss;
 use Application\Entity\Goods;
 use Stock\Entity\Mark;
 use Application\Entity\Order;
@@ -15,6 +10,9 @@ use Application\Entity\Order;
  */
 class MarkManager
 {
+    
+    const JWT_PUBLIC_KEY = 'markirovka_public_key.txt'; //публичный ключ OpenAPI
+    
     /**
      * Doctrine entity manager.
      * @var \Doctrine\ORM\EntityManager
@@ -32,16 +30,38 @@ class MarkManager
      * @var \Admin\Service\AdminManager
      */
     private $adminManager;
-
+    
+    /**
+     * Filesystem cache.
+     * @var \Laminas\Cache\Storage\StorageInterface
+     */
+    private $cache;    
+ 
+    /**
+     * @var string
+     */
+    private $token_dir;
+    
+    /**
+     * @var string
+     */
+    private $jwt_public_key;    
     
     /**
      * Constructs the service.
      */
-    public function __construct($entityManager, $logManager, $adminManager) 
+    public function __construct($entityManager, $logManager, $adminManager, $cache) 
     {
         $this->entityManager = $entityManager;
         $this->logManager = $logManager;
         $this->adminManager = $adminManager;
+        $this->cache = $cache;
+        
+        $this->token_dir = './data/token/';
+        $this->jwt_public_key = '';
+        if (file_exists($this->token_dir.self::JWT_PUBLIC_KEY)){
+            $this->jwt_public_key = file_get_contents($this->token_dir.self::JWT_PUBLIC_KEY);
+        }        
         
     }
     
@@ -88,100 +108,98 @@ class MarkManager
         return;
     }
     
+    
     /**
-     * Update ot.
-     * @param Ot $ot
-     * @param array $data
+     * Update mark status.
+     * @param Mark $mark
+     * @param integer $markStatus
      * @return integer
      */
-    public function updateOt($ot, $data)            
+    public function updateMarkStatus($mark, $markStatus)            
     {
-        if ($data['doc_date'] > $this->allowDate){
-            $ot->setAplId($data['apl_id']);
-            $ot->setDocDate($data['doc_date']);
-            $ot->setComment($data['comment']);
-            $ot->setStatusEx($data['status_ex']);
-            $ot->setStatus($data['status']);
-            $ot->setStatusAccount(Ot::STATUS_ACCOUNT_NO);
-            $ot->setOffice($data['office']);
-            $ot->setCompany($data['company']);
-            $ot->setComiss(null);
-            if (!empty($data['comiss'])){
-                $ot->setComiss($data['comiss']);
-            }
-            if (!empty($data['doc_no'])){
-//                $ot->setDocNo($data['doc_no']);
-            }
 
-            $this->entityManager->persist($ot);
-            $this->entityManager->flush($ot);
-        }    
-        
+
+        $mark->setMarkStatus($markStatus);
+
+        $this->entityManager->persist($mark);
+        $this->entityManager->flush();
+
         return;
     }
     
     /**
-     * Update ot status.
-     * @param Ot $ot
-     * @param integer $status
-     * @return integer
-     */
-    public function updateOtStatus($ot, $status)            
-    {
-
-        if ($ot->getDocDate() > $this->allowDate || $ot->getStatus() != Ot::STATUS_ACTIVE){
-            $ot->setStatus($status);
-            $ot->setStatusEx(Ot::STATUS_EX_NEW);
-            $ot->setStatusAccount(Ot::STATUS_ACCOUNT_NO);
-            
-            $this->entityManager->persist($ot);
-            $this->entityManager->flush();
-
-            $this->repostOt($ot);
-            $this->logManager->infoOt($ot, Log::STATUS_UPDATE);
-        }    
-        
-        return;
-    }
-    
-    /**
-     * Удаление ОТ
      * 
-     * @param Ot $ot
+     * @return токен ЧЗ
      */
-    public function removeOt($ot)
+    private function signToken()
     {
-        if ($ot->getDocDate() > $this->allowDate){
-            $this->logManager->infoOt($ot, Log::STATUS_DELETE);
-            $this->entityManager->getRepository(Movement::class)
-                    ->removeDocMovements($ot->getLogKey());
-            $this->entityManager->getRepository(Comiss::class)
-                    ->removeDocComiss($ot->getLogKey());
-            $this->removeOtGood($ot);
-
-            $this->entityManager->getConnection()->delete('ot', ['id' => $ot->getId()]);
-        }    
+        $result = $this->cache->getItem('markirovka_token', false);
         
-        return;
+        if (!$result){
+            $url = "https://markirovka.crpt.ru/api/v3/true-api/auth/simpleSignIn";
+
+            $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $headers = array(
+                    "Accept: application/json",
+
+                    "Content-Type: application/json",
+            );
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+            $data = $this->jwt_public_key;
+
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+            $resp = curl_exec($curl);
+
+            curl_close($curl);
+            $response = json_decode($resp, true);
+
+            // Возвращаем uuidToken
+            $result = $response['uuidToken'];
+            $this->cache->setItem('markirovka_token', $result);
+        } 
+        
+        return $result;
+        
     }
     
     /**
-     * Заменить товар
-     * @param Goods $oldGood
-     * @param Goods $newGood
+     * 
+     * @param string $qrCode
      */
-    public function changeGood($oldGood, $newGood)
+    public function signQr($qrCode)
     {
-        $rows = $this->entityManager->getRepository(OtGood::class)
-                ->findBy(['good' => $oldGood->getId()]);
-        foreach ($rows as $row){
-            $row->setGood($newGood);
-            $this->entityManager->persist($row);
-            $this->entityManager->flush();
-            $this->updateOtMovement($row->getOt());
-        }
+        $uuidToken = $this->signToken();
+
+        $payload = json_encode([$qrCode]); 
+
+        $url = "https://markirovka.crpt.ru/api/v3/true-api/cises/info";
+
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+        $headers = array(
+                "Accept: application/json",
+                "Authorization: Bearer " . $uuidToken,
+                "Content-Type: application/json",
+        );
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
+
+        $resp = curl_exec($curl);
+        curl_close($curl);
         
-        return;
+        echo json_encode($resp);
+        exit;        
     }
+    
 }
 
