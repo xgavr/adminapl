@@ -175,6 +175,8 @@ class MarkManager
     public function signQr($qrCode)
     {
         $uuidToken = $this->signToken();
+        
+        var_dump($uuidToken); exit;
 
         $payload = json_encode([$qrCode]); 
 
