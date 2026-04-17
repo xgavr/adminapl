@@ -20,7 +20,13 @@ class MarkManagerFactory
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $logManager = $container->get(LogManager::class);
         $adminManager = $container->get(AdminManager::class);
+        
+        if (!file_exists('./config/development.config.php')){ //если не отладка на локальной машине
+            $cache  = $container->get('default_cache');
+        } else {    
+            $cache = $container->get('FilesystemCache');
+        }         
                         
-        return new MarkManager($entityManager, $logManager, $adminManager);
+        return new MarkManager($entityManager, $logManager, $adminManager, $cache);
     }
 }
