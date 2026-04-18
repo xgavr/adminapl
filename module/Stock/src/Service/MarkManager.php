@@ -211,7 +211,7 @@ class MarkManager
             }
         }
         
-        echo $resp;
+        //echo $resp;
         exit;        
     }
     
