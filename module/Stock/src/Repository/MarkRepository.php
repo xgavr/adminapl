@@ -170,7 +170,7 @@ class MarkRepository extends EntityRepository{
 
         $queryBuilder->select('m')
             ->from(Mark::class, 'm')
-            ->where('m.markStatus like ":mark31"')
+            ->where('m.mark like ":mark31"')
             ->setParameter('mark31', "$mark31%") 
             ->setMaxResults(1)
             ->orderBy('m.id', 'ASC')    
