@@ -61,6 +61,7 @@ class MarkRepository extends EntityRepository{
                     $orX = $queryBuilder->expr()->orX();
                     
                     $orX->add($queryBuilder->expr()->eq('g.code', ':query'));
+                    $orX->add($queryBuilder->expr()->eq('g.mark', '%:query%'));
                     if (is_numeric($q)){
                         $orX->add($queryBuilder->expr()->eq('o.aplId', ':query'));
                     }
@@ -138,4 +139,18 @@ class MarkRepository extends EntityRepository{
 
         return $result['countMark'];
     }    
+    
+    public function findForCheckMark31()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('SUBSTRING(m.mark, 0, 31) as mark31')
+            ->from(Mark::class, 'm')
+            ->where('m.markStatus = :markStatus')
+            ->setParameter('markStatus', Mark::MARK_UNKNOWN)    
+                ;
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
