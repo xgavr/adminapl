@@ -109,7 +109,7 @@ class MarkController extends AbstractActionController
        $marks = $this->entityManager->getRepository(Mark::class)
                 ->findForCheckMark31();  
        
-       var_dump($marks);
+       var_dump($marks); exit;
         
         $result = $this->markManager->signQr($marks);
                 
