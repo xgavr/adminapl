@@ -188,6 +188,25 @@ class Mark {
     }
     
     /**
+     * 
+     * @param string|null $remoteStatus
+     * @return type
+     */
+    public static function getRemoteMarkStatus($remoteStatus) {
+        
+        if (empty($remoteStatus)){
+            return self::MARK_NOT_LISTED;
+        }
+        
+        switch ($remoteStatus){
+            case 'INTRODUCED': return self::MARK_ACTIVE;
+            case 'RETIRED': return self::MARK_RETIRED;
+        }
+        
+        return self::MARK_UNKNOWN;
+    }
+    
+    /**
      * Returns possible mark statuses as array.
      * @return array
      */
