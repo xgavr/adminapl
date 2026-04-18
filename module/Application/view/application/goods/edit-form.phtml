@@ -117,7 +117,7 @@ $docName = 'Новый';
                     return process(data);
                 });
             },
-            changeInputOnSelect: true,
+            changeInputOnSelect: false,
             afterSelect: function(data) {
                 $('#name').val(data.nameShort);
                 $('#code').val(data.code);
@@ -131,7 +131,7 @@ $docName = 'Новый';
                     return process(data);
                 });
             },
-            changeInputOnSelect: true,
+            changeInputOnSelect: false
         });
 
         var forms = $('#goods-form');
