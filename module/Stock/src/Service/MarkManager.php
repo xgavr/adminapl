@@ -235,7 +235,7 @@ class MarkManager
         }
         
         //echo $resp;
-        exit;        
+        return;        
     }
     
 }
