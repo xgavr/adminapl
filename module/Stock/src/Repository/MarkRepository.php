@@ -148,7 +148,7 @@ class MarkRepository extends EntityRepository{
 
         $queryBuilder = $entityManager->createQueryBuilder();
 
-        $queryBuilder->select('LEFT(m.mark, 31) as mark31')
+        $queryBuilder->select('SUBSTRING(m.mark, 1, 31) as mark31')
             ->from(Mark::class, 'm')
             ->where('m.markStatus = :markStatus')
             ->setParameter('markStatus', Mark::MARK_UNKNOWN)    
