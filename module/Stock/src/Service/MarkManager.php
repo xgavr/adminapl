@@ -172,15 +172,19 @@ class MarkManager
     
     /**
      * 
-     * @param string $qrCode
+     * @param string|array $qrCodes
      */
-    public function signQr($qrCode)
+    public function signQr($qrCodes)
     {
         $uuidToken = $this->signToken();
         
 //        var_dump($uuidToken); exit;
+        
+        if (is_string($qrCodes)){
+            $qrCodes = [$qrCodes];
+        }
 
-        $payload = json_encode([$qrCode]); 
+        $payload = json_encode($qrCodes); 
 
         $url = "https://markirovka.crpt.ru/api/v3/true-api/cises/info";
 
