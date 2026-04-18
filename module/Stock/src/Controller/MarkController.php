@@ -94,7 +94,7 @@ class MarkController extends AbstractActionController
             return;                        
         }     
         
-        var_dump($mark->getMark31());
+//        var_dump($mark->getMark31());
         
         $data = $this->markManager->signQr($mark->getMark31());
         
@@ -103,7 +103,7 @@ class MarkController extends AbstractActionController
         
         $result = $query->getOneOrNullResult(2);
         
-        var_dump($result);
+//        var_dump($result);
  
         return new JsonModel(
            $result
