@@ -16,6 +16,9 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">               
+                <button class="btn btn-info mark-statuses" type="button">
+                    <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                </button> 
                 <div class="form-group">
                     <div class="btn-group">
                         <input id="searchinput" name="search" style="width: 200px" class="form-control enter-search" onfocus="this.select();" type="text" placeholder="Поиск">
@@ -102,6 +105,12 @@ $this->pageBreadcrumbs()->setItems([
         $(".inputclear").click(function(){
             $("#searchinput").val('');
             refreshTable();
+        });
+        
+        $(".mark-statuses").click(function(){
+            $.get( "/mark/mark-statuses/", function(data){
+                refreshTable();
+            }); 
         });
         
         $(document).on('change', '.refresh-table', function (e) {
