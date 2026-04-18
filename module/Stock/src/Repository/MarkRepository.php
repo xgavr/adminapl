@@ -61,11 +61,12 @@ class MarkRepository extends EntityRepository{
                     $orX = $queryBuilder->expr()->orX();
                     
                     $orX->add($queryBuilder->expr()->eq('g.code', ':query'));
-                    $orX->add($queryBuilder->expr()->eq('g.mark', '%:query%'));
+                    $orX->add($queryBuilder->expr()->eq('g.mark', ':mark'));
                     if (is_numeric($q)){
                         $orX->add($queryBuilder->expr()->eq('o.aplId', ':query'));
                     }
                     $queryBuilder->setParameter('query', $q);
+                    $queryBuilder->setParameter('mark', "%$q%");
                             
                     if ($orX->count()){
                         $queryBuilder->andWhere($orX);
