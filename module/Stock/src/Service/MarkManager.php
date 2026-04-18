@@ -215,7 +215,7 @@ class MarkManager
         
         if (is_array($result)){
             foreach ($result as $value){
-                var_dump($value); exit;
+                var_dump($value['cisInfo']['status']); //exit;
             }
         }
         
