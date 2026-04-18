@@ -103,5 +103,20 @@ class MarkController extends AbstractActionController
         );           
     }        
     
+    public function markStatusesAction()
+    {
+ 
+       $marks = $this->entityManager->getRepository(Mark::class)
+                ->findForCheckMark31();  
+       
+       var_dump($marks);
+        
+        $result = $this->markManager->signQr($marks);
+                
+        return new JsonModel(
+           $result
+        );           
+    }        
+    
     
 }
