@@ -215,8 +215,23 @@ class MarkManager
         
         if (is_array($result)){
             foreach ($result as $value){
-                var_dump($value['cisInfo']['cis'], $value['cisInfo']['status']); //exit;
+                //var_dump($value['cisInfo']['cis'], $value['cisInfo']['status']); //exit;
+                                                
+                if (!empty($value['cisInfo']['cis'])){
+                    $mark = $this->entityManager->getRepository(Mark::class)
+                            ->findMarkByMark31($value['cisInfo']['cis']);
+                
+                    if ($mark && !empty($value['cisInfo']['status'])){
+                        $mark->setMarkStatus(Mark::getRemoteMarkStatus($value['cisInfo']['status']));                        
+                    } else {
+                        $mark->setMarkStatus(Mark::MARK_NOT_FOUND);
+                    }
+                    
+                    $this->entityManager->persist($mark);
+                }        
             }
+            
+            $this->entityManager->flush();
         }
         
         //echo $resp;
