@@ -84,7 +84,7 @@ class MarkController extends AbstractActionController
     {
         $markId = $this->params()->fromRoute('id', -1);
         
-        var_dump($markId);
+//        var_dump($markId);
         
         $mark = $this->entityManager->getRepository(Mark::class)
                 ->find($markId);        
@@ -92,7 +92,9 @@ class MarkController extends AbstractActionController
         if ($mark == null) {
             $this->getResponse()->setStatusCode(404);
             return;                        
-        }        
+        }     
+        
+        var_dump($mark->getMark31());
         
         $data = $this->markManager->signQr($mark->getMark31());
         
