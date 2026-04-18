@@ -84,6 +84,8 @@ class MarkController extends AbstractActionController
     {
         $markId = $this->params()->fromRoute('id', -1);
         
+        var_dump($markId);
+        
         $mark = $this->entityManager->getRepository(Mark::class)
                 ->find($markId);        
 
