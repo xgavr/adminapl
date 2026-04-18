@@ -156,4 +156,26 @@ class MarkRepository extends EntityRepository{
         
         return array_column($queryBuilder->getQuery()->getResult(), 'mark31');
     }
+    
+    /**
+     * 
+     * @param string $mark31
+     * @return type
+     */
+    public function findMarkByMark31($mark31)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('m')
+            ->from(Mark::class, 'm')
+            ->where('m.markStatus like ":mark31"')
+            ->setParameter('mark31', "$mark31%") 
+            ->setMaxResults(1)
+            ->orderBy('m.id', 'ASC')    
+                ;
+        
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
 }
