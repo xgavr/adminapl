@@ -106,6 +106,7 @@ class MarkRepository extends EntityRepository{
                 if ($params['markId'] > 0){
                     $queryBuilder->andWhere('m.id = :markId')
                         ->setParameter('markId', $params['markId'])
+                        ->setMaxResults(1);    
                      ;
                 }    
             }                        
