@@ -204,9 +204,17 @@ class MarkManager
 
         $resp = curl_exec($curl);
         curl_close($curl);
-        var_dump($resp);
-        if (is_array($resp)){
-            foreach ($resp as $value){
+        
+//        var_dump($resp);
+        
+        try{
+            $result = json_decode($resp, \Laminas\Json\Json::TYPE_ARRAY);
+        } catch (Throwable $e){
+            var_dump($e->getMessage());
+        }
+        
+        if (is_array($result)){
+            foreach ($result as $value){
                 var_dump($value); exit;
             }
         }
