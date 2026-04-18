@@ -78,7 +78,7 @@ class MarkRepository extends EntityRepository{
                 $queryBuilder->orderBy('m.'.$params['sort'], $params['order']);
             }                 
         }
-//        var_dump($queryBuilder->getQuery()->getSQL()); exit;
+        var_dump($queryBuilder->getQuery()->getSQL()); exit;
         return $queryBuilder->getQuery();
     }  
     
