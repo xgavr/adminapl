@@ -108,8 +108,13 @@ $this->pageBreadcrumbs()->setItems([
         });
         
         $(".mark-statuses").click(function(){
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });            
             $.get( "/mark/mark-statuses/", function(data){
                 refreshTable();
+                dialog.modal('hide');
             }); 
         });
         
@@ -141,8 +146,14 @@ $this->pageBreadcrumbs()->setItems([
     
     function rowStyle(row, index) {
         var retired = 'tablerow';
-        if (row.mark === <?= Mark::MARK_ACTIVE?>){
+        if (row.markStatus === <?= Mark::MARK_RETIRED?>){
             retired += ' success';
+        }    
+        if (row.markStatus === <?= Mark::MARK_NOT_FOUND?>){
+            retired += ' error';
+        }    
+        if (row.markStatus === <?= Mark::MARK_NOT_LISTED?>){
+            retired += ' warning';
         }    
         return {classes: retired};    
     }    
