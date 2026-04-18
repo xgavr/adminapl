@@ -96,8 +96,11 @@ class MarkController extends AbstractActionController
         
         $query = $this->entityManager->getRepository(Mark::class)
                 ->queryAllMark(['markId' => $mark->getId()]);
+        
         $result = $query->getOneOrNullResult(2);
         
+        var_dump($result);
+ 
         return new JsonModel(
            $result
         );           
