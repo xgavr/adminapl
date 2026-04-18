@@ -28,6 +28,7 @@ class Mark {
     const MARK_RETIRED      = 2; // Выбыл.
     const MARK_UNKNOWN      = 3; // Неизвестно.
     const MARK_NOT_LISTED      = 4; // Не числится за нами.
+    const MARK_NOT_FOUND      = 5; // Не найден.
     
     /**
      * @ORM\Id
@@ -195,7 +196,7 @@ class Mark {
     public static function getRemoteMarkStatus($remoteStatus) {
         
         if (empty($remoteStatus)){
-            return self::MARK_NOT_LISTED;
+            return self::MARK_NOT_FOUND;
         }
         
         switch ($remoteStatus){
