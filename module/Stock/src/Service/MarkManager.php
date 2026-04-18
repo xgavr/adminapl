@@ -205,6 +205,12 @@ class MarkManager
         $resp = curl_exec($curl);
         curl_close($curl);
         
+        if (is_array($resp)){
+            foreach ($resp as $value){
+                var_dump($value); exit;
+            }
+        }
+        
         echo $resp;
         exit;        
     }
