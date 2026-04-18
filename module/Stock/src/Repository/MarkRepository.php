@@ -66,7 +66,7 @@ class MarkRepository extends EntityRepository{
                         $orX->add($queryBuilder->expr()->eq('o.aplId', ':query'));
                     }
                     $queryBuilder->setParameter('query', $q);
-                    $queryBuilder->setParameter('mark', "%$q%");
+                    $queryBuilder->setParameter('mark', "%{$params['search']}%");
                             
                     if ($orX->count()){
                         $queryBuilder->andWhere($orX);
@@ -79,7 +79,7 @@ class MarkRepository extends EntityRepository{
             }                 
         }
 //        var_dump($queryBuilder->getQuery()->getSQL()); exit;
-        var_dump($queryBuilder->getQuery()->getDQL(), $queryBuilder->getQuery()->getParameters()); exit;
+//        var_dump($queryBuilder->getQuery()->getDQL(), $queryBuilder->getQuery()->getParameters()); exit;
         return $queryBuilder->getQuery();
     }  
     
