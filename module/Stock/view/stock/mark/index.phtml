@@ -1,5 +1,6 @@
 <?php
 use Stock\Entity\Mark;
+use Application\Entity\Order;
 
 $this->headTitle('Коды маркировки');
 
@@ -97,8 +98,8 @@ $this->pageBreadcrumbs()->setItems([
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
             closeButton: true
         });        
-        $.get( "/mark/status/"+row.id+'?status='+newStatus, function(data){
-            $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
+        $.get( "/mark/status/"+rowId+'?status='+newStatus, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: rowId, row: data});
             dialog.modal('hide');
         });        
     }    
@@ -172,6 +173,12 @@ $this->pageBreadcrumbs()->setItems([
         if (row.markStatus === <?= Mark::MARK_NOT_LISTED?>){
             retired += ' warning';
         }    
+        if (row.status === <?= Mark::STATUS_RETIRED?>){
+            retired += ' retired';
+        }    
+        if (row.order.status !== <?= Order::STATUS_SHIPPED?>){
+            retired += ' muted';
+        }    
         return {classes: retired};    
     }    
     
@@ -216,7 +223,7 @@ $this->pageBreadcrumbs()->setItems([
         actions: {
             markStatus: {
                 name: 'Проверить состояние кода',
-                iconClass: 'glyphicon glyphicon-checked',
+                iconClass: 'glyphicon glyphicon-ok',
                 onClick: function(row) {
                     checkMarkStatus(row);
                 },
@@ -226,7 +233,7 @@ $this->pageBreadcrumbs()->setItems([
             }, 
             statusActiv: {
                 name: 'Сделать активным',
-                iconClass: 'glyphicon glyphicon-checked',
+                iconClass: 'glyphicon glyphicon-ok-circle',
                 onClick: function(row) {
                     changeStatus(row.id, <?= Mark::STATUS_ACTIVE?>);
                 },
@@ -239,7 +246,7 @@ $this->pageBreadcrumbs()->setItems([
             }, 
             statusRetired: {
                 name: 'Сделать не активным',
-                iconClass: 'glyphicon glyphicon-unchecked',
+                iconClass: 'glyphicon glyphicon-ban-circle',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
                     changeStatus(row.id, <?= Mark::STATUS_RETIRED?>);
