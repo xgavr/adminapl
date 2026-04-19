@@ -403,7 +403,7 @@ class PaymentManager
             $data['Data']['counterpartyBankCorrAccount'] = $payment->getCounterpartyBankCorrAccount();
         }
         
-        var_dump($data); exit;
+//        var_dump($data); exit;
         $result = $this->tochkaPayment->paymentV2($data);
 
 //        var_dump($result); 
