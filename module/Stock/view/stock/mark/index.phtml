@@ -216,6 +216,7 @@ $this->pageBreadcrumbs()->setItems([
         actions: {
             markStatus: {
                 name: 'Проверить состояние кода',
+                iconClass: 'glyphicon glyphicon-check-ok',
                 onClick: function(row) {
                     checkMarkStatus(row);
                 },
@@ -225,7 +226,7 @@ $this->pageBreadcrumbs()->setItems([
             }, 
             statusActiv: {
                 name: 'Сделать активным',
-                iconClass: 'glyphicon glyphicon-check',
+                iconClass: 'glyphicon glyphicon-ok',
                 onClick: function(row) {
                     changeStatus(row.id, <?= Mark::STATUS_ACTIVE?>);
                 },
@@ -238,7 +239,7 @@ $this->pageBreadcrumbs()->setItems([
             }, 
             statusRetired: {
                 name: 'Сделать не активным',
-                iconClass: 'glyphicon glyphicon-uncheck',
+                iconClass: 'glyphicon glyphicon-remove',
 //                classNames: 'bg-danger',
                 onClick: function(row) {
                     changeStatus(row.id, <?= Mark::STATUS_RETIRED?>);
