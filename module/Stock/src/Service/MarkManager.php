@@ -87,6 +87,8 @@ class MarkManager
             
             if (empty($mark)){
                 $mark = new Mark();
+                $mark->setMarkStatus(Mark::MARK_UNKNOWN);
+                $mark->setStatus(Mark::STATUS_ACTIVE);
             }
                            
             $mark->setAplId($data['id']);
@@ -94,9 +96,7 @@ class MarkManager
             $mark->setGood($good);
             $mark->setMark($data['type']);
             $mark->setMarkGroup($data['sort']);
-            $mark->setMarkStatus(Mark::MARK_UNKNOWN);
             $mark->setOrder($order);
-            $mark->setStatus(Mark::STATUS_ACTIVE);
             $mark->setUpdated(date('Y-m-d H:i:s'));
 
             $this->entityManager->persist($mark);        
@@ -110,6 +110,23 @@ class MarkManager
     
     
     /**
+     * Update status.
+     * @param Mark $mark
+     * @param integer $status
+     * @return integer
+     */
+    public function updateStatus($mark, $status)            
+    {
+
+        $mark->setStatus($status);
+
+        $this->entityManager->persist($mark);
+        $this->entityManager->flush();
+
+        return;
+    }
+    
+    /**
      * Update mark status.
      * @param Mark $mark
      * @param integer $markStatus
@@ -117,7 +134,6 @@ class MarkManager
      */
     public function updateMarkStatus($mark, $markStatus)            
     {
-
 
         $mark->setMarkStatus($markStatus);
 
