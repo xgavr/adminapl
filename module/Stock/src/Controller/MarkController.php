@@ -95,11 +95,8 @@ class MarkController extends AbstractActionController
             return;                        
         }     
         
-        if ($newStatus === Mark::MARK_ACTIVE){
-            $this->markManager->updateStatus($mark, Mark::STATUS_RETIRED);
-        }
-        if ($newStatus === Mark::MARK_RETIRED){
-            $this->markManager->updateStatus($mark, Mark::STATUS_ACTIVE);
+        if ($newStatus > 0){
+            $this->markManager->updateStatus($mark, $newStatus);
         }
         
         $query = $this->entityManager->getRepository(Mark::class)
