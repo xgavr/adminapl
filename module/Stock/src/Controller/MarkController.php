@@ -80,6 +80,40 @@ class MarkController extends AbstractActionController
     }        
     
         
+    public function statusAction()
+    {
+        $markId = $this->params()->fromRoute('id', -1);
+        $newStatus = $this->params()->fromQuery('status', -1);
+        
+//        var_dump($markId);
+        
+        $mark = $this->entityManager->getRepository(Mark::class)
+                ->find($markId);        
+
+        if ($mark == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }     
+        
+        if ($newStatus === Mark::MARK_ACTIVE){
+            $this->markManager->updateStatus($mark, Mark::STATUS_RETIRED);
+        }
+        if ($newStatus === Mark::MARK_RETIRED){
+            $this->markManager->updateStatus($mark, Mark::STATUS_ACTIVE);
+        }
+        
+        $query = $this->entityManager->getRepository(Mark::class)
+                ->queryAllMark(['markId' => $mark->getId()]);
+        
+        $result = $query->getOneOrNullResult(2);
+        
+//        var_dump($result);
+ 
+        return new JsonModel(
+           $result
+        );           
+    }        
+    
     public function markStatusAction()
     {
         $markId = $this->params()->fromRoute('id', -1);
