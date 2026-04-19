@@ -373,14 +373,16 @@ class PaymentManager
     public function sendPaymentV2($payment)
     {
         $data['Data'] = [
-            "accountCode" => $payment->getBankAccount()->getRs(),
+            "accountCode" => $payment->getBankAccount()->getRs(),            
             "bankCode" =>  $payment->getBankAccount()->getBik(),
-            "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
-//            "counterpartyBankCorrAccount" => $payment->getCounterpartyBankCorrAccount(),
+            "payerINN" =>  $payment->getBankAccount()->getLegal()->getInn(),
+            "payerKPP" =>  ($payment->getPaymentType() === Payment::PAYMENT_TYPE_TAX) ? 0:$payment->getBankAccount()->getLegal()->getKpp(),
             "counterpartyBankBic" => $payment->getCounterpartyBankBik(),
+            "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
             "counterpartyINN" => $payment->getСounterpartyInn(),
             "counterpartyKPP" => $payment->getСounterpartyKpp(),
-            "counterpartyName" => $payment->getCounterpartyName(),
+            "counterpartyName" => $payment->getCounterpartyName(),            
+//            "counterpartyBankCorrAccount" => $payment->getCounterpartyBankCorrAccount(),
             "paymentAmount" => $payment->getFormatAmount('.'),
             "paymentDate" => $payment->getPaymentDate(),
             "paymentNumber" => $payment->getId(),
