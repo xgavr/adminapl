@@ -396,7 +396,7 @@ class PaymentManager
             "taxInfoOKATO" => ($payment->getTaxInfoStatus() === Payment::TAX_STATUS_01) ? 0:$payment->getTaxInfoOkato(),
             "taxInfoPeriod" => $payment->getTaxInfoPeriod(),
             "taxInfoReasonCode" => $payment->getTaxInfoReasonCode(),
-            "taxInfoStatus" => $payment->getTaxInfoStatus(),        
+//            "taxInfoStatus" => $payment->getTaxInfoStatus(),        
         ];
         
         if ($payment->getCounterpartyBankCorrAccount()){
