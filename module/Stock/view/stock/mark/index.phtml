@@ -177,7 +177,7 @@ $this->pageBreadcrumbs()->setItems([
             retired += ' retired';
         }    
         if (row.order.status !== <?= Order::STATUS_SHIPPED?>){
-            retired += ' muted';
+            retired += ' retired-muted';
         }    
         return {classes: retired};    
     }    
