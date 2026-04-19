@@ -92,6 +92,17 @@ $this->pageBreadcrumbs()->setItems([
         $('#table').bootstrapTable('refresh');
     }
     
+    function changeStatus(rowId, newStatus){
+        var dialog = bootbox.dialog({
+            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+            closeButton: true
+        });        
+        $.get( "/mark/status/"+row.id+'?status='+newStatus, function(data){
+            $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
+            dialog.modal('hide');
+        });        
+    }    
+    
     function checkMarkStatus(row){
         var dialog = bootbox.dialog({
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
@@ -200,7 +211,7 @@ $this->pageBreadcrumbs()->setItems([
             return $table.bootstrapTable('getData')[getCurrentIndex()];
         },
         actionsGroups: [
-//           ['statusActiv', 'statusRetired', 'repostEx'], ['history']
+           ['markStatus'], ['statusActiv', 'statusRetired']
         ],      
         actions: {
             markStatus: {
@@ -212,6 +223,33 @@ $this->pageBreadcrumbs()->setItems([
                     return true;
                 }                
             } 
+            statusActiv: {
+                name: 'Сделать активным',
+                iconClass: 'glyphicon glyphicon-check',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Mark::STATUS_ACTIVE?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= Mark::STATUS_RETIRED?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= Mark::STATUS_RETIRED?>;
+                }                
+            }, 
+            statusRetired: {
+                name: 'Сделать не активным',
+                iconClass: 'glyphicon glyphicon-uncheck',
+//                classNames: 'bg-danger',
+                onClick: function(row) {
+                    changeStatus(row.id, <?= Mark::STATUS_RETIRED?>);
+                },
+                isShown: function(row) {
+                    return row.status === <?= Mark::STATUS_ACTIVE?>;
+                },
+                isEnabled: function(row) {
+                    return row.status === <?= Mark::STATUS_ACTIVE?>;
+                }                
+            },
         }
     });    
     
