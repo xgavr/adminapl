@@ -376,7 +376,7 @@ class PaymentManager
             "accountCode" => $payment->getBankAccount()->getRs(),            
             "bankCode" =>  $payment->getBankAccount()->getBik(),
             "payerINN" =>  $payment->getBankAccount()->getLegal()->getInn(),
-            "payerKPP" =>  ($payment->getPaymentType() === Payment::PAYMENT_TYPE_TAX) ? 0:$payment->getBankAccount()->getLegal()->getKpp(),
+            "payerKPP" =>  ($payment->getTaxInfoStatus() === Payment::TAX_STATUS_01) ? 0:$payment->getBankAccount()->getLegal()->getKpp(),
             "counterpartyBankBic" => $payment->getCounterpartyBankBik(),
             "counterpartyAccountNumber" => $payment->getCounterpartyAccountNumber(),
             "counterpartyINN" => $payment->getСounterpartyInn(),
@@ -393,7 +393,7 @@ class PaymentManager
             "taxInfoDocumentDate" => $payment->getTaxInfoDocumentDate(),
             "taxInfoDocumentNumber" => $payment->getTaxInfoDocumentNumber(),
             "taxInfoKBK" => $payment->getTaxInfoKbk(),
-            "taxInfoOKATO" => $payment->getTaxInfoOkato(),
+            "taxInfoOKATO" => ($payment->getTaxInfoStatus() === Payment::TAX_STATUS_01) ? 0:$payment->getTaxInfoOkato(),
             "taxInfoPeriod" => $payment->getTaxInfoPeriod(),
             "taxInfoReasonCode" => $payment->getTaxInfoReasonCode(),
             "taxInfoStatus" => $payment->getTaxInfoStatus(),        
@@ -403,7 +403,7 @@ class PaymentManager
             $data['Data']['counterpartyBankCorrAccount'] = $payment->getCounterpartyBankCorrAccount();
         }
         
-//        var_dump($data); exit;
+        var_dump($data); exit;
         $result = $this->tochkaPayment->paymentV2($data);
 
 //        var_dump($result); 
