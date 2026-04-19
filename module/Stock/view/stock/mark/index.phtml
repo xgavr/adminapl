@@ -222,7 +222,7 @@ $this->pageBreadcrumbs()->setItems([
                 isEnabled: function(row) {
                     return true;
                 }                
-            } 
+            }, 
             statusActiv: {
                 name: 'Сделать активным',
                 iconClass: 'glyphicon glyphicon-check',
@@ -249,7 +249,7 @@ $this->pageBreadcrumbs()->setItems([
                 isEnabled: function(row) {
                     return row.status === <?= Mark::STATUS_ACTIVE?>;
                 }                
-            },
+            }
         }
     });    
     
