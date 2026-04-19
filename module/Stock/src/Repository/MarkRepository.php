@@ -155,6 +155,8 @@ class MarkRepository extends EntityRepository{
             ->from(Mark::class, 'm')
             ->where('m.markStatus = :markStatus')
             ->setParameter('markStatus', Mark::MARK_UNKNOWN)    
+            ->where('m.status = :status')
+            ->setParameter('status', Mark::STATUS_ACTIVE)    
                 ;
         
         return array_column($queryBuilder->getQuery()->getResult(), 'mark31');
