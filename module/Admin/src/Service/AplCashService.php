@@ -709,7 +709,7 @@ class AplCashService {
         } catch (\Laminas\Json\Exception\RuntimeException $ex) {
             var_dump($ex->getMessage());
             var_dump($body);
-            exit;
+            //exit;
         }
 //        var_dump($result); exit;
         
