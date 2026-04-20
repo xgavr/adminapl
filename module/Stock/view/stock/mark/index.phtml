@@ -208,8 +208,9 @@ $this->pageBreadcrumbs()->setItems([
     function orderFormatter(value, row){
         return [
             '<nobr>',
-            "<a href='#' class='order-view-show' modal-url='/order/view/"+row.order.id+"'>" + row.order.aplId+"</a>",
-            '</nobr>'
+            "<a href='#' class='order-view-show' modal-url='/order/view/"+row.order.id+"'>",
+            '<span class="glyphicon glyphicon-link"></span></a>'+row.order.aplId,
+            '</nobr>'            
         ].join(''); 
     }    
     
