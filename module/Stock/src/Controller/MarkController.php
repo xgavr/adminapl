@@ -51,12 +51,14 @@ class MarkController extends AbstractActionController
         $order = $this->params()->fromQuery('order', 'DESC');
         $search = $this->params()->fromQuery('search');
         $markStatus = $this->params()->fromQuery('markStatus');
+        $status = $this->params()->fromQuery('status');
 
 
         
         $params = [
             'q' => $q, 'sort' => $sort, 'order' => $order, 
             'markStatus' => $markStatus, 'search' => $search,
+            'status' => $status,
         ];
         $query = $this->entityManager->getRepository(Mark::class)
                         ->queryAllMark($params);
