@@ -771,4 +771,15 @@ class AplCashService {
         return $result;        
     }
     
+    /**
+     * Проверка маркировки на выбыл
+     */
+    public function checkMarks()
+    {
+       $marks = $this->entityManager->getRepository(Mark::class)
+                ->findForCheckMark31();
+       
+        return $this->markManager->signQr($marks);
+    }
+    
 }
