@@ -70,7 +70,8 @@ class MarkRepository extends EntityRepository{
                 $q = $codeFilter->filter($params['search']);
 
                 if ($q){
-                    $queryBuilder->resetDQLPart('wghere');
+                    
+                    $queryBuilder->resetDQLPart('where');
                     
                     $orX = $queryBuilder->expr()->orX();
                     
@@ -149,7 +150,8 @@ class MarkRepository extends EntityRepository{
                 $q = $codeFilter->filter($params['search']);
 
                 if ($q){
-                    $queryBuilder->resetDQLPart('wghere');
+                    
+                    $queryBuilder->resetDQLPart('where');
                     
                     $orX = $queryBuilder->expr()->orX();
                     
