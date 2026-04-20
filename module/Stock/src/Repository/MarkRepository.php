@@ -182,11 +182,14 @@ class MarkRepository extends EntityRepository{
         $entityManager = $this->getEntityManager();
 
         $queryBuilder = $entityManager->createQueryBuilder();
+        
+        $orX = $queryBuilder->expr()->orX();
+        $orX->add($queryBuilder->expr()->eq(m.markStatus, Mark::MARK_UNKNOWN));
+        $orX->add($queryBuilder->expr()->eq(m.markStatus, Mark::MARK_ACTIVE));
 
         $queryBuilder->select('SUBSTRING(m.mark, 1, 31) as mark31')
             ->from(Mark::class, 'm')
-            ->where('m.markStatus = :markStatus')
-            ->setParameter('markStatus', Mark::MARK_UNKNOWN)    
+            ->where($orX)  
             ->andWhere('m.status = :status')
             ->setParameter('status', Mark::STATUS_ACTIVE)    
                 ;
