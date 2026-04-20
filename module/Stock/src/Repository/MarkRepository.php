@@ -46,7 +46,7 @@ class MarkRepository extends EntityRepository{
                 }    
             }            
             if (!empty($params['markStatus'])){
-                if ($params['markStatus'] === -22){
+                if ($params['markStatus'] == -22){
                     $queryBuilder->andWhere('m.markStatus != :markStatus')
                         ->setParameter('markStatus', Mark::MARK_RETIRED)
                      ;
