@@ -1779,6 +1779,8 @@ class ProcessingController extends AbstractActionController
             $this->aplCashService->processChecks();
             
             $this->aplCashService->unloadMarks();
+            
+            $this->aplCashService->checkMarks();
         }    
         
         return new JsonModel([
