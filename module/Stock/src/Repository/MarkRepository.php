@@ -72,6 +72,7 @@ class MarkRepository extends EntityRepository{
                 if ($q){
                     
                     $queryBuilder->resetDQLPart('where');
+                    $queryBuilder->getParameters()->clear();
                     
                     $orX = $queryBuilder->expr()->orX();
                     
@@ -152,6 +153,7 @@ class MarkRepository extends EntityRepository{
                 if ($q){
                     
                     $queryBuilder->resetDQLPart('where');
+                    $queryBuilder->getParameters()->clear();
                     
                     $orX = $queryBuilder->expr()->orX();
                     
