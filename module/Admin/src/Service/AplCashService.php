@@ -665,7 +665,8 @@ class AplCashService {
                             $cashDoc = $this->entityManager->getRepository(CashDoc::class)
                                     ->findOneBy(['aplId' => $checkId]);
                             if (!$cashDoc){
-                                throw new \Exception("Не найден документ aplId: $checkId");
+                                //throw new \Exception("Не найден документ aplId: $checkId");
+                                continue;
                             }
                              $this->cashManager->updateCashDocCheckStatus($cashDoc, CashDoc::CHECK_FALL);
                             
