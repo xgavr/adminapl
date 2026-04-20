@@ -46,6 +46,11 @@ class MarkRepository extends EntityRepository{
                 }    
             }            
             if (!empty($params['markStatus'])){
+                if ($params['markStatus'] === -22){
+                    $queryBuilder->andWhere('m.markStatus != :markStatus')
+                        ->setParameter('markStatus', Mark::MARK_RETIRED)
+                     ;
+                }    
                 if ($params['markStatus'] > 0){
                     $queryBuilder->andWhere('m.markStatus = :markStatus')
                         ->setParameter('markStatus', $params['markStatus'])
@@ -120,6 +125,11 @@ class MarkRepository extends EntityRepository{
                 }    
             }                        
             if (!empty($params['markStatus'])){
+                if ($params['markStatus'] === -22){
+                    $queryBuilder->andWhere('m.markStatus != :markStatus')
+                        ->setParameter('markStatus', Mark::MARK_RETIRED)
+                     ;
+                }    
                 if ($params['markStatus'] > 0){
                     $queryBuilder->andWhere('m.markStatus = :markStatus')
                         ->setParameter('markStatus', $params['markStatus'])
