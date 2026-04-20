@@ -52,12 +52,21 @@ class MarkRepository extends EntityRepository{
                      ;
                 }    
             }
+            if (!empty($params['status'])){
+                if ($params['status'] > 0){
+                    $queryBuilder->andWhere('m.status = :status')
+                        ->setParameter('status', $params['status'])
+                     ;
+                }    
+            }
             
             if (!empty($params['search'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['search']);
 
                 if ($q){
+                    $queryBuilder->resetDQLPart('wghere');
+                    
                     $orX = $queryBuilder->expr()->orX();
                     
                     $orX->add($queryBuilder->expr()->eq('g.code', ':query'));
@@ -117,12 +126,21 @@ class MarkRepository extends EntityRepository{
                      ;
                 }    
             }      
+            if (!empty($params['status'])){
+                if ($params['status'] > 0){
+                    $queryBuilder->andWhere('m.status = :status')
+                        ->setParameter('status', $params['status'])
+                     ;
+                }    
+            }
             
             if (!empty($params['search'])){                
                 $codeFilter = new ArticleCode();
                 $q = $codeFilter->filter($params['search']);
 
                 if ($q){
+                    $queryBuilder->resetDQLPart('wghere');
+                    
                     $orX = $queryBuilder->expr()->orX();
                     
                     $orX->add($queryBuilder->expr()->eq('g.code', ':query'));
