@@ -186,6 +186,7 @@ class MarkRepository extends EntityRepository{
         $orX = $queryBuilder->expr()->orX();
         $orX->add($queryBuilder->expr()->eq('m.markStatus', Mark::MARK_UNKNOWN));
         $orX->add($queryBuilder->expr()->eq('m.markStatus', Mark::MARK_ACTIVE));
+        $orX->add($queryBuilder->expr()->gte('m.updated', date('Y-m-d', strtotime('-1 day'))));
 
         $queryBuilder->select('SUBSTRING(m.mark, 1, 31) as mark31')
             ->from(Mark::class, 'm')
