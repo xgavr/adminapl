@@ -243,6 +243,7 @@ class MarkManager
                         $mark->setMarkStatus(Mark::MARK_NOT_FOUND);
                     }
                     
+                    $mark->setUpdated(date('Y-m-d H:i:s')); 
                     $this->entityManager->persist($mark);
                 }        
             }
