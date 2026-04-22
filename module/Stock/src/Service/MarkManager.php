@@ -236,15 +236,17 @@ class MarkManager
                 if (!empty($value['cisInfo']['cis'])){
                     $mark = $this->entityManager->getRepository(Mark::class)
                             ->findMarkByMark31($value['cisInfo']['cis']);
-                
-                    if ($mark && !empty($value['cisInfo']['status'])){
-                        $mark->setMarkStatus(Mark::getRemoteMarkStatus($value['cisInfo']['status']));                        
-                    } else {
-                        $mark->setMarkStatus(Mark::MARK_NOT_FOUND);
-                    }
                     
-                    $mark->setUpdated(date('Y-m-d H:i:s')); 
-                    $this->entityManager->persist($mark);
+                    if ($mark){
+                        if ($mark && !empty($value['cisInfo']['status'])){
+                            $mark->setMarkStatus(Mark::getRemoteMarkStatus($value['cisInfo']['status']));                        
+                        } else {
+                            $mark->setMarkStatus(Mark::MARK_NOT_FOUND);
+                        }
+
+                        $mark->setUpdated(date('Y-m-d H:i:s')); 
+                        $this->entityManager->persist($mark);
+                    }
                 }        
             }
             
