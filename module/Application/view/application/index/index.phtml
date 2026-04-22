@@ -7,6 +7,51 @@
   <a href="/apl/show-ref">проверка</a>
 </div>
 
+<?php if ($this->access('bank.manage')): ?>
+    <div class="panel panel-success">
+        <div class="panel-heading">Банк</div>
+        <div class="panel-body">
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Выписка</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/bank/statement" target="_blank">Выписка</a>
+                                </li>
+                            </ol>
+                        </p>
+                        <p><a class="btn btn-success pull-right" href="/bank/statement">Перейти в выписку&raquo;</a></p>
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Платежки</h3>
+                    </div>
+                    <div class="panel-body">
+                        <p>
+                            <ol>
+                                <li>
+                                    Перейти на страницу <a href="/payment" target="_blank">Платежки</a>
+                                </li>
+                            </ol>
+                        </p>
+                        <p><a class="btn btn-success pull-right" href="/payment">Перейти в платежки&raquo;</a></p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+
 <?php if ($this->access('member.manage') || $this->access('user.manage')): ?>
     <div class="panel panel-success">
         <div class="panel-heading">Пользователи</div>
