@@ -238,7 +238,7 @@ class MarkManager
                             ->findMarkByMark31($value['cisInfo']['cis']);
                     
                     if ($mark){
-                        if ($mark && !empty($value['cisInfo']['status'])){
+                        if (!empty($value['cisInfo']['status'])){
                             $mark->setMarkStatus(Mark::getRemoteMarkStatus($value['cisInfo']['status']));                        
                         } else {
                             $mark->setMarkStatus(Mark::MARK_NOT_FOUND);
