@@ -628,7 +628,8 @@ class AplCashService {
         
         $conn = ftp_connect($settings['till_ftp']);
         if (!$conn || !ftp_login($conn, $settings['till_ftp_login'], $settings['till_ftp_passw'])) {
-            throw new \Exception("Не удалось подключиться к FTP кассы Перово");
+            //throw new \Exception("Не удалось подключиться к FTP кассы Перово");
+            return;
         }
         
         ftp_pasv($conn, true); // Включаем пассивный режим
