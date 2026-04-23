@@ -246,11 +246,11 @@ class MarkManager
 
                         $mark->setUpdated(date('Y-m-d H:i:s')); 
                         $this->entityManager->persist($mark);
+                        $this->entityManager->flush();
                     }
                 }        
             }
             
-            $this->entityManager->flush();
         }
         
         //echo $resp;
