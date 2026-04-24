@@ -503,6 +503,56 @@ class TillController extends AbstractActionController
             'statement' => $statement,
             'order' => $order,
         ]);        
+    }    
+
+    /**
+     * 
+     * @return ViewModel|JsonModel
+     */
+    public function cachCheckPrAction()
+    {
+
+        $orderId = (int)$this->params()->fromQuery('order', -1);
+         
+        
+        if ($orderId > 0){
+            $order = $this->entityManager->getRepository(Order::class)
+                    ->find($orderId);
+        } 
+
+        $cashPr = $this->entityManager->getRepository(Cash::class)
+                ->findOneBy(['payment' => Cash::PAYMENT_CHECK_PR]);
+        
+        $checkPr = null;
+        if ($order){
+            $checkPr = $this->entityManager->getRepository(CashDoc::class)
+                    ->findOneBy(['cash' => $cashPr->getId(), 'order' => $order->getId()]);
+        }
+        
+        if ($cashPr && empty($checkPr)){
+            
+            $company = $this->entityManager->getRepository(Office::class)
+                    ->findDefaultCompany($cashPr->getOffice(), date('Y-m-d')); 
+            
+            $data = [
+                'amount' => 0,
+                'cash' => $cashPr,
+                'checkStatus' => CashDoc::CHECK_ACTIVE,
+                'comment' => 'Полный расчет',
+                'company' => $company,
+                'contact' => $order->getContact(),
+                'dateOper' => date('Y-m-d'),
+                'kind' => CashDoc::KIND_IN_PAYMENT_CLIENT,
+                'order' => $order,
+                'status' => CashDoc::STATUS_ACTIVE,
+            ];
+            
+            $cashDoc = $this->cashManager->addCashDoc($data);
+        }
+        
+        return new JsonModel(
+           ['result' => 'ok']
+        );        
     }        
     
     public function editCashOutAction()
