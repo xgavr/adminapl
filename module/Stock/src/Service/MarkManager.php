@@ -239,14 +239,18 @@ class MarkManager
                     
                     if ($mark){
                         if (!empty($value['cisInfo']['status'])){
-                            $mark->setMarkStatus(Mark::getRemoteMarkStatus($value['cisInfo']['status']));                        
+
+                            $newMark = Mark::getRemoteMarkStatus($value['cisInfo']['status']);
                         } else {
-                            $mark->setMarkStatus(Mark::MARK_NOT_FOUND);
+ 
+                            $newMark = Mark::MARK_NOT_FOUND;
                         }
 
-                        $mark->setUpdated(date('Y-m-d H:i:s')); 
-                        $this->entityManager->persist($mark);
-                        $this->entityManager->flush();
+
+                        $this->entityManager->getConnection()->update('marks', [
+                            'mark_status' => $newMark,
+                            'date_updated' => date('Y-m-d H:i:s'),
+                        ], ['id' => $mark->getId()]);
                     }
                 }        
             }
