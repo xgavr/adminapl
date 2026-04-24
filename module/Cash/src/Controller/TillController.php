@@ -539,7 +539,6 @@ class TillController extends AbstractActionController
                 $data = [
                     'amount' => 0,
                     'cash' => $cashPr,
-                    'checkStatus' => CashDoc::CHECK_ACTIVE,
                     'comment' => 'Полный расчет',
                     'company' => $company,
                     'contact' => $order->getContact(),
