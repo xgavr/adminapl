@@ -130,7 +130,7 @@ $tag = md5(time());
                 </button>                
                 <button <?= $cashDocDisabled?> class="btn btn-default btn-sm check-pr-in" type="button" 
                     title="Чек ПР">
-                    <span class="glyphicon glyphicon-rub" aria-hidden="true"></span> ЧПР
+                    ЧПР
                 </button>                
                 <button <?= $cashDocDisabled?> class="btn btn-info btn-sm cash-out-modal-show" type="button" 
                     modal-url="/till/edit-cash-out?order=<?= $order->getId()?>" title="Списание из кассы">
@@ -370,14 +370,16 @@ $tag = md5(time());
         });        
         
         $(document).on('click', '.check-pr-in', function (e) {
-            var dialog = bootbox.dialog({
-                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                closeButton: true
-            });        
-            $.get( '/till/cash-check-pr/<?= $order->getId()?>', function( data ) {        
-                $('#cashdoctable').bootstrapTable('refresh');
-                dialog.modal('hide');        
-            });    
+            if (confirm('Сделать Чек полного расчета?')){
+                var dialog = bootbox.dialog({
+                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                    closeButton: true
+                });        
+                $.get( '/till/cash-check-pr/<?= $order->getId()?>', function( data ) {        
+                    $('#cashdoctable').bootstrapTable('refresh');
+                    dialog.modal('hide');        
+                });    
+            }
         });            
     });    
 
