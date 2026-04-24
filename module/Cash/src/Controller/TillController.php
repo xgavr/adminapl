@@ -509,7 +509,7 @@ class TillController extends AbstractActionController
      * 
      * @return ViewModel|JsonModel
      */
-    public function cachCheckPrAction()
+    public function cashCheckPrAction()
     {
 
         $orderId = (int)$this->params()->fromQuery('order', -1);
