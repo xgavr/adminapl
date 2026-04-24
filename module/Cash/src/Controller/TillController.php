@@ -512,7 +512,7 @@ class TillController extends AbstractActionController
     public function cashCheckPrAction()
     {
 
-        $orderId = (int)$this->params()->fromRoute('order', -1);
+        $orderId = (int)$this->params()->fromRoute('id', -1);
          
         
         if ($orderId > 0){
