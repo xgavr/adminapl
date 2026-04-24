@@ -73,7 +73,7 @@ $this->pageBreadcrumbs()->setItems([
                      <th data-field="created" data-sortable="true" data-width="10" data-formatter="dateFormatter">Создан</th>             
                      <th data-field="updated" data-sortable="true" data-width="10" data-formatter="dateFormatter">Обновление</th>             
                      <th data-field="order" data-sortable="false" data-width="10" data-formatter="orderFormatter">Заказ</th>             
-                     <th data-field="good" data-sortable="true" data-width="20" data-formatter="markLinkFormatter">Артикул</th>             
+                     <th data-field="good" data-sortable="true" data-width="20" data-formatter="markLinkFormatter">Товар (АплИд)</th>             
                      <!--<th data-field="markGroup" data-sortable="false">Группа ЧЗ</th>-->             
                      <th data-field="mark" data-sortable="false" data-formatter="markFormatter">КM</th>
                      <th data-field="mark" data-sortable="false">Код со сканера</th>
@@ -201,7 +201,7 @@ $this->pageBreadcrumbs()->setItems([
         return [
             '<nobr>',
             '<a href="/goods/view/' + row.good.id + '" class="btn btn-link btn-xs" title="Перейти на страницу товара" target="_blank">',
-            '<span class="glyphicon glyphicon-link"></span></a>'+row.good.code,
+            '<span class="glyphicon glyphicon-link"></span></a>'+row.good.aplId,
             '</nobr>'
         ].join(''); 
     }    
