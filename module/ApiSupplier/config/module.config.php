@@ -41,6 +41,7 @@ return [
     'service_manager' => [
         'factories' => [
             Service\ApiSupplierManager::class => Service\Factory\ApiSupplierManagerFactory::class,
+            Service\AutoEuroManager::class => Service\Factory\AutoEuroManagerFactory::class,
             Service\MikadoManager::class => Service\Factory\MikadoManagerFactory::class,
             Service\MskManager::class => Service\Factory\MskManagerFactory::class,
         ],
