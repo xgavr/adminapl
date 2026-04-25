@@ -10,7 +10,7 @@ namespace Application\Controller\Factory;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Application\Controller\SapiController;
-use Application\Service\SupplierApi\AutoEuroManager;
+use ApiSupplier\Service\AutoEuroManager;
 use Admin\Service\AdminManager;
 
 
