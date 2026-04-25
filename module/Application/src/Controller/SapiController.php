@@ -31,7 +31,7 @@ class SapiController extends AbstractActionController
     
     /**
      * Менеджер товаров.
-     * @var \Application\Service\SupplierApi\AutoEuroManager 
+     * @var \ApiSupplier\Service\AutoEuroManager 
      */
     private $autoEuroManager;          
     
