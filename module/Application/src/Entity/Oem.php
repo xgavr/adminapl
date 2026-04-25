@@ -32,6 +32,7 @@ class Oem {
     const SOURCE_IID = 8; //Номер у поставщика
     const SOURCE_EXT_SOURCE = 9; //Внешние источники
     const SOURCE_EAN = 10; //штрихкод
+    const SOURCE_INTR = 11; // интернет
     
     const RATING_UPDATED      = 1; // Рейтинг обновлен.
     const RATING_FOR_UPDATE   = 2; // Рейтинг не обновлен.
@@ -335,6 +336,7 @@ class Oem {
             self::SOURCE_TD => self::SOURCE_TD_NAME,
             self::SOURCE_SUP => 'Поставщик',
             self::SOURCE_MAN => 'Введено вручную',
+            self::SOURCE_INTR => 'Авто интернет',
             self::SOURCE_CROSS => 'Кросс лист',
             self::SOURCE_MY_CODE => 'Свой артикул',
             self::SOURCE_IID => 'Номер у поставщика',
