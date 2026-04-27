@@ -137,8 +137,6 @@ class OemRepository  extends EntityRepository{
                             ], 
                             ['id' => $oem->getId()]);
 
-                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
-
                 } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
                     //заменить источник если новый источник текдок
                     $this->getEntityManager()->getConnection()->update('oem', 
@@ -178,6 +176,8 @@ class OemRepository  extends EntityRepository{
                 }
             }    
         }
+        
+        $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
         
         return $oem;
     }
