@@ -582,7 +582,11 @@ class Payment {
      */
     public function getTaxInfoStatus() 
     {
-        return ($this->taxInfoStatus) ? $this->taxInfoStatus:self::TAX_STATUS_01;
+        if ($this->getPaymentType() === self::PAYMENT_TYPE_TAX){
+            return ($this->taxInfoStatus) ? $this->taxInfoStatus:self::TAX_STATUS_01;
+        }
+        
+        return;
     }
     
     /**
