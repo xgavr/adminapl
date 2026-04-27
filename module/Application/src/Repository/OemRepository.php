@@ -149,6 +149,7 @@ class OemRepository  extends EntityRepository{
                                 'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                             ], 
                             ['id' => $oem->getId()]);
+                    
                 } elseif ($source == Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN){
                     //заменить источник если новый источник кросс и старый источник не текдок, не ручной
                     $this->getEntityManager()->getConnection()->update('oem', 
@@ -161,7 +162,21 @@ class OemRepository  extends EntityRepository{
                                 'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                             ], 
                             ['id' => $oem->getId()]);
-                } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_CROSS){
+                    
+                } elseif ($source == Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR){
+                    //заменить источник если новый источник кросс и старый источник не текдок, не ручной
+                    $this->getEntityManager()->getConnection()->update('oem', 
+                            [
+                                'oe' => $oe, 
+                                'oe_number' => $oems['oeNumber'],
+                                'brand_name' => $brandName,
+                                'status' => Oem::STATUS_ACTIVE,                            
+                                'source' => Oem::SOURCE_INTR,
+                                'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                            ], 
+                            ['id' => $oem->getId()]);
+                    
+                } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_CROSS){
                     //заменить источник если новый источник кросс и старый источник не текдок, не ручной
                     $this->getEntityManager()->getConnection()->update('oem', 
                             [
