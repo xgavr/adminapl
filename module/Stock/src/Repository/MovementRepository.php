@@ -654,7 +654,7 @@ class MovementRepository extends EntityRepository{
                     'reserve' => $reserveRest,
                     'delivery' => $deliveryRest,
                     'vozvrat' => $vozvratRest,
-                    'base_stamp' => $baseStamp,
+                    //'base_stamp' => $baseStamp,
                 ];
 
                 $crit = array_filter([
@@ -677,7 +677,7 @@ class MovementRepository extends EntityRepository{
                         'reserve' => $reserveRest,
                         'delivery' => $deliveryRest,
                         'vozvrat' => $vozvratRest,
-                        'base_stamp' => $baseStamp,
+                        //'base_stamp' => $baseStamp,
                     ]);
                 }
             }    
