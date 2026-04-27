@@ -654,8 +654,11 @@ class MovementRepository extends EntityRepository{
                     'reserve' => $reserveRest,
                     'delivery' => $deliveryRest,
                     'vozvrat' => $vozvratRest,
-                    //'base_stamp' => $baseStamp,
                 ];
+                
+                if (!empty($baseStamp)){
+                    $upd['base_stamp'] = $baseStamp;
+                }
 
                 $crit = array_filter([
                     'good' => $goodId,
@@ -677,7 +680,7 @@ class MovementRepository extends EntityRepository{
                         'reserve' => $reserveRest,
                         'delivery' => $deliveryRest,
                         'vozvrat' => $vozvratRest,
-                        //'base_stamp' => $baseStamp,
+                        'base_stamp' => $baseStamp,
                     ]);
                 }
             }    
