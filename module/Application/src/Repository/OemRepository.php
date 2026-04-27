@@ -114,7 +114,7 @@ class OemRepository  extends EntityRepository{
             $inserted = $this->getEntityManager()->getRepository(Goods::class)
                     ->addGoodOem($data);
             
-            $upd = ['status_oem_ex' => Goods::OEM_EX_NEW];
+            $upd = ['status_oem_ex' => Goods::OEM_EX_NEW, 'fasade_ex' => Goods::FASADE_EX_NEW];
             
             if ($inserted > 0){
                 $upd['check_oem'] = Goods::CHECK_OEM_NO;
@@ -137,6 +137,8 @@ class OemRepository  extends EntityRepository{
                             ], 
                             ['id' => $oem->getId()]);
 
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+                    
                 } elseif ($source == Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_TD){
                     //заменить источник если новый источник текдок
                     $this->getEntityManager()->getConnection()->update('oem', 
@@ -149,6 +151,8 @@ class OemRepository  extends EntityRepository{
                                 'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                             ], 
                             ['id' => $oem->getId()]);
+                    
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
                     
                 } elseif ($source == Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN){
                     //заменить источник если новый источник кросс и старый источник не текдок, не ручной
@@ -163,6 +167,8 @@ class OemRepository  extends EntityRepository{
                             ], 
                             ['id' => $oem->getId()]);
                     
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+                    
                 } elseif ($source == Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR){
                     //заменить источник если новый источник кросс и старый источник не текдок, не ручной
                     $this->getEntityManager()->getConnection()->update('oem', 
@@ -176,6 +182,8 @@ class OemRepository  extends EntityRepository{
                             ], 
                             ['id' => $oem->getId()]);
                     
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+                    
                 } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_CROSS){
                     //заменить источник если новый источник кросс и старый источник не текдок, не ручной
                     $this->getEntityManager()->getConnection()->update('oem', 
@@ -188,11 +196,12 @@ class OemRepository  extends EntityRepository{
                                 'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                             ], 
                             ['id' => $oem->getId()]);
+    
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+        
                 }
             }    
         }
-        
-        $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
         
         return $oem;
     }
