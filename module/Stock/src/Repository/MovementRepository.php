@@ -612,9 +612,10 @@ class MovementRepository extends EntityRepository{
     /**
      * Обновить актуальные остатки
      * @param integer $goodId
+     * @param float $baseStamp
      * @return null
      */
-    public function updateGoodBalance($goodId) 
+    public function updateGoodBalance($goodId, $baseStamp = null) 
     {
         $entityManager = $this->getEntityManager();
         $connection = $entityManager->getConnection();
@@ -653,6 +654,7 @@ class MovementRepository extends EntityRepository{
                     'reserve' => $reserveRest,
                     'delivery' => $deliveryRest,
                     'vozvrat' => $vozvratRest,
+                    'base_stamp' => $baseStamp,
                 ];
 
                 $crit = array_filter([
@@ -675,6 +677,7 @@ class MovementRepository extends EntityRepository{
                         'reserve' => $reserveRest,
                         'delivery' => $deliveryRest,
                         'vozvrat' => $vozvratRest,
+                        'base_stamp' => $baseStamp,
                     ]);
                 }
             }    
