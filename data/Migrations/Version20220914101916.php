@@ -32,8 +32,8 @@ final class Version20220914101916 extends AbstractMigration
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_office_id_office_id_fk');
         $table->addForeignKeyConstraint('legal', ['company_id'], ['id'], 
                 ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_company_id_legal_id_fk');
-        $table->addForeignKeyConstraint('register', ['base_stamp'], ['doc_stamp'], 
-                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_base_stamp_register_doc_stamp_fk');
+//        $table->addForeignKeyConstraint('register', ['base_stamp'], ['doc_stamp'], 
+//                ['onDelete'=>'CASCADE', 'onUpdate'=>'CASCADE'], 'gd_base_stamp_register_doc_stamp_fk');
         $table->addOption('engine' , 'InnoDB');        
 
     }
