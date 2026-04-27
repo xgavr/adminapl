@@ -204,7 +204,7 @@ class PtuManager
             }  
             
             $this->entityManager->getRepository(Movement::class)
-                    ->updateGoodBalance($ptuGood->getGood()->getId());
+                    ->updateGoodBalance($ptuGood->getGood()->getId(), $docStamp);
         }    
         
         return;
