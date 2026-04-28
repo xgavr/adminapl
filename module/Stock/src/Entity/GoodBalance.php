@@ -61,7 +61,8 @@ class GoodBalance {
     protected $price;
     
     /** 
-     * @ORM\Column(name="base_stamp")  
+     * @ORM\Column(name="base_stamp")
+     *   
      */
     protected $baseStamp;
 
