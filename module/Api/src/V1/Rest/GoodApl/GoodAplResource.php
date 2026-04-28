@@ -150,6 +150,7 @@ class GoodAplResource extends AbstractResourceListener
                 'delivery' => $rest['delivery'],
                 'vozvrat' => $rest['vozvrat'],
                 'available' => $rest['available'],                                       
+                'baseStamp' => $rest['baseStamp'],                                       
             ];
         }                        
         
