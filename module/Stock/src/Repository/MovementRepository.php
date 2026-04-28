@@ -656,7 +656,7 @@ class MovementRepository extends EntityRepository{
                     'vozvrat' => $vozvratRest,
                 ];
                 
-                if (!empty($baseStamp)){
+                if ($baseStamp > 1){
                     $upd['base_stamp'] = $baseStamp;
                 }
 
