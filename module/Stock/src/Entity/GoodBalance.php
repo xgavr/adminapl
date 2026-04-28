@@ -61,9 +61,15 @@ class GoodBalance {
     protected $price;
     
     /** 
+     * @ORM\Column(name="bas_stamp")  
+     */
+    protected $baseStamp;
+
+    /** 
      * @ORM\Column(name="status")  
      */
     protected $status;
+
 
     /**
      * @ORM\ManyToOne(targetEntity="Application\Entity\Goods", inversedBy="goodBalances") 
@@ -83,11 +89,6 @@ class GoodBalance {
      */
     private $company;
     
-    /**
-     * @ORM\ManyToOne(targetEntity="Stock\Entity\Register", inversedBy="goodBalances") 
-     * @ORM\JoinColumn(name="base_stamp", referencedColumnName="id")
-     */
-    private $base;
 
     public function __construct() {
     }
@@ -259,6 +260,10 @@ class GoodBalance {
     public function getBase() 
     {
         return $this->base;
+    }
+    
+    public function setBase($base) {
+        $this->base = $base;
     }
 
     /**
