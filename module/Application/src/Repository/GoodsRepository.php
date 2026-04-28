@@ -1669,7 +1669,7 @@ class GoodsRepository extends EntityRepository
                 ->addSelect('p.id as producerId, p.name as producerName')
                 ->addSelect('off.name as officeName, off.id as officeId, off.aplId as officeAplId')        
                 ->addSelect('gb.rest, gb.price, gb.reserve, gb.delivery, gb.vozvrat, gb.rest-gb.reserve-gb.delivery-gb.vozvrat as available')        
-                ->addSelect('gb.baseStamp as baseStamp')
+                ->addSelect('gb.baseStamp as ptuStamp')
                 ->addSelect('tg.name as tgName')
                 ->addSelect('gs.rest as aplRest')
                 ->addSelect('c.name as companyName')
