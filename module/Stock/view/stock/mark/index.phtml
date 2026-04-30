@@ -57,7 +57,7 @@ $this->pageBreadcrumbs()->setItems([
             data-page-list="[5, 10, 20, 50]"
             data-toolbar="#toolbar"
             data-show-refresh="true"
-            data-query-params="queryParams"
+            data-query-params="markQueryParams"
             data-unique-id="id"
             data-sort-name="aplId"
             data-sort-order="desc"  
@@ -152,7 +152,7 @@ $this->pageBreadcrumbs()->setItems([
                         
     });    
     
-    function queryParams(params) {
+    function markQueryParams(params) {
         $('#toolbar').find('input[name]').each(function () {
             params[$(this).attr('name')] = $(this).val();
         });
