@@ -128,7 +128,7 @@ $tag = md5(time());
                     modal-url="/till/edit-cash-in?order=<?= $order->getId()?>" title="Поступление в кассу">
                     <span class="glyphicon glyphicon-rub" aria-hidden="true"></span> +
                 </button>                
-                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm check-pr-in" type="button" 
+                <button <?= $cashDocDisabled?> class="btn btn-default btn-sm check-pr-in--<?= $order->getId()?>" type="button" 
                     title="Чек ПР">
                     ЧПР
                 </button>                
@@ -369,7 +369,7 @@ $tag = md5(time());
             });    
         });        
         
-        $(document).on('click', '.check-pr-in', function (e) {
+        $(document).on('click', '.check-pr-in--<?= $order->getId()?>', function (e) {
             if (confirm('Сделать Чек полного расчета?')){
                 var dialog = bootbox.dialog({
                     message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
