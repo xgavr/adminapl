@@ -248,6 +248,18 @@ class GoodsManager
             return false;
         }
         
+        $oemsCount = $this->entityManager->getRepository(Oem::class)
+                ->count(['good' => $good->getId(), 'source' => Oem::SOURCE_MAN]);
+        if ($oemsCount){
+            return false;
+        }
+        
+        $oemsCount = $this->entityManager->getRepository(Oem::class)
+                ->count(['good' => $good->getId(), 'source' => Oem::SOURCE_INTR]);
+        if ($oemsCount){
+            return false;
+        }
+        
         $movementsCount = $this->entityManager->getRepository(Movement::class)
                 ->count(['good' => $good->getId()]);
         if ($movementsCount){
