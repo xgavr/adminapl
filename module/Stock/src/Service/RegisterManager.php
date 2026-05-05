@@ -685,7 +685,7 @@ class RegisterManager
         
         $this->changeGood($good, $newGood);
         
-        //movements
+        //movements в закрытых периодах
         $this->entityManager->getConnection()->update('movement', ['good_id' => $newGood->getId()], ['good_id' => $good->getId()]);
                
         return;
