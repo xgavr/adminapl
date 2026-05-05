@@ -685,6 +685,9 @@ class RegisterManager
         
         $this->changeGood($good, $newGood);
         
+        //movements
+        $this->entityManager->getConnection()->update('movement', ['good_id' => $newGood->getId()], ['good_id' => $good->getId()]);
+               
         return;
     }
     
