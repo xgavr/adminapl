@@ -297,10 +297,14 @@
                                 <option value="<?= $key?>" <?= ($key === Oem::SOURCE_EXT_SOURCE) ? 'selected':'' ?>><?= $value?></option>
                             <?php endforeach;?>
                         </select>
-                        <button value="/goods/laximo-find-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
+                        <button value="/oem/oems-from-json/<?= $goods->getId()?>" class="btn btn-default oem-from-json"
+                                title="Загрузить номера из Json" data-table="oemTable">
+                            <span class="glyphicon glyphicon-import" >Json</span>
+                        </button>                             
+<!--                        <button value="/goods/laximo-find-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
                                 title="Загрузить номера из ТекДока" data-table="oemTable">
                             <span class="glyphicon glyphicon-import" >Laximo</span>
-                        </button>                             
+                        </button>                             -->
                         <button value="/goods/good-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
                                 title="Загрузить номера из ТекДока" data-table="oemTable" disabled>
                             <span class="glyphicon glyphicon-import" ></span>
@@ -818,6 +822,26 @@
                 });
             }); 
             return;            
+        });
+        
+        $('.oem-from-json').click(function (){
+            bootbox.prompt({
+                title: 'Вставьте промпт в ИИ и введите ответ в формате json',
+                message: "<h5>Промпт:</h5><p>Сделай строку в формате JSON с оригинальными номерами для <?= $goods->getCode()?> <?= $goods->getProducer()->getName()?> \n\
+    без аналогов в виде [{oem: xxxx, 'brand': 'xxxx'}], где oem - оригинальный номер, brand - производитель. Если номеров нет, то выводи пустой массив</p>",
+                inputType: 'textarea',
+                value: '',        
+                callback: function (result) {
+//                    console.log(result);              
+                    if (result){
+                        $.post('/oem/oems-from-json/<?= $goods->getId()?>', {jsonStr: result}, function( data ) {
+                            if (data == 'ok'){
+                                $('#oemTable').bootstrapTable('refresh');
+                            }
+                        });    
+                    };    
+                }
+            });          
         });
         
         $('.update-token-group').click(function (){
