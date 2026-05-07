@@ -21,9 +21,8 @@
 <div class="row">
     <div class="col-md-3">
         <h3>
-            <?= $goods->getNameShort() ?>
-            <?= $goods->getCode()?>
-            <?= $goods->getProducer()->getName()?>
+            <?php $search = $goods->getNameShort().' '.$goods->getCode().' '.$goods->getProducer()->getName()?>
+            <?= $search?>
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
             <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
@@ -34,6 +33,7 @@
                 </button>
             </sup>    
         </h3>
+        <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в хроме</a></h5>
         <h5>
             Цена: <?= $goods->getPrice(); ?>
             <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
@@ -583,6 +583,8 @@
                     data-response-handler="responseHandler"
                     data-classes = "table table-bordered table-hover table-condensed"
                     data-silent-sort ="true"
+                    data-sort-name="saleCount"
+                    data-sort-order="desc"                    
                     >
                     <thead>
                         <tr>
@@ -590,8 +592,9 @@
                              <th data-field="tdId" data-sortable="true" data-type="numeric">TD</th>
                              <th data-field="aplId" data-sortable="true" data-type="numeric">APL</th>-->
                              <th data-field="fullName" data-sortable="true" data-formatter="carFormatter">Машина</th>
-                             <th data-field="saleCount" data-sortable="true">Продаж</th>
-                             <th data-field="goodCount" data-sortable="true">Товаров</th>
+                             <th data-field="saleCount" data-sortable="true" data-width="5">Продаж</th>
+                             <th data-field="saleMonth" data-sortable="true" data-width="5">Продаж М</th>
+                             <th data-field="goodCount" data-sortable="true" data-width="5">Товаров</th>
                          </tr>                
                     </thead>
                 </table>
