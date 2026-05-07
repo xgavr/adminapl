@@ -358,4 +358,32 @@ class OemController extends AbstractActionController
         ]);           
     }    
     
+    /**
+     * 
+     * 
+     */
+    public function oemsFromJsonAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        $jsonStr = $this->params()->fromPost('jsonStr');
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId); 
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }       
+        
+        //Проверка json
+        $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
+//        var_dump($json); exit;        
+        
+        $this->oemManager->fromJsonToOem($good, $jsonStr);
+        
+        return new JsonModel([
+            'ok'
+        ]);           
+    }    
+    
 }
