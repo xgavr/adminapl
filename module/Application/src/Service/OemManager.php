@@ -270,4 +270,26 @@ class OemManager
         return $this->entityManager->getRepository(OemRaw::class)
                 ->randRawpriceBy($params);
     }   
+    
+    /**
+     * Загрузить строку json с номерами
+     *  [{oem: xxxx, 'brand': 'xxxx'}]
+     * 
+     * @param Goods $good
+     * @param str $jsonStr
+     */
+    public function fromJsonToOem($good, $jsonStr)
+    {
+        $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
+        
+        foreach ($json as $oem){            
+            $this->addOem($good, [
+                'source' => Oem::SOURCE_MAN,
+                'oeNumber' => $oem['oem'],
+                'brandName' => $oem['brand'],
+            ]);
+        }
+        
+        return;
+    }
 }
