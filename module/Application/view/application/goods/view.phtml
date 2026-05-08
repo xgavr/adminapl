@@ -825,11 +825,21 @@
         });
         
         $('.oem-from-json').click(function (){
+            var message = "Сделай строку в формате JSON с оригинальными номерами для <?= $goods->getCode()?> <?= $goods->getProducer()->getName()?> \n\
+    без аналогов в виде [{oem: xxxx, 'brand': 'xxxx'}], где oem - оригинальный номер, brand - производитель. \n\
+    Если номеров нет, то выводи пустой массив. Ничего не выдумывай!"
+            
+            var $temp = $("<textarea>");
+            $("body").append($temp);
+            
+            $temp.val(message).select();
+            document.execCommand("copy");   
+            
+            $temp.remove();
+        
             bootbox.prompt({
                 title: 'Вставьте промпт в ИИ и введите ответ в формате json',
-                message: "<h5>Промпт:</h5><p>Сделай строку в формате JSON с оригинальными номерами для <?= $goods->getCode()?> <?= $goods->getProducer()->getName()?> \n\
-    без аналогов в виде [{oem: xxxx, 'brand': 'xxxx'}], где oem - оригинальный номер, brand - производитель. \n\
-    Если номеров нет, то выводи пустой массив. Ничего не выдумывай!</p>",
+                message: '<h5>Промпт:</h5><p>' + message + '</p>',
                 inputType: 'textarea',
                 value: '',    
                 rows: 20, 
