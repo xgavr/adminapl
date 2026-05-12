@@ -21,7 +21,7 @@
 <div class="row">
     <div class="col-md-3">
         <h3>
-            <?php $search = $goods->getNameShort().' '.$goods->getCode().' '.$goods->getProducer()->getName()?>
+            <?php $search = $goods->getCode().' '.$goods->getProducer()->getName() . ' '. $goods->getNameShort()?>
             <?= $search?>
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
             <sup>
