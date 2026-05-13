@@ -26,7 +26,13 @@ class MarketManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $ftpManager = $container->get(FtpManager::class);
         
+        if (!file_exists('./config/development.config.php')){ //если не отладка на локальной машине
+            $cache  = $container->get('default_cache');
+        } else {    
+            $cache = $container->get('FilesystemCache');
+        }         
+        
         // Инстанцируем сервис и внедряем зависимости.
-        return new MarketManager($entityManager, $ftpManager);
+        return new MarketManager($entityManager, $ftpManager, $cache);
     }
 }
