@@ -57,12 +57,19 @@ class MarketManager
      * @var \Admin\Service\FtpManager
      */
     private $ftpManager;    
+    
+    /**
+     * Filesystem cache.
+     * @var \Laminas\Cache\Storage\StorageInterface
+     */
+    private $cache;     
   
     // Конструктор, используемый для внедрения зависимостей в сервис.
-    public function __construct($entityManager, $ftpManager)
+    public function __construct($entityManager, $ftpManager, $cache)
     {
         $this->entityManager = $entityManager;
         $this->ftpManager = $ftpManager;
+        $this->cache = $cache;
         
         if (!file_exists(self::MARKET_FOLDER)){
             mkdir(self::MARKET_FOLDER);
@@ -390,6 +397,40 @@ class MarketManager
     }
     
     /**
+     * Получить картинки товара new
+     * @param array $images
+     * @param MarketPriceSetting $market
+     * @return array 
+     */
+    private function imagesNew($images, $market)
+    {
+        $imageList = [];
+        if (!empty($market->getImageCount())){            
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
+                $images = $this->entityManager->getRepository(Images::class)
+                        ->arrayGoodImages($good['id'], ['similar' => Images::SIMILAR_MATCH, 'limit' => $market->getImageCountOrNull()]);
+            } else {
+                $images = $this->entityManager->getRepository(Images::class)
+                        ->arrayGoodImages($good['id'], ['limit' => $market->getImageCountOrNull()]);                
+            }
+            
+            if ($market->getImageCountOrNull() > 0){
+                $imageList = array_slice($images, 0, $market->getImageCountOrNull());
+            } else {
+                $imageList = $images;
+            }
+
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH && count($imageList) == 0){
+                return false;
+            }
+            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_SIMILAR && count($imageList) == 0){
+                return false;
+            }
+        }    
+        return $imageList;        
+    }
+    
+    /**
      * Получить лучшую поставку
      * @param array $goodSupplier
      * @param Region $region
@@ -527,6 +568,43 @@ class MarketManager
     }
     
     /**
+     * текущие ссылки для прайсов
+     * @param Good $good
+     */
+    private function aplLinks($good)
+    {
+        $cacheKey = '1_good_links_' . $good->getId();
+        
+        $result = $this->cache->getItem($cacheKey);
+        
+        if (empty($result)){
+            
+            try{
+                $data = json_decode(file_get_contents("https://autopartslist.ru/product/{$good->getAplId()}/apl-info"), \Laminas\Json\Json::TYPE_ARRAY);
+            } catch(Throwable $e) {
+                var_dump($e->getMessage());
+                $data = [];
+            }
+                                        
+            if (!empty($data['slug'])){
+                $result['url'] = "https://autopartslist.ru/product/".$data['slug'];
+            }
+            
+            if (!empty($data['images'])){
+                foreach($data['images'] as $img){
+//                    $result['images'][] = "https://autopartslist.ru/storage/".$img;
+                    $result['images'][] = $img;
+                }
+            }
+            
+            $this->cache->setItem($cacheKey, $result);
+            
+        }
+        
+        return $result;
+    }
+    
+    /**
      * Данные для прайса
      * @param MarketPriceSetting $market
      * @param integer $offset
@@ -558,12 +636,6 @@ class MarketManager
         foreach ($data as $good){
 //            var_dump($good); exit;
             $rows++;
-            if (!empty($market->getImageCount())){
-                $images = $this->images($good, $market);
-                if ($images === false){
-                    continue;
-                }
-            }    
 
     //                $rawprices = $this->rawprices($good, $market);
             $rawprices = $this->restShipping($good['id'], $market, $good['price']);
@@ -571,6 +643,19 @@ class MarketManager
             if ($rawprices['realrest'] == 0){
                 continue;
             }
+            
+            $links = $this->aplLinks($good);
+            
+            if (empty($links)){
+                continue;
+            }
+            
+            if (!empty($market->getImageCount())){
+                $images = $this->imagesNew($links['images'], $market);
+                if ($images === false){
+                    continue;
+                }
+            }    
 
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
             $sheet->setCellValue("A$k", ltrim($good['code'], '='));
@@ -652,18 +737,25 @@ class MarketManager
         foreach ($data as $good){
 //            var_dump($good); exit;
             $rows++;
-            $images = $this->images($good, $market);
+
+            $rawprices = $this->restShipping($good['id'], $market, $good['price']);
+            if ($rawprices['realrest'] == 0){
+                $restSkip++;
+                continue;
+            }            
+
+            $links = $this->aplLinks($good);
+            
+            if (empty($links)){
+                continue;
+            }
+                        
+            $images = $this->imagesNew($links['images'], $market);
             if ($images === false){
                 $imageSkip++;
                 continue;
             }
 //                $rawprices = $this->rawprices($good, $market);
-            $rawprices = $this->restShipping($good['id'], $market, $good['price']);
-            if ($rawprices['realrest'] == 0){
-                $restSkip++;
-                continue;
-            }
-
             $opts = Goods::optPrices($good['price'], $good['meanPrice']);
             $lot = $rawprices['lot'];
 
@@ -679,7 +771,8 @@ class MarketManager
             $offer = new OfferSimple();
             $offer->setId($good['aplId'])
                 ->setAvailable(true)
-                ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good['aplId'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
+//                ->setUrl(self::APL_BASE_URL.'/catalog/view/id/'.$good['aplId'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
+                ->setUrl($links['url'].'?utm_source='.$market->getId().'&utm_term='.$good['aplId'])
                 ->setPrice($market->getExtraPrice($opts, $lot, $good['marketPlacePrice']))
                 ->setCurrencyId('RUR')
                 ->setCategoryId($categoryId)
