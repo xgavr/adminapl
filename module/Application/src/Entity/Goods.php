@@ -517,7 +517,7 @@ class Goods {
             $title = $this->aplId;
         }
         if ($this->aplId){
-            return "<a href='https://autopartslist.ru/product/{$this->aplId}/apls-info' target=_blank>{$title}</a>";
+            return "<a href='https://autopartslist.ru/product/{$this->aplId}/apl-info' target=_blank>{$title}</a>";
         }
         return 'Товара нет сайте';
     }
