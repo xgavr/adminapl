@@ -573,7 +573,7 @@ class MarketManager
         if (empty($result)){
             
             try{
-                $data = json_decode(file_get_contents("https://autopartslist.ru/product/{$good['aplId']}/apl-info"), \Laminas\Json\Json::TYPE_ARRAY);
+                $data = json_decode(@file_get_contents("https://autopartslist.ru/product/{$good['aplId']}/apl-info"), \Laminas\Json\Json::TYPE_ARRAY);
             } catch(Throwable $e) {
                 var_dump($e->getMessage());
                 $data = [];
@@ -743,7 +743,7 @@ class MarketManager
                 continue;
             }
                         
-            $images = $this->imagesNew($links['images'], $market);
+            $images = $this->imagesNew($links['images'] ?? null, $market);
             if ($images === false){
                 $imageSkip++;
                 continue;
