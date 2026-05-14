@@ -405,7 +405,7 @@ class MarketManager
     private function imagesNew($images, $market)
     {
         $imageList = [];
-        if (!empty($market->getImageCount())){            
+        if (!empty($market->getImageCount()) && !empty($images)){            
             
             if ($market->getImageCountOrNull() > 0){
                 $imageList = array_slice($images, 0, $market->getImageCountOrNull());
