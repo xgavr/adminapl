@@ -406,13 +406,6 @@ class MarketManager
     {
         $imageList = [];
         if (!empty($market->getImageCount())){            
-            if ($market->getGoodSetting() == MarketPriceSetting::IMAGE_MATH){
-                $images = $this->entityManager->getRepository(Images::class)
-                        ->arrayGoodImages($good['id'], ['similar' => Images::SIMILAR_MATCH, 'limit' => $market->getImageCountOrNull()]);
-            } else {
-                $images = $this->entityManager->getRepository(Images::class)
-                        ->arrayGoodImages($good['id'], ['limit' => $market->getImageCountOrNull()]);                
-            }
             
             if ($market->getImageCountOrNull() > 0){
                 $imageList = array_slice($images, 0, $market->getImageCountOrNull());
