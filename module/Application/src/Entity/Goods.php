@@ -507,6 +507,22 @@ class Goods {
     }
     
     /**
+     * Ссылка на apl-info
+     * @param string $title
+     * @return string
+     */
+    public function getFasadeInfoLinkId($title = null) 
+    {
+        if (!$title){
+            $title = $this->aplId;
+        }
+        if ($this->aplId){
+            return "<a href='https://autopartslist.ru/product/{$this->aplId}/apls-info' target=_blank>{$title}</a>";
+        }
+        return 'Товара нет сайте';
+    }
+    
+    /**
      * Ссылка на Красивый сайт
      * @param string $title
      * @return string
