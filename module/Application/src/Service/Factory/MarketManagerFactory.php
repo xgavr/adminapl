@@ -27,7 +27,7 @@ class MarketManagerFactory  implements FactoryInterface
         $ftpManager = $container->get(FtpManager::class);
         
         if (!file_exists('./config/development.config.php')){ //если не отладка на локальной машине
-            $cache  = $container->get('default_cache');
+            $cache  = $container->get('default_wheek_cache');
         } else {    
             $cache = $container->get('FilesystemCache');
         }         
