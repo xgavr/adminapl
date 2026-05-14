@@ -566,6 +566,8 @@ class MarketManager
      */
     private function aplLinks($good)
     {
+        return []; //фид генерируем на красивом сайте
+        
         $cacheKey = '1_good_links_' . $good['id'];
         
         $result = $this->cache->getItem($cacheKey);
