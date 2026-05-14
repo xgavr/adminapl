@@ -569,18 +569,18 @@ class MarketManager
     
     /**
      * текущие ссылки для прайсов
-     * @param Good $good
+     * @param array $good
      */
     private function aplLinks($good)
     {
-        $cacheKey = '1_good_links_' . $good->getId();
+        $cacheKey = '1_good_links_' . $good['id'];
         
         $result = $this->cache->getItem($cacheKey);
         
         if (empty($result)){
             
             try{
-                $data = json_decode(file_get_contents("https://autopartslist.ru/product/{$good->getAplId()}/apl-info"), \Laminas\Json\Json::TYPE_ARRAY);
+                $data = json_decode(file_get_contents("https://autopartslist.ru/product/{$good['aplId']}/apl-info"), \Laminas\Json\Json::TYPE_ARRAY);
             } catch(Throwable $e) {
                 var_dump($e->getMessage());
                 $data = [];
