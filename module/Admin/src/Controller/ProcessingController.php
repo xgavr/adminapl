@@ -2147,6 +2147,7 @@ class ProcessingController extends AbstractActionController
     }
     
     /**
+     * отключено
      * Выгрузить прайсы для ТП
      * @return JsonModel
      */
@@ -2156,8 +2157,8 @@ class ProcessingController extends AbstractActionController
 
         if ($settings['market_unload'] == 1){
 
-            $markets = $this->marketManager->unloadNext(4);             
-            $this->ozonManager->updateMarkets($markets);
+//            $markets = $this->marketManager->unloadNext(4);             
+//            $this->ozonManager->updateMarkets($markets);
         }    
                 
         return new JsonModel(
