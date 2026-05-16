@@ -165,7 +165,7 @@ class GoodAplResource extends AbstractResourceListener
      */
     public function fetchAll($params = [])
     {
-//        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '512M');
         
         $articleFilter = new ArticleCode();
         $availableFilter = new GoodAvailable($this->entityManager);
