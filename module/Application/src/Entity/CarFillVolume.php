@@ -253,4 +253,21 @@ class CarFillVolume {
         $car->addCarFillVolume($this);
     }
 
+    /**
+     * Массив для формы
+     * @return array 
+     */
+    public function toArray()
+    {
+        $result = [
+            'id' => $this->getId(),
+            'type' => $this->getCarFillType()->getTitle(),
+            'title' => $this->getCarFillTitle()->getTitle(),
+            'unit' => $this->getCarFillUnit()->getTitle(),
+            'volume' => $this->getVolume(),
+            'info' => $this->getInfo(),
+        ];
+        
+        return $result;
+    }     
 }
