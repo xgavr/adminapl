@@ -367,7 +367,7 @@ class Car {
 
     public function getNormsAsArray() {
         try{
-            return json_decode($this->norms);
+            return json_decode($this->norms, \Laminas\Json\Json::TYPE_ARRAY);
         } catch(\Throwable $e){
             return [];
         }
