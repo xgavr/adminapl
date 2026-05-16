@@ -114,25 +114,27 @@ $this->headScript()
             <?php endforeach;?>
         </table>-->
         <table class="table table-striped">
-            <?php foreach($car->getNormsAsArray() as $fillVoume):?>
-            <tr>
-                <td>
-                    <?= $fillVoume['title']?>
-                </td>
-                <td>
-                    <?= $fillVoume['type']?>
-                </td>
-                <td>
-                    <?= $fillVoume['volume']?>
-                </td>
-                <td>
-                    <?= $fillVoume['unit']?>
-                </td>
-                <td>
-                    <?= $fillVoume['info']?>
-                </td>
-            </tr>
-            <?php endforeach;?>
+            <?php if(!empty($car->getNorms)):?>
+                <?php foreach($car->getNormsAsArray() as $fillVoume):?>
+                <tr>
+                    <td>
+                        <?= $fillVoume['title']?>
+                    </td>
+                    <td>
+                        <?= $fillVoume['type']?>
+                    </td>
+                    <td>
+                        <?= $fillVoume['volume']?>
+                    </td>
+                    <td>
+                        <?= $fillVoume['unit']?>
+                    </td>
+                    <td>
+                        <?= $fillVoume['info']?>
+                    </td>
+                </tr>
+                <?php endforeach;?>
+            <?php endif;?>    
         </table>
 
         <h3>Товары<sup><?= $totalGoods?></sup></h3>
