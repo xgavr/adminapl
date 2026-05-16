@@ -414,7 +414,7 @@ class CarManager
     {
         
         ini_set('memory_limit', '512M');
-        set_time_limit(900);
+        set_time_limit(1800);
         $startTime = time();
         
         $cars = $this->entityManager->getRepository(Car::class)
@@ -422,7 +422,7 @@ class CarManager
         
         foreach($cars as $car){
             $this->updateNorms($car);
-            if (time() > $startTime + 840){
+            if (time() > $startTime + 1800){
                 break;
             }
         }
