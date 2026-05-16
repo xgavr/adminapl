@@ -455,7 +455,8 @@ class CarController extends AbstractActionController
     public function carFillVolumesAction()
     {
        
-        $this->carManager->carFillVolumes();
+//        $this->carManager->carFillVolumes();
+        $this->carManager->updateCarNorms();
 
         return new JsonModel([
             'result' => 'ok-reload',
