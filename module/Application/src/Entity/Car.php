@@ -10,6 +10,8 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
+use Application\Entity\CarFillVolume;
 
 /**
  * Description of Car
@@ -475,6 +477,23 @@ class Car {
     public function getCarFillVolumes() 
     {
         return $this->carFillVolumes;
+    }
+    
+    public function getCarFillVolumesAsArray()
+    {
+        $result = [];
+        
+        $criteria = Criteria::create()
+                ->andWhere(Criteria::expr()->eq('lang', CarFillVolume::LANG_RU))
+                ->andWhere(Criteria::expr()->eq('status', CarFillVolume::STATUS_ACTIVE))
+                ;    
+        $fillVolumes = $this->carFillVolumes->matching($criteria);
+        
+        foreach ($fillVolumes as $fillVolume){
+            $result[] = $fillVolume->toArray();
+        }
+        
+        return $result;
     }
     
     public function addCarFillVolume($carFillVolume)
