@@ -422,6 +422,7 @@ class CarManager
         
         foreach($cars as $car){
             $this->updateNorms($car);
+            usleep(100);
             if (time() > $startTime + 1800){
                 break;
             }
