@@ -392,6 +392,36 @@ class CarManager
     }
     
     /**
+     * Заполнить norms
+     * @param Car $car
+     */
+    public function updateNorms($car)
+    {
+        $norms = $car->getCarFillVolumesAsArray();
+        $car->setNorms(json_encode($norms));
+        
+        $this->entityManager->persist($car);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
+     * Поместить все автонормы в car
+     * @return null
+     */
+    public function updateCarNorms()
+    {
+        $cars = $this->entityManager->getRepository(Car::class)
+                ->findBy(['status' => Car::STATUS_ACTIVE]);
+        foreach ($cars as $car){
+            $this->updateNorms($car);
+        }
+        
+        return;
+    }
+    
+    /**
      * Обновить машина товара по товару с тем же номером
      * @param Goods $good
      */
