@@ -399,7 +399,7 @@ class CarManager
     {
         $norms = $car->getCarFillVolumesAsArray();
         $car->setNorms(json_encode($norms));
-        
+        $car->setFillVolumesFlag(Car::FILL_VOLUMES_YES);
         $this->entityManager->persist($car);
         $this->entityManager->flush();
         
@@ -412,10 +412,19 @@ class CarManager
      */
     public function updateCarNorms()
     {
+        
+        ini_set('memory_limit', '512M');
+        set_time_limit(900);
+        $startTime = time();
+        
         $cars = $this->entityManager->getRepository(Car::class)
-                ->findBy(['status' => Car::STATUS_ACTIVE]);
-        foreach ($cars as $car){
+                ->findBy(['status' => Car::STATUS_ACTIVE, 'fillVolumesFlag' => Car::FILL_VOLUMES_NO]);
+        
+        foreach($cars as $car){
             $this->updateNorms($car);
+            if (time() > $startTime + 840){
+                break;
+            }
         }
         
         return;
