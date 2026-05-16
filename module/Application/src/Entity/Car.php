@@ -130,6 +130,11 @@ class Car {
     protected $details;
 
     /**
+     * @ORM\Column(name="norms")  
+     */
+    protected $norms;
+
+    /**
      * @ORM\Column(name="year_from")  
      */
     protected $yearFrom;
@@ -353,7 +358,23 @@ class Car {
     public function setDetails($details) {
         $this->details = $details;
     }
-        
+    
+    public function getNorms() {
+        return $this->norms;
+    }
+
+    public function getNormsAsArray() {
+        try{
+            return json_decode($this->norms);
+        } catch(\Throwable $e){
+            return [];
+        }
+    }
+
+    public function setNorms($norms) {
+        $this->norms = $norms;
+    }
+            
     public function getYearFrom() {
         return $this->yearFrom;
     }
