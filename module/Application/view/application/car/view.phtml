@@ -92,7 +92,7 @@ $this->headScript()
         </table>
 
         <h3>Автонормы</h3>
-        <table class="table table-striped">
+<!--        <table class="table table-striped">
             <?php foreach($car->getCarFillVolumes() as $fillVoume):?>
             <tr>
                 <td>
@@ -109,6 +109,24 @@ $this->headScript()
                 </td>
                 <td>
                     <?= $fillVoume->getInfo()?>
+                </td>
+            </tr>
+            <?php endforeach;?>
+        </table>-->
+        <table class="table table-striped">
+            <?php foreach($car->getNormsAsArray() as $fillVoume):?>
+            <tr>
+                <td>
+                    <?= $fillVoume['title']?>
+                </td>
+                <td>
+                    <?= $fillVoume['type']?>
+                </td>
+                <td>
+                    <?= $fillVoume['unit']?>
+                </td>
+                <td>
+                    <?= $fillVoume['info']?>
                 </td>
             </tr>
             <?php endforeach;?>
