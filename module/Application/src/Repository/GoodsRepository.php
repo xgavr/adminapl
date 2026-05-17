@@ -3021,7 +3021,7 @@ class GoodsRepository extends EntityRepository
      */
     public function carsForFasade($params = null)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '1024M');
       
         $entityManager = $this->getEntityManager();
 
@@ -3050,7 +3050,7 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('c.saleMonth as carSaleMonth')
                     ->addSelect('c.status as carStatus')
                     ->addSelect('c.details as carDetails')
-                    ->addSelect('c.norms as carNorms')
+//                    ->addSelect('c.norms as carNorms')
                     ->addSelect('c.yearFrom as carYearFrom')
                     ->addSelect('c.yearTo as carYearTo')
                     ->addSelect('m.id as modelId')
