@@ -3050,7 +3050,7 @@ class GoodsRepository extends EntityRepository
                     ->addSelect('c.saleMonth as carSaleMonth')
                     ->addSelect('c.status as carStatus')
                     ->addSelect('c.details as carDetails')
-//                    ->addSelect('c.norms as carNorms')
+                    ->addSelect('c.norms as carNorms')
                     ->addSelect('c.yearFrom as carYearFrom')
                     ->addSelect('c.yearTo as carYearTo')
                     ->addSelect('m.id as modelId')
@@ -3082,7 +3082,9 @@ class GoodsRepository extends EntityRepository
                   ;
 
     //        var_dump($queryBuilder->getQuery()->getSQL());
-            return $queryBuilder->getQuery()->getResult(2);
+            $result = $queryBuilder->getQuery()->getResult(2);
+            var_dump(count($result));
+            return $result;
         }
         
         return [];
