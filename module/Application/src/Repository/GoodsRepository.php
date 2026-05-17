@@ -3097,6 +3097,7 @@ class GoodsRepository extends EntityRepository
                     'makeId' => $row['makeId'],
                     'makeName' => $row['makeName'],
                     'modelId' => $row['modelId'],
+                    'modelFullName' => $row['modelFullName'],
                     'carName' => $row['carName'],
                     'carFullName' => $row['carFullName'],
                     'carGoodCount' => $row['carGoodCount'],
