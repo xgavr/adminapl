@@ -3101,6 +3101,7 @@ class GoodsRepository extends EntityRepository
                     'carSaleMonth' => $row['carSaleMonth'],
                     'carStatus' => $row['carStatus'],
                     'carDetails' => $row['carDetails'],
+                    'carNorms' => $row['carNorms'],
                     'carYearFrom' => $row['carYearFrom'],
                     'carYearTo' => $row['carYearTo'],
                 ];
@@ -3132,7 +3133,7 @@ class GoodsRepository extends EntityRepository
             }
         }
         
-        return $result;
+        return [$result];
     }   
 
     /**
