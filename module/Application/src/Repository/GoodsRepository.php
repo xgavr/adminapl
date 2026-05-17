@@ -3021,7 +3021,7 @@ class GoodsRepository extends EntityRepository
      */
     public function carsForFasade($params = null)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '1024M');
       
         $entityManager = $this->getEntityManager();
 
@@ -3034,7 +3034,7 @@ class GoodsRepository extends EntityRepository
         foreach ($goods as $good){
             $carCount += $good->getCars()->count();
             $goodIds[] = $good->getId();
-            if ($carCount > 50000){
+            if ($carCount > 80000){
                 break;
             }
         }
@@ -3083,61 +3083,69 @@ class GoodsRepository extends EntityRepository
                     ->andWhere($queryBuilder->expr()->in('g.id', $goodIds))
                   ;
 
-    //        var_dump($queryBuilder->getQuery()->getSQL());
+    //        var_dump($queryBuilder->getQuery()->getSQL());            
             $data = $queryBuilder->getQuery()->getResult(2);
             
-            foreach ($data as $row){
-                $result['goodrelated'][] = [
-                    'admin_apl_id' => $row['admin_apl_id'],
-                    'carId' => $row['carId'],
-                ];
-                $result['goodcars'][$row['carId']] = [
-                    'carId' => $row['carId'],
-                    'carAplId' => $row['carAplId'],
-                    'makeId' => $row['makeId'],
-                    'makeName' => $row['makeName'],
-                    'modelId' => $row['modelId'],
-                    'modelFullName' => $row['modelFullName'],
-                    'carName' => $row['carName'],
-                    'carFullName' => $row['carFullName'],
-                    'carGoodCount' => $row['carGoodCount'],
-                    'carSaleCount' => $row['carSaleCount'],
-                    'carSaleMonth' => $row['carSaleMonth'],
-                    'carStatus' => $row['carStatus'],
-                    'carDetails' => $row['carDetails'],
-                    'carNorms' => $row['carNorms'],
-                    'carYearFrom' => $row['carYearFrom'],
-                    'carYearTo' => $row['carYearTo'],
-                ];
-                $result['goodmodels'][$row['modelId']] = [
-                    'modelId' => $row['modelId'],
-                    'modelAplId' => $row['modelAplId'],
-                    'makeId' => $row['makeId'],
-                    'makeName' => $row['makeName'],
-                    'makeNameRu' => $row['makeNameRu'],
-                    'modelName' => $row['modelName'],
-                    'modelFullName' => $row['modelFullName'],
-                    'modelNameRu' => $row['modelNameRu'],
-                    'modelGoodCount' => $row['modelGoodCount'],
-                    'modelSaleCount' => $row['modelSaleCount'],
-                    'modelSaleMonth' => $row['modelSaleMonth'],
-                    'constructionFrom' => $row['constructionFrom'],
-                    'constructionTo' => $row['constructionTo'],
-                    'interval' => $row['interval'],
-                    'modelStatus' => $row['modelStatus'],
-                ];
-                $result['goodmakes'][$row['makeId']] = [
-                    'makeId' => $row['makeId'],
-                    'makeAplId' => $row['makeAplId'],
-                    'makeName' => $row['makeName'],
-                    'makeFullName' => $row['makeFullName'],
-                    'makeNameRu' => $row['makeNameRu'],
-                    'makeGoodCount' => $row['makeGoodCount'],
-                    'makeSaleCount' => $row['makeSaleCount'],
-                    'makeSaleMonth' => $row['makeSaleMonth'],
-                    'makeStatus' => $row['makeStatus'],
-                ];
+            $dataQuery = $queryBuilder->getQuery();
+            $iterables = $dataQuery->iterate();
+
+            
+            foreach ($iterables as $iterable){
+                foreach ($iterable as $row){
+                    $result['goodrelated'][] = [
+                        'admin_apl_id' => $row['admin_apl_id'],
+                        'carId' => $row['carId'],
+                    ];
+                    $result['goodcars'][$row['carId']] = [
+                        'carId' => $row['carId'],
+                        'carAplId' => $row['carAplId'],
+                        'makeId' => $row['makeId'],
+                        'makeName' => $row['makeName'],
+                        'modelId' => $row['modelId'],
+                        'modelFullName' => $row['modelFullName'],
+                        'carName' => $row['carName'],
+                        'carFullName' => $row['carFullName'],
+                        'carGoodCount' => $row['carGoodCount'],
+                        'carSaleCount' => $row['carSaleCount'],
+                        'carSaleMonth' => $row['carSaleMonth'],
+                        'carStatus' => $row['carStatus'],
+                        'carDetails' => $row['carDetails'],
+                        'carNorms' => $row['carNorms'],
+                        'carYearFrom' => $row['carYearFrom'],
+                        'carYearTo' => $row['carYearTo'],
+                    ];
+                    $result['goodmodels'][$row['modelId']] = [
+                        'modelId' => $row['modelId'],
+                        'modelAplId' => $row['modelAplId'],
+                        'makeId' => $row['makeId'],
+                        'makeName' => $row['makeName'],
+                        'makeNameRu' => $row['makeNameRu'],
+                        'modelName' => $row['modelName'],
+                        'modelFullName' => $row['modelFullName'],
+                        'modelNameRu' => $row['modelNameRu'],
+                        'modelGoodCount' => $row['modelGoodCount'],
+                        'modelSaleCount' => $row['modelSaleCount'],
+                        'modelSaleMonth' => $row['modelSaleMonth'],
+                        'constructionFrom' => $row['constructionFrom'],
+                        'constructionTo' => $row['constructionTo'],
+                        'interval' => $row['interval'],
+                        'modelStatus' => $row['modelStatus'],
+                    ];
+                    $result['goodmakes'][$row['makeId']] = [
+                        'makeId' => $row['makeId'],
+                        'makeAplId' => $row['makeAplId'],
+                        'makeName' => $row['makeName'],
+                        'makeFullName' => $row['makeFullName'],
+                        'makeNameRu' => $row['makeNameRu'],
+                        'makeGoodCount' => $row['makeGoodCount'],
+                        'makeSaleCount' => $row['makeSaleCount'],
+                        'makeSaleMonth' => $row['makeSaleMonth'],
+                        'makeStatus' => $row['makeStatus'],
+                    ];
+                }    
             }
+            
+            unset($data);
         }
         
         return [$result];
