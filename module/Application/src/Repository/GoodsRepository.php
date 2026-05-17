@@ -3083,7 +3083,7 @@ class GoodsRepository extends EntityRepository
 
     //        var_dump($queryBuilder->getQuery()->getSQL());
             $result = $queryBuilder->getQuery()->getResult(2);
-            var_dump(count($result));
+            var_dump(count($result)); exit;
             return $result;
         }
         
