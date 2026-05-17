@@ -3094,6 +3094,9 @@ class GoodsRepository extends EntityRepository
                 $result['goodcars'][$row['carId']] = [
                     'carId' => $row['carId'],
                     'carAplId' => $row['carAplId'],
+                    'makeId' => $row['makeId'],
+                    'makeName' => $row['makeName'],
+                    'modelId' => $row['modelId'],
                     'carName' => $row['carName'],
                     'carFullName' => $row['carFullName'],
                     'carGoodCount' => $row['carGoodCount'],
@@ -3108,6 +3111,9 @@ class GoodsRepository extends EntityRepository
                 $result['goodmodels'][$row['modelId']] = [
                     'modelId' => $row['modelId'],
                     'modelAplId' => $row['modelAplId'],
+                    'makeId' => $row['makeId'],
+                    'makeName' => $row['makeName'],
+                    'makeNameRu' => $row['makeNameRu'],
                     'modelName' => $row['modelName'],
                     'modelFullName' => $row['modelFullName'],
                     'modelNameRu' => $row['modelNameRu'],
