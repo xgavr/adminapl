@@ -3113,8 +3113,8 @@ class GoodsRepository extends EntityRepository
                 $result['goodcars'][$car->getId()] = [
                     'carId' => $car->getId(),
                     'carAplId' => $car->getAplId(),
-                    'makeId' => $car->getMake()->getId(),
-                    'makeName' => $car->getMake()->getName(),
+                    'makeId' => $car->getModel()->getMake()->getId(),
+                    'makeName' => $car->getModel()->getMake()->getName(),
                     'modelId' => $car->getModel()->getId(),
                     'modelFullName' => $car->getModel()->getFullName(),
                     'carName' => $car->getName(),
