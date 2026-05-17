@@ -3124,7 +3124,7 @@ class GoodsRepository extends EntityRepository
                     'carSaleMonth' => $car->getSaleMonth(),
                     'carStatus' => $car->getStatus(),
                     'carDetails' => $car->getDetails(),
-                    'carNorms' => $car->getNorms(),
+                    //'carNorms' => $car->getNorms(),
                     'carYearFrom' => $car->getYearFrom(),
                     'carYearTo' => $car->getYearTo(),
                 ];
