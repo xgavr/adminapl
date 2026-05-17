@@ -3087,11 +3087,11 @@ class GoodsRepository extends EntityRepository
             $data = $queryBuilder->getQuery()->getResult(2);
             
             foreach ($data as $row){
-                $result['related'][] = [
+                $result['goodrelated'][] = [
                     'admin_apl_id' => $row['admin_apl_id'],
                     'carId' => $row['carId'],
                 ];
-                $result['cars'][$row['carId']] = [
+                $result['goodcars'][$row['carId']] = [
                     'carId' => $row['carId'],
                     'carAplId' => $row['carAplId'],
                     'carName' => $row['carName'],
@@ -3105,7 +3105,7 @@ class GoodsRepository extends EntityRepository
                     'carYearFrom' => $row['carYearFrom'],
                     'carYearTo' => $row['carYearTo'],
                 ];
-                $result['models'][$row['modelId']] = [
+                $result['goodmodels'][$row['modelId']] = [
                     'modelId' => $row['modelId'],
                     'modelAplId' => $row['modelAplId'],
                     'modelName' => $row['modelName'],
@@ -3119,7 +3119,7 @@ class GoodsRepository extends EntityRepository
                     'interval' => $row['interval'],
                     'modelStatus' => $row['modelStatus'],
                 ];
-                $result['makes'][$row['makeId']] = [
+                $result['goodmakes'][$row['makeId']] = [
                     'makeId' => $row['makeId'],
                     'makeAplId' => $row['makeAplId'],
                     'makeName' => $row['makeName'],
