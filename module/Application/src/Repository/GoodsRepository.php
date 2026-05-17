@@ -31,6 +31,7 @@ use Fasade\Entity\GroupSite;
 use Application\Entity\GoodRelated;
 use Application\Entity\Images;
 use Application\Entity\Token;
+use Application\Entity\Car;
 
 /**
  * Description of GoodsRepository
@@ -3021,7 +3022,7 @@ class GoodsRepository extends EntityRepository
      */
     public function carsForFasade($params = null)
     {
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
       
         $entityManager = $this->getEntityManager();
 
@@ -3034,7 +3035,7 @@ class GoodsRepository extends EntityRepository
         foreach ($goods as $good){
             $carCount += $good->getCars()->count();
             $goodIds[] = $good->getId();
-            if ($carCount > 80000){
+            if ($carCount > 50000){
                 break;
             }
         }
@@ -3044,108 +3045,127 @@ class GoodsRepository extends EntityRepository
         if (count($goodIds)){
             $queryBuilder->select('g.id as admin_apl_id')
                     ->addSelect('c.id as carId')
-                    ->addSelect('c.aplId as carAplId')
-                    ->addSelect('c.name as carName')
-                    ->addSelect('c.fullName as carFullName')
-                    ->addSelect('c.goodCount as carGoodCount')
-                    ->addSelect('c.saleCount as carSaleCount')
-                    ->addSelect('c.saleMonth as carSaleMonth')
-                    ->addSelect('c.status as carStatus')
-                    ->addSelect('c.details as carDetails')
-                    ->addSelect('c.norms as carNorms')
-                    ->addSelect('c.yearFrom as carYearFrom')
-                    ->addSelect('c.yearTo as carYearTo')
-                    ->addSelect('m.id as modelId')
-                    ->addSelect('m.aplId as modelAplId')
-                    ->addSelect('m.name as modelName')
-                    ->addSelect('m.fullName as modelFullName')
-                    ->addSelect('m.nameRu as modelNameRu')
-                    ->addSelect('m.goodCount as modelGoodCount')
-                    ->addSelect('m.saleCount as modelSaleCount')
-                    ->addSelect('m.saleMonth as modelSaleMonth')
-                    ->addSelect('m.constructionFrom')
-                    ->addSelect('m.constructionTo')
-                    ->addSelect('m.interval')
-                    ->addSelect('m.status as modelStatus')
-                    ->addSelect('mk.id as makeId')
-                    ->addSelect('mk.aplId as makeAplId')
-                    ->addSelect('mk.name as makeName')
-                    ->addSelect('mk.fullName as makeFullName')
-                    ->addSelect('mk.nameRu as makeNameRu')
-                    ->addSelect('mk.goodCount as makeGoodCount')
-                    ->addSelect('mk.saleCount as makeSaleCount')
-                    ->addSelect('mk.saleMonth as makeSaleMonth')
-                    ->addSelect('mk.status as makeStatus')
+//                    ->addSelect('c.aplId as carAplId')
+//                    ->addSelect('c.name as carName')
+//                    ->addSelect('c.fullName as carFullName')
+//                    ->addSelect('c.goodCount as carGoodCount')
+//                    ->addSelect('c.saleCount as carSaleCount')
+//                    ->addSelect('c.saleMonth as carSaleMonth')
+//                    ->addSelect('c.status as carStatus')
+//                    ->addSelect('c.details as carDetails')
+//                    ->addSelect('c.norms as carNorms')
+//                    ->addSelect('c.yearFrom as carYearFrom')
+//                    ->addSelect('c.yearTo as carYearTo')
+//                    ->addSelect('m.id as modelId')
+//                    ->addSelect('m.aplId as modelAplId')
+//                    ->addSelect('m.name as modelName')
+//                    ->addSelect('m.fullName as modelFullName')
+//                    ->addSelect('m.nameRu as modelNameRu')
+//                    ->addSelect('m.goodCount as modelGoodCount')
+//                    ->addSelect('m.saleCount as modelSaleCount')
+//                    ->addSelect('m.saleMonth as modelSaleMonth')
+//                    ->addSelect('m.constructionFrom')
+//                    ->addSelect('m.constructionTo')
+//                    ->addSelect('m.interval')
+//                    ->addSelect('m.status as modelStatus')
+//                    ->addSelect('mk.id as makeId')
+//                    ->addSelect('mk.aplId as makeAplId')
+//                    ->addSelect('mk.name as makeName')
+//                    ->addSelect('mk.fullName as makeFullName')
+//                    ->addSelect('mk.nameRu as makeNameRu')
+//                    ->addSelect('mk.goodCount as makeGoodCount')
+//                    ->addSelect('mk.saleCount as makeSaleCount')
+//                    ->addSelect('mk.saleMonth as makeSaleMonth')
+//                    ->addSelect('mk.status as makeStatus')
                     ->from(Goods::class, 'g')
                     ->join('g.cars', 'c')
-                    ->join('c.model', 'm')
-                    ->join('m.make', 'mk')
+//                    ->join('c.model', 'm')
+//                    ->join('m.make', 'mk')
                     ->andWhere($queryBuilder->expr()->in('g.id', $goodIds))
                   ;
 
-    //        var_dump($queryBuilder->getQuery()->getSQL());            
+    //        var_dump($queryBuilder->getQuery()->getSQL());
             $data = $queryBuilder->getQuery()->getResult(2);
             
-            $dataQuery = $queryBuilder->getQuery();
-            $iterables = $dataQuery->iterate();
-
+            $carIds = [];
+            $models = [];
+            $makes = [];
             
-            foreach ($iterables as $iterable){
-                foreach ($iterable as $row){
-                    $result['goodrelated'][] = [
-                        'admin_apl_id' => $row['admin_apl_id'],
-                        'carId' => $row['carId'],
-                    ];
-                    $result['goodcars'][$row['carId']] = [
-                        'carId' => $row['carId'],
-                        'carAplId' => $row['carAplId'],
-                        'makeId' => $row['makeId'],
-                        'makeName' => $row['makeName'],
-                        'modelId' => $row['modelId'],
-                        'modelFullName' => $row['modelFullName'],
-                        'carName' => $row['carName'],
-                        'carFullName' => $row['carFullName'],
-                        'carGoodCount' => $row['carGoodCount'],
-                        'carSaleCount' => $row['carSaleCount'],
-                        'carSaleMonth' => $row['carSaleMonth'],
-                        'carStatus' => $row['carStatus'],
-                        'carDetails' => $row['carDetails'],
-                        'carNorms' => $row['carNorms'],
-                        'carYearFrom' => $row['carYearFrom'],
-                        'carYearTo' => $row['carYearTo'],
-                    ];
-                    $result['goodmodels'][$row['modelId']] = [
-                        'modelId' => $row['modelId'],
-                        'modelAplId' => $row['modelAplId'],
-                        'makeId' => $row['makeId'],
-                        'makeName' => $row['makeName'],
-                        'makeNameRu' => $row['makeNameRu'],
-                        'modelName' => $row['modelName'],
-                        'modelFullName' => $row['modelFullName'],
-                        'modelNameRu' => $row['modelNameRu'],
-                        'modelGoodCount' => $row['modelGoodCount'],
-                        'modelSaleCount' => $row['modelSaleCount'],
-                        'modelSaleMonth' => $row['modelSaleMonth'],
-                        'constructionFrom' => $row['constructionFrom'],
-                        'constructionTo' => $row['constructionTo'],
-                        'interval' => $row['interval'],
-                        'modelStatus' => $row['modelStatus'],
-                    ];
-                    $result['goodmakes'][$row['makeId']] = [
-                        'makeId' => $row['makeId'],
-                        'makeAplId' => $row['makeAplId'],
-                        'makeName' => $row['makeName'],
-                        'makeFullName' => $row['makeFullName'],
-                        'makeNameRu' => $row['makeNameRu'],
-                        'makeGoodCount' => $row['makeGoodCount'],
-                        'makeSaleCount' => $row['makeSaleCount'],
-                        'makeSaleMonth' => $row['makeSaleMonth'],
-                        'makeStatus' => $row['makeStatus'],
-                    ];
-                }    
+            foreach ($data as $row){
+                 $result['goodrelated'][] = [
+                    'admin_apl_id' => $row['admin_apl_id'],
+                    'carId' => $row['carId'],
+                ];  
+                $carIds[$row['carId']] = $row['carId'];
             }
             
-            unset($data);
+            foreach ($carIds as $carId){
+                
+                $car = $entityManager->getRepository(Car::class)
+                        ->find($carId);
+                
+                if (empty($car)){
+                    continue;
+                }
+                
+                $models[$car->getModel()->getId()] = $car->getModel();
+                
+                $result['goodcars'][$car->getId()] = [
+                    'carId' => $car->getId(),
+                    'carAplId' => $car->getAplId(),
+                    'makeId' => $car->getMake()->getId(),
+                    'makeName' => $car->getMake()->getName(),
+                    'modelId' => $car->getModel()->getId(),
+                    'modelFullName' => $car->getModel()->getFullName(),
+                    'carName' => $car->getName(),
+                    'carFullName' => $car->getFullName(),
+                    'carGoodCount' => $car->getGoodCount(),
+                    'carSaleCount' => $car->getSaleCount(),
+                    'carSaleMonth' => $car->getSaleMonth(),
+                    'carStatus' => $car->getStatus(),
+                    'carDetails' => $car->getDetails(),
+                    'carNorms' => $car->getNorms(),
+                    'carYearFrom' => $car->getYearFrom(),
+                    'carYearTo' => $car->getYearTo(),
+                ];
+            }    
+            
+            foreach($models as $model){
+                
+                $makes[$model->getMake()->getId()] = $model->getMake();
+                        
+                $result['goodmodels'][$model->getId()] = [
+                    'modelId' => $model->getId(),
+                    'modelAplId' => $model->getAplId(),
+                    'makeId' => $model->getMake()->getId(),
+                    'makeName' => $model->getMake()->getName(),
+                    'makeNameRu' => $model->getMake()->getNameRu(),
+                    'modelName' => $model->getName(),
+                    'modelFullName' => $model->getFullName(),
+                    'modelNameRu' => $model->getNameRu(),
+                    'modelGoodCount' => $model->getGoodCount(),
+                    'modelSaleCount' => $model->getSaleCount(),
+                    'modelSaleMonth' => $model->getSaleMonth(),
+                    'constructionFrom' => $model->getConstructionFrom(),
+                    'constructionTo' => $model->getConstructionTo(),
+                    'interval' => $model->getInterval(),
+                    'modelStatus' => $model->getStatus(),
+                ];
+            }
+            
+            foreach($makes as $make){
+                $result['goodmakes'][$make->getId()] = [
+                    'makeId' => $make->getId(),
+                    'makeAplId' => $make->getAplId(),
+                    'makeName' => $make->getName(),
+                    'makeFullName' => $make->getFullName(),
+                    'makeNameRu' => $make->getNameRu(),
+                    'makeGoodCount' => $make->getGoodCount(),
+                    'makeSaleCount' => $make->getSaleCount(),
+                    'makeSaleMonth' => $make->getSaleCount(),
+                    'makeStatus' => $make->getStatus(),
+                ];
+            }
         }
         
         return [$result];
