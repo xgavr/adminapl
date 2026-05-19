@@ -245,12 +245,16 @@ class MarkManager
  
                             $newMark = Mark::MARK_NOT_FOUND;
                         }
-
-
-                        $this->entityManager->getConnection()->update('marks', [
+                        
+                        $upd = [
                             'mark_status' => $newMark,
-                            'date_updated' => date('Y-m-d H:i:s'),
-                        ], ['id' => $mark->getId()]);
+                        ];
+                        
+                        if ($mark->getStatus() === Mark::STATUS_ACTIVE && $mark->getMarkStatus() !== $newMark){
+                            $upd['date_updated'] = date('Y-m-d H:i:s');
+                        }
+
+                        $this->entityManager->getConnection()->update('marks', $upd, ['id' => $mark->getId()]);
                     }
                 }        
             }
