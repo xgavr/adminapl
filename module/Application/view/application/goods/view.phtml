@@ -22,6 +22,7 @@
     <div class="col-md-3">
         <h3>
             <?php $search = $goods->getCode().' '.$goods->getProducer()->getName() . ' '. $goods->getNameShort()?>
+            <?php $search2 = $goods->getCode().' '.$goods->getProducer()->getName()?>
             <?= $search?>
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
             <sup>
@@ -33,7 +34,7 @@
                 </button>
             </sup>    
         </h3>
-        <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в гугле</a></h5>
+        <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в гугле</a> <a href="https://www.google.com/search?q=<?= $search2?>" target="_blank">Поиск в гугле 2</a></h5>
         <h5>
             Цена: <?= $goods->getPrice(); ?>
             <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
