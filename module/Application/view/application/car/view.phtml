@@ -114,7 +114,7 @@ $this->headScript()
             <?php endforeach;?>
         </table>-->
         <table class="table table-striped">
-            <?php if(!empty($car->getNorms)):?>
+            <?php if(!empty($car->getNorms())):?>
                 <?php foreach($car->getNormsAsArray() as $fillVoume):?>
                 <tr>
                     <td>
