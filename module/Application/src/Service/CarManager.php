@@ -872,12 +872,13 @@ class CarManager
         
         foreach($data2 as $key => $row){
             $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
-                    ->findBy(['volume' => $key]);
+                    ->findBy(['volume' => $key, 'carFillTitle' => 8]);
             
             foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
                 
                 $fillVolumeToUpdate->setVolumeNorm($row[0]);
                 $this->entityManager->persist($fillVolumeToUpdate);
+                $this->entityManager->flush();
                 
                 if (!empty($row[1])){
                     $newVolume = new CarFillVolume();
@@ -892,6 +893,7 @@ class CarManager
                     $newVolume->setVolumeNorm($row[1]);
                     
                     $this->entityManager->persist($newVolume);
+                    $this->entityManager->flush();
                 }
                 
                 if (!empty($row[2])){
@@ -908,10 +910,10 @@ class CarManager
                     $newVolume->setVolumeNorm($row[2]);
                     
                     $this->entityManager->persist($newVolume);
+                    $this->entityManager->flush();
                 }                                
             }
-            
-            $this->entityManager->flush();
+
             
             usleep(100);
         }        
