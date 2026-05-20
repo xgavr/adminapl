@@ -47,6 +47,11 @@ class CarFillVolume {
     protected $volume;
         
     /**
+     * @ORM\Column(name="volume_norm")   
+     */
+    protected $volumeNorm;
+        
+    /**
      * @ORM\Column(name="info")   
      */
     protected $info;
@@ -94,6 +99,14 @@ class CarFillVolume {
     {
         $this->volume = $volume;
     }     
+    
+    public function getVolumeNorm() {
+        return $this->volumeNorm;
+    }
+
+    public function setVolumeNorm($volumeNorm) {
+        $this->volumeNorm = $volumeNorm;
+    }
     
     public function getInfo() 
     {
