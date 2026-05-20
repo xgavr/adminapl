@@ -876,7 +876,7 @@ class CarManager
             
             foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
                 
-                $fillVolumeToUpdate->setVolume($row[0]);
+                $fillVolumeToUpdate->setVolumeNorm($row[0]);
                 $this->entityManager->persist($fillVolumeToUpdate);
                 
                 if (!empty($row[1])){
@@ -895,6 +895,7 @@ class CarManager
                 }
                 
                 if (!empty($row[2])){
+                    
                     $newVolume = new CarFillVolume();
                     $newVolume->setCar($fillVolumeToUpdate->getCar());
                     $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
@@ -907,10 +908,10 @@ class CarManager
                     $newVolume->setVolumeNorm($row[2]);
                     
                     $this->entityManager->persist($newVolume);
-                }
-                
-                $this->entityManager->flush();
+                }                                
             }
+            
+            $this->entityManager->flush();
             
             usleep(100);
         }        
