@@ -853,9 +853,62 @@ class CarManager
         ];
         
         foreach($data as $key => $value){
-            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key]);
-            usleep(100);
+            //$this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key]);
+            //usleep(100);
         }
+        
+        $data2 = [
+            'MB 310.1|MB 325.0' => ['MB 310.1', 'MB 325.0'],
+            'MB 310.1|MB 325.2|MB 325.5' => ['MB 310.1', 'MB 325.2', 'MB 325.5'],
+            'MB 310.1|MB 325.2' => ['MB 310.1', 'MB 325.2'],
+            'MB 310.0|MB 325.0' => ['MB 310.0', 'MB 325.0'],
+            'MB 310.1|MB 310.2' => ['MB 310.1', 'MB 310.2'],
+            'CUNA NC 596-16|ASTM D 3306' => ['CUNA NC 956-16', 'ASTM D3306'],
+            'CUNA NC 956-16|ASTM D 3306' => ['CUNA NC 956-16', 'ASTM D3306'],
+        ];
+        
+        foreach($data2 as $key => $row){
+            $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
+                    ->findBy(['volume' => $key]);
+            
+            foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
+                
+                $fillVolumeToUpdate->setVolume($row[0]);
+                $this->entityManager->persist($fillVolumeToUpdate);
+                
+                if (!empty($row[1])){
+                    $newVolume = new CarFillVolume();
+                    $newVolume->setCar($fillVolumeToUpdate->getCar());
+                    $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
+                    $newVolume->setCarFillType(2);
+                    $newVolume->setCarFillUnit($fillVolumeToUpdate->getCarFillUnit());
+                    $newVolume->setInfo($fillVolumeToUpdate);
+                    $newVolume->setLang($fillVolumeToUpdate->getLang());
+                    $newVolume->setStatus($fillVolumeToUpdate->getStatus());
+                    $newVolume->setVolume($fillVolumeToUpdate->getVolume());
+                    $newVolume->setVolumeNorm($row[1]);
+                    
+                    $this->entityManager->persist($newVolume);
+                }
+                
+                if (!empty($row[2])){
+                    $newVolume = new CarFillVolume();
+                    $newVolume->setCar($fillVolumeToUpdate->getCar());
+                    $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
+                    $newVolume->setCarFillType(2);
+                    $newVolume->setCarFillUnit($fillVolumeToUpdate->getCarFillUnit());
+                    $newVolume->setInfo($fillVolumeToUpdate->getInfo());
+                    $newVolume->setLang($fillVolumeToUpdate->getLang());
+                    $newVolume->setStatus($fillVolumeToUpdate->getStatus());
+                    $newVolume->setVolume($fillVolumeToUpdate->getVolume());
+                    $newVolume->setVolumeNorm($row[2]);
+                    
+                    $this->entityManager->persist($newVolume);
+                }
+            }
+            
+            usleep(100);
+        }        
         
         return;
     }    
