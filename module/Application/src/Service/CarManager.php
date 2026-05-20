@@ -867,6 +867,9 @@ class CarManager
             'CUNA NC 956-16|ASTM D 3306' => ['CUNA NC 956-16', 'ASTM D3306'],
         ];
         
+        $doubleType = $this->entityManager->getRepository(CarFillType::class)
+                ->find(2);
+        
         foreach($data2 as $key => $row){
             $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
                     ->findBy(['volume' => $key]);
@@ -880,7 +883,7 @@ class CarManager
                     $newVolume = new CarFillVolume();
                     $newVolume->setCar($fillVolumeToUpdate->getCar());
                     $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
-                    $newVolume->setCarFillType(2);
+                    $newVolume->setCarFillType($doubleType);
                     $newVolume->setCarFillUnit($fillVolumeToUpdate->getCarFillUnit());
                     $newVolume->setInfo($fillVolumeToUpdate);
                     $newVolume->setLang($fillVolumeToUpdate->getLang());
@@ -895,7 +898,7 @@ class CarManager
                     $newVolume = new CarFillVolume();
                     $newVolume->setCar($fillVolumeToUpdate->getCar());
                     $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
-                    $newVolume->setCarFillType(2);
+                    $newVolume->setCarFillType($doubleType);
                     $newVolume->setCarFillUnit($fillVolumeToUpdate->getCarFillUnit());
                     $newVolume->setInfo($fillVolumeToUpdate->getInfo());
                     $newVolume->setLang($fillVolumeToUpdate->getLang());
@@ -905,6 +908,8 @@ class CarManager
                     
                     $this->entityManager->persist($newVolume);
                 }
+                
+                $this->entityManager->flush();
             }
             
             usleep(100);
