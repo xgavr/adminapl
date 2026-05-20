@@ -872,7 +872,7 @@ class CarManager
         
         foreach($data2 as $key => $row){
             $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
-                    ->findBy(['volume' => $key, 'carFillTitle' => 8]);
+                    ->findBy(['volume' => $key, 'carFillTitile' => 8]);
             
             foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
                 
