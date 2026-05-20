@@ -765,4 +765,98 @@ class CarManager
             $this->getOrCreateCar($model, $carData);
         }        
     }
+    
+    /**
+     * Обновить нормы антифриза
+     * @return null
+     */
+    public function updateCarFreezVolumeNorms()
+    {
+        
+        $data = [
+            'G 12 Plus' => 'G12+',
+            'WSS-M97B44-D' => 'Ford WSS-M97B44-D',
+            'MAN 324' => 'MAN 324 Typ NF',
+            'MAN 324 Typ NF' => 'MAN 324 Typ NF',
+            'MB 310.0' => 'MB 310.0',
+            'MB 310.1' => 'MB 310.1',
+            'MB 325.0' => 'MB 325.0',
+            'TL 774 G' => 'G12++',
+            'TL 774 F' => 'G12+',
+            'TL 774 D' => 'G12',
+            'G 13' => 'G13',
+            'G 12' => 'G12',
+            'G 11' => 'G11',
+            'Glaceol RX Typ D' => 'Renault Type D',
+            'Glaceol AL Typ C' => 'Renault Type C',
+            'VOLVO COOLANT' => 'Volvo Coolant 1286083',
+            'VOLVO COOLANT VCS' => 'Volvo Coolant VCS',
+            'Glysantin G33' => 'PSA B71 5110',
+            'Glysantin G33-23F' => 'PSA B71 5110',
+            'Glysantin G30' => 'G12+',
+            'Glysantin G30-91' => 'G12+',
+            'Revkogel 2000' => 'PSA B71 5110',
+            'GURIT ESSEX REVKOGEL 2000' => 'PSA B71 5110',
+            'Procor TM108|Revkogel 2000' => 'PSA B71 5110',
+            'Revkogel 107' => 'PSA B71 5110',
+            'DEXCOOL' => 'GM Dex-Cool',
+            'Texaco XLC' => 'GM Dex-Cool',
+            'Havoline XLC Long Life' => 'GM Dex-Cool',
+            'ARTECO Havoline XLC' => 'GM Dex-Cool',
+            'Glacelf Supra' => 'GM Dex-Cool',
+            'Paraflu 11' => 'Fiat 9.55523-G1',
+            'Paraflu UP' => 'Fiat 9.55523-G2',
+            'Paraflu' => 'Fiat 9.55523-G1',
+            'Paraflu FE' => 'Fiat 9.55523-G2',
+            'SAE J-1034' => 'SAE J1034',
+            'ASTM D-3306' => 'ASTM D3306',
+            'CUNA NC 956-16' => 'CUNA NC 956-16',
+            'CUNA NC 596-16' => 'CUNA NC 956-16',
+            'Iveco 18-1830' => 'Iveco 18-1830',
+            'FIAT 9.55523' => 'Fiat 9.55523-G1',
+            'ESD-M97B-49A' => 'Ford ESD-M97B49-A',
+            'ESE-M97B-44A' => 'Ford ESE-M97B44-A',
+            'WAS-M97B44-D' => 'Ford WSS-M97B44-D',
+            'WSS-M97B51-A1' => 'Ford WSS-M97B51-A1',
+            '9735 K0' => '9735.K0',
+            '000016218' => '16218',
+            '00009979A6' => '9979.A6',
+            'TOYOTA Super Long Life Coolant (SLLC)' => 'Toyota SLLC',
+            'SLLC' => 'Toyota SLLC',
+            'TOYOTA Long Life Coolant (LLC)' => 'Toyota LLC',
+            'LLC' => 'Toyota LLC',
+            'DIA QUEEN SUPER LONG LIFE COOLANT' => 'Mitsubishi DiaQueen SLLC',
+            'MITSUBISHI MOTORS Genuine Coolant' => 'Mitsubishi LLC',
+            'MS-9769' => 'Chrysler MS-9769',
+            '05066386AA' => '05066386AA',
+            '99000-99032-12X' => '99000-99032-12X',
+            '99000-99032-20X' => '99000-99032-20X',
+            'Охлаждающая жидкость с длительным сроком службы FL 22' => 'Mazda FL22',
+            'Procor 3000' => 'Peugeot-Citroen Procor 3000',
+            'Nissan L250' => 'L250',
+            'OL999-9001' => 'OL999-9001',
+            'JLM 20404' => 'JLM 20404',
+            'B 040 1065' => 'B 040 1065',
+            
+            '90297545/1940656' => '1940656',            
+            '1940656/90297545' => '1940656',            
+            '40 - 93 170 402' => '93170402',            
+            '1940663/93170402' => '93170402',            
+            '1940650/09194431' => '1940650',            
+            '1949650/09194431' => '1940650',            
+            '93165413/1940679' => '1940679', 
+            
+            '83 19 2 211 191' => '83192211191',            
+            '81 22 9 407 454' => '81229407454',            
+            '83 51 0 406 720' => '83510406720',            
+            '81 22 9 401 240' => '81229401240',            
+        ];
+        
+        foreach($data as $key => $value){
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key]);
+            usleep(100);
+        }
+        
+        return;
+    }    
 }
