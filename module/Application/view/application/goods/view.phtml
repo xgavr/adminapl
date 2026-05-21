@@ -125,8 +125,13 @@
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <table class="table table-bordered">
                     <tr>
-                        <th colspan="3">Характеристики</th>
-                    </tr>
+                        <th colspan="2">Характеристики</th>
+                        <th width="10">
+                            <button class="btn btn-default btn-xs attributes-from-json"
+                                    title="Загрузить характеристики из Json">
+                                <span class="glyphicon glyphicon-import"></span>
+                            </button>                                
+                        </th>                    </tr>
                     <?php if (!$goods->getAttributeValues()->count()):?>
                         <tr><td colspan="3"><i>Нет характеристик</i></td></tr>
                     <?php endif;?>
@@ -850,6 +855,40 @@
                         $.post('/oem/oems-from-json/<?= $goods->getId()?>', {jsonStr: result}, function( data ) {
                             if (data == 'ok'){
                                 $('#oemTable').bootstrapTable('refresh');
+                            }
+                        });    
+                    };    
+                }
+            });          
+        });
+        
+        $('.attributes-from-json').click(function (){
+            var message = "Сделай строку в формате JSON с основными характеристиками (цвет, вес, спецификациии) для <?= $goods->getCode()?> <?= $goods->getProducer()->getName()?> \n\
+    в виде [{type:xxx, name: xxxx, 'value': 'xxxx', 'unit': 'xxxx'}], где name - название характеристики (цве, вес, спецификация и т.п.), value - значение характеристики, unit - размерность (кг, л. и т.п.). \n\
+    type - тип характеристики. Для спецификаций антифриза type = AFZ, для остальных случаев type = G.\n\
+    Если имеется несколько характеристик с одинаковым наименованием, но разными значениями, то для каждого значения делается новая строка .\n\
+    Если характеристик нет, то выводи пустой массив. Ничего не выдумывай!"
+            
+            var $temp = $("<textarea>");
+            $("body").append($temp);
+            
+            $temp.val(message).select();
+            document.execCommand("copy");   
+            
+            $temp.remove();
+        
+            bootbox.prompt({
+                title: 'Вставьте промпт в ИИ и введите ответ в формате json',
+                message: '<h5>Промпт для <a href="https://www.google.com/search?q=<?= $search?>" target="_blank">ИИ</a>:</h5><p>' + message + '</p>',
+                inputType: 'textarea',
+                value: '',    
+                rows: 20, 
+                callback: function (result) {
+//                    console.log(result);              
+                    if (result){
+                        $.post('/goods/attributes-from-json/<?= $goods->getId()?>', {jsonStr: result}, function( data ) {
+                            if (data == 'ok'){
+                                window.location.reload();
                             }
                         });    
                     };    
