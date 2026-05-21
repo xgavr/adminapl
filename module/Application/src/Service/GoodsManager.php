@@ -15,6 +15,7 @@ use Application\Entity\Images;
 use Application\Entity\Rawprice;
 use Application\Entity\Raw;
 use Application\Entity\Attribute;
+use Application\Entity\AttributeValue;
 use Application\Entity\Rate;
 use Application\Entity\ScaleTreshold;
 use Phpml\Math\Statistic\Mean;
@@ -33,6 +34,7 @@ use Application\Entity\Oem;
 use Stock\Entity\Reserve;
 use Application\Filter\ArticleCode;
 use GoodMap\Entity\FoldBalance;
+use Application\Entity\GoodAttributeValue;
 
 /**
  * Description of GoodsService
@@ -1397,5 +1399,85 @@ class GoodsManager
         }
             
         return;        
+    }
+    
+    /**
+     * Загрузить строку json с атрибутами
+     *  [{name: xxxx, 'value': 'xxxx', 'unit': 'xxxx'}]
+     *  value = str | {key: ['spec1', spec2, ...]}
+     * 
+     * @param Goods $good
+     * @param str $jsonStr
+     */
+    public function fromJsonToAttributes($good, $jsonStr)
+    {
+        
+        $attrCount = $this->entityManager->getRepository(GoodAttributeValue::class)
+                    ->count(['good' => $good->getId()]);
+        
+//        var_dump($attrCount, $part['properties'], $part['dimensions']); exit;
+        
+        if ($attrCount > 0){
+            return;
+        }
+        
+        $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
+        
+        foreach ($json as $row){
+            
+            $attribute = $this->entityManager->getRepository(Attribute::class)
+                    ->findOneBy(['name' => $row['name']]);
+
+            if (empty($attribute)){
+                $attributeTdId = $this->entityManager->getRepository(Attribute::class)
+                    ->attributeMaxTdId();
+            } else {
+                $attributeTdId = $attribute->getTdId();
+            }    
+
+            $attributeValue = $this->entityManager->getRepository(AttributeValue::class)
+                    ->findOneBy(['value' => $row['value']]);                
+
+            if (empty($attributeValue)){
+                $valueTdId = $this->entityManager->getRepository(Attribute::class)
+                    ->attributeValueMaxTdId();
+            } else {
+                $valueTdId = $attributeValue->getTdId();
+            }    
+
+            $name = $row['name'];
+            if (!empty($row['unit'])){
+                $name .= ' ['.$row['unit'].']';
+            }
+            
+            $attr = [
+                'propertyShortName' => $row['name'],
+                'propertyName' => $name,
+                'propertyUnitName' => $row['unit'],
+                'propertyType' => $row['type'],
+                'propertyId' => $attributeTdId,
+                'valueId' => $valueTdId,
+                'value' => $row['value'],
+            ];
+
+            var_dump($attr);
+            
+            $this->entityManager->getRepository(GoodAttributeValue::class)
+                    ->addGoodAttributeValue($good, $attr);                   
+        }
+        
+        return;
+    }   
+    
+    /**
+     * 
+     * @param GoodAttributeValue $goodAttributeValue
+     */
+    public function removeGoodAttributeValue($goodAttributeValue)
+    {
+        $this->entityManager->remove($goodAttributeValue);
+        $this->entityManager->flush();
+        
+        return;
     }
 }
