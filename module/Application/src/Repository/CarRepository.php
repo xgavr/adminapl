@@ -16,6 +16,7 @@ use Application\Entity\VehicleDetail;
 use Application\Entity\VehicleDetailValue;
 use Application\Entity\VehicleDetailCar;
 use Application\Entity\Goods;
+use Application\Entity\CarFillVolume;
 
 /**
  * Description of CarRepository
@@ -495,5 +496,23 @@ class CarRepository extends EntityRepository
 //        var_dump($queryBuilder->getQuery()->getSQL());
         return $queryBuilder->getQuery();
         
+    }
+    
+    public function normsList($type)
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('cfv.volumeNorm')
+                ->distinct()
+                ->from(CarFillVolume::class, 'cfv')
+                ->where('cfv.volumeNorm is not null')
+                ->andWhere('identity(cfv.carFillTitle) = :type')
+                ->setParameter('type', $type)
+            ;
+        
+//        var_dump($queryBuilder->getQuery()->getSQL());
+        $result = $queryBuilder->getQuery()->getResult();
+        
+        return array_values($result);        
     }
 }
