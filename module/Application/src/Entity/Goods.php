@@ -1873,6 +1873,21 @@ class Goods {
         return false;
     }
     
+    /**
+     * Возвращает тип марки по Честному знаку или ложь
+     * @return str|bool
+     */
+    public function inAntifreezCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '115-143-290') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
       
     /**
      * // Добавляет новую категорию к данному товару.
