@@ -30,6 +30,7 @@ use Stock\Entity\Reserve;
 use Application\Entity\GoodToken;
 use GoodMap\Entity\FoldBalance;
 use Application\Entity\GoodAttributeValue;
+use Application\Entity\Car;
 
 class GoodsController extends AbstractActionController
 {
@@ -743,6 +744,13 @@ class GoodsController extends AbstractActionController
         
         $tdOems = $this->entityManager->getRepository(Oem::class)
                 ->findGoodsTdOem($goods);
+        
+        $norms = [];
+        if ($goods->inAntifreezCategory()){
+            $norms = $this->entityManager->getRepository(Car::class)
+                    ->normsList(8);
+        }
+        
 
         // Render the view template.
         return new ViewModel([
@@ -766,6 +774,7 @@ class GoodsController extends AbstractActionController
             'rbacManager' => $this->rbacManager,
             'tab' => $tab,
             'tdOems' => $tdOems,
+            'norms' => implode(',', $norms),
         ]);
     }      
 
