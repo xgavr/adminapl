@@ -29,6 +29,7 @@ use Application\Entity\GoodSupplier;
 use Stock\Entity\Reserve;
 use Application\Entity\GoodToken;
 use GoodMap\Entity\FoldBalance;
+use Application\Entity\GoodAttributeValue;
 
 class GoodsController extends AbstractActionController
 {
@@ -1976,6 +1977,28 @@ class GoodsController extends AbstractActionController
         
     }
     
+    public function deleteGoodAttributeValueAction()
+    {
+        $goodAttributeValueId = $this->params()->fromRoute('id', -1);
+        
+        $goodAttributeValue = $this->entityManager->getRepository(GoodAttributeValue::class)
+                ->find($goodAttributeValueId);
+        
+        if ($goodAttributeValue == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->goodsManager->removeGoodAttributeValue($goodAttributeValue);
+        
+        return new JsonModel(
+           ['ok']
+        );           
+        
+        exit;
+        
+    }
+    
     public function compareRawpriceAction()
     {
         $goodId = $this->params()->fromRoute('id', -1);
@@ -2123,4 +2146,32 @@ class GoodsController extends AbstractActionController
         
         return new JsonModel(['ok']);          
     }    
+    
+    /**
+     * 
+     * 
+     */
+    public function attributesFromJsonAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        $jsonStr = $this->params()->fromPost('jsonStr');
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId); 
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }       
+        
+        //Проверка json
+        $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
+//        var_dump($json); exit;        
+        
+        $this->goodsManager->fromJsonToAttributes($good, $jsonStr);
+        
+        return new JsonModel([
+            'ok'
+        ]);           
+    }     
 }
