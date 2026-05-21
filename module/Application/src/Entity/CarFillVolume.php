@@ -278,6 +278,7 @@ class CarFillVolume {
             'title' => $this->getCarFillTitle()->getTitle(),
             'unit' => $this->getCarFillUnit()->getTitle(),
             'volume' => $this->getVolume(),
+            'volumeNorm' => $this->getVolumeNorm(),
             'info' => $this->getInfo(),
         ];
         
