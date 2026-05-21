@@ -242,4 +242,44 @@ class AttributeRepository  extends EntityRepository{
         $data = $queryBuilder->getQuery()->getResult();                
         return $data;
     }
+    
+    /**
+     * Максимальный тд ид для новых атрибутов
+     * @return id
+     */
+    public function attributeMaxTdId()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('a.tdId')
+                ->from(Attribute::class, 'a')
+                ->orderBy('a.tdId', 'desc')
+                ->setMaxResults(1)
+                ;
+        
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();  
+        
+        return 1 + ($row['tdId'] ?? 0);        
+    }
+    
+    /**
+     * Максимальный тд ид для новых атрибутов value
+     * @return id
+     */
+    public function attributeValueMaxTdId()
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('av.tdId')
+                ->from(AttributeValue::class, 'av')
+                ->orderBy('av.tdId', 'desc')
+                ->setMaxResults(1)
+                ;
+        
+        $row = $queryBuilder->getQuery()->getOneOrNullResult();  
+        
+        return 1 + ($row['tdId'] ?? 0);        
+    }
 }
