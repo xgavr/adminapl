@@ -1460,7 +1460,7 @@ class GoodsManager
                 'value' => $row['value'],
             ];
 
-            var_dump($attr);
+//            var_dump($attr);
             
             $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->addGoodAttributeValue($good, $attr);                   
