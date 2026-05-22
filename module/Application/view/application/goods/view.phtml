@@ -575,7 +575,14 @@
                                 type="button" title="Обновить машины по номеру" id="updateCarByOem"
                                 url="/car/update-good-car-by-oem/<?= $goods->getId()?>">
                             <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                        </button>                
+                        </button>
+                        <?php if(!empty($norms)):?>
+                            <button class="btn btn-default" 
+                                    type="button" title="Обновить машины по номеру" id="updateCarByOem"
+                                    url="/car/update-good-car-by-attr/<?= $goods->getId()?>">
+                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                            </button>                
+                        <?php endif; ?>
                         <button class="btn btn-default" 
                                 type="button" title="Удалить все машины" id="removeCars"
                                 <?= ($goods->getCheckCar() === Goods::CHECK_CAR_OE) ? '':'disabled' ?>
@@ -869,7 +876,7 @@
         $('.attributes-from-json').click(function (){
             var message = "Сделай строку в формате JSON с основными характеристиками (цвет, вес, спецификациии) для <?= $goods->getCode()?> <?= $goods->getProducer()->getName()?> \n\
     в виде [{type:xxx, name: xxxx, 'value': 'xxxx', 'unit': 'xxxx'}], где name - название характеристики (цве, вес, спецификация и т.п.), value - значение характеристики, unit - размерность (кг, л. и т.п.). \n\
-    type - тип характеристики. Для спецификаций антифриза type = AFZ, для остальных случаев type = G."
+    type - тип характеристики. Для спецификаций антифриза type = A, для остальных случаев type = G."
     <?php if(!empty($norms)): ?>
         message += " Нормализованные значения спецификаций - <?= $norms?>.";
     <?php endif; ?>    
