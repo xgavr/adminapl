@@ -298,7 +298,7 @@ class AttributeRepository  extends EntityRepository{
                 ->join('av.attributeValues', 'gav')
                 ->join('gav.attribute', 'a')
                 ->where('gav.good = :goodId')
-                ->setParamentr('goodId', $good->getId())
+                ->setParametr('goodId', $good->getId())
                 ->andWhere('a.valueType = :valueType')
                 ->setParametr('valueType', $type)
                 ;
