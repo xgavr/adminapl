@@ -713,11 +713,25 @@ class OrderController extends AbstractActionController
     public function viewAction() 
     {       
         $orderId = (int)$this->params()->fromRoute('id', -1);
+        $orderAplId = (int)$this->params()->fromQuery('aplId', -1);
         
         // Validate input parameter
         if ($orderId<0) {
-            $this->getResponse()->setStatusCode(404);
-            return;
+            
+            if ($orderAplId > 0){
+                $order = $this->entityManager->getRepository(Order::class)
+                    ->findOneBy(['aplId' => $orderAplId]);
+                if ($order){
+                    $orderId = $order->getId();
+                } else {
+                    $this->getResponse()->setStatusCode(404);
+                   return;                   
+                }
+            } else {             
+                $this->getResponse()->setStatusCode(404);
+                return;               
+            }
+
         }
         
         // Find the tax order ID
