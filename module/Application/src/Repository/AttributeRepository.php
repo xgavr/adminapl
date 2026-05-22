@@ -280,7 +280,7 @@ class AttributeRepository  extends EntityRepository{
         
         $row = $queryBuilder->getQuery()->getOneOrNullResult();  
         
-        return 1 + ($row['tdId'] ?? 0);        
+        return 1 + ((int) $row['tdId'] ?? 0);        
     }
     
     /**
