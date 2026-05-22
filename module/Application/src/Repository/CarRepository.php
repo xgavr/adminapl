@@ -529,7 +529,7 @@ class CarRepository extends EntityRepository
     {
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        $queryBuilder->select('сar')
+        $queryBuilder->select('car')
                 ->distinct()
                 ->from(Car::class, 'car')
                 ->join('car.carFillVolumes', 'cfv')
