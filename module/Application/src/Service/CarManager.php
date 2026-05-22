@@ -509,7 +509,7 @@ class CarManager
         $norms = $this->entityManager->getRepository(GoodAttributeValue::class)
                 ->findNormsForUpdateCar($good, 'A');
         
-        var_dump($norms); exit;
+//        var_dump($norms); exit;
         
         if (empty($norms)){
 //            $this->entityManager->getRepository(Goods::class)
