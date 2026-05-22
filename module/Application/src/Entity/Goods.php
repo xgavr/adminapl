@@ -124,6 +124,14 @@ class Goods {
         '115-132-133' => '2710', // тормозная жидкость
     ];    
     
+    const SIMPLE_NAME = [
+        '272-273', // шины
+        '187-244', // Трансмиссионное масло
+        '187-188', // Моторное масло
+        '115-143-290', // антифриз
+        '115-132-133', // тормозная жидкость
+    ];    
+    
     
     /**
      * @ORM\Id
@@ -1874,13 +1882,28 @@ class Goods {
     }
     
     /**
-     * Возвращает тип марки по Честному знаку или ложь
+     * Возвращает что это антифриз
      * @return str|bool
      */
     public function inAntifreezCategory()
     {
         foreach ($this->getCategories() as $groupSite) {
             if ($groupSite->getCode() == '115-143-290') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Возвращает что не недо составных наименований
+     * @return str|bool
+     */
+    public function simpleNameCategories()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if (in_array($groupSite->getCode(), self::SIMPLE_NAME)) {
                 return true;
             }
         }
