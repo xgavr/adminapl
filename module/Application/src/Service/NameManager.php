@@ -2406,34 +2406,36 @@ class NameManager
         $result['description'] = $good->getDescription();
         $result['bestName'] = $result['description'];
 
-        $textPart = $this->textPart($good);            
-        if ($textPart){
-            $result['textPart'] = $textPart;
-
-            $attrPrice = $this->attrPrice($good);
-            $result['attrPrice'] = $attrPrice;
-//                $result['attrPart'] = $this->attrPart($good);
-
-            $carPart = $this->carPart($good);
-            $carPartStr = null;
-            if (count($carPart)){
-                $carPartStr = $this->carPartStr($carPart);
-                $result['carPartStr'] = $carPartStr;                    
-            }
-            if (!$carPartStr){
-                $carPartStr = $this->priceCarStr($good->getId());
-                $result['carPrice'] = $carPartStr;                    
-            }
-            if (!$carPartStr){
-                $carPartStr = $this->oeCar($good->getId());
-                $result['oeCarPart'] = $carPartStr;
-            }
-
-            if ($carPartStr){
-                $result['bestName'] = trim($textPart.' '.$attrPrice).' '.$carPartStr;
-            }                
-        }    
+        if (!$good->simpleNameCategories()){//не надо сложных наименований для масла и т.п.
             
+            $textPart = $this->textPart($good);            
+            if ($textPart){
+                $result['textPart'] = $textPart;
+
+                $attrPrice = $this->attrPrice($good);
+                $result['attrPrice'] = $attrPrice;
+    //                $result['attrPart'] = $this->attrPart($good);
+
+                $carPart = $this->carPart($good);
+                $carPartStr = null;
+                if (count($carPart)){
+                    $carPartStr = $this->carPartStr($carPart);
+                    $result['carPartStr'] = $carPartStr;                    
+                }
+                if (!$carPartStr){
+                    $carPartStr = $this->priceCarStr($good->getId());
+                    $result['carPrice'] = $carPartStr;                    
+                }
+                if (!$carPartStr){
+                    $carPartStr = $this->oeCar($good->getId());
+                    $result['oeCarPart'] = $carPartStr;
+                }
+
+                if ($carPartStr){
+                    $result['bestName'] = trim($textPart.' '.$attrPrice).' '.$carPartStr;
+                }                
+            }    
+        }    
 
         if ($flag){
             $upd = [                    
