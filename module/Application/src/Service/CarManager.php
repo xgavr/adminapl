@@ -19,6 +19,7 @@ use Application\Entity\Oem;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Application\Entity\Make;
 use Application\Filter\ArticleCode;
+use Application\Entity\GoodAttributeValue;
 
 /**
  * Description of CarService
@@ -487,6 +488,60 @@ class CarManager
             ]);                                                             
         
         return;
+    }
+    
+    /**
+     * Обновить машина товара по атрибутам товара с той же спецификацией
+     * @param Goods $good
+     */
+    public function updateCarsByAttr($good, $force = false)
+    {
+        
+//        if ($good->getCheckCar() === Goods::CHECK_CAR_OE){
+//            $this->entityManager->getRepository(Goods::class)
+//                ->removeGoodCars($good);
+//        } else {        
+            if ($good->getCars()->count() && $force === false){
+                return; //уже есть машины
+            }
+//        }    
+        
+        $norms = $this->entityManager->getRepository(GoodAttributeValue::class)
+                ->findNormsForUpdateCar($good, 'A');
+        
+        var_dump($norms);
+        
+        if (empty($norms)){
+//            $this->entityManager->getRepository(Goods::class)
+//                ->updateGoodId($good->getId(), [
+//                    'check_car' => Goods::CHECK_CAR_NO_OE,
+//                ]);                                             
+//            return;            
+        }
+        
+        foreach ($norms as $norm){
+            
+            $cars = $this->entityManager->getRepository(Car::class)
+                    ->findCarByNorm($norm['value']);
+            
+            foreach ($cars as $car){
+//                var_dump($oem['oe'], $goodsWithCar->getCode());
+                    
+                $this->entityManager->getRepository(Goods::class)
+                        ->removeGoodCar($good, $car);
+                    
+                $this->entityManager->getRepository(Goods::class)
+                        ->addGoodCar($good, $car);                
+            }    
+        }           
+        
+        $this->entityManager->getRepository(Goods::class)
+            ->updateGoodId($good->getId(), [
+                'fasade_ex' => Goods::FASADE_EX_NEW,
+                'check_car' => Goods::CHECK_CAR_OE,
+            ]);
+        
+        return;        
     }
     
     /**
