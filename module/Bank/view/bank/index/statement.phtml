@@ -765,7 +765,8 @@
 
     function orderFormatter(value, row){
         if (row.aplPaymentType == 'Orders'){
-            return '<a href="https://old.autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+//            return '<a href="https://old.autopartslist.ru/admin/orders/view/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
+            return "<a href='#' class='order-view-show' modal-url='/order/view?aplId"+row.aplPaymentTypeId+"'>Заказ №"+row.aplPaymentTypeId+"</a>";
         }
         if (row.aplPaymentType == 'Users'){
             return '<a href="https://old.autopartslist.ru/admin/users/users-orders/id/'+row.aplPaymentTypeId+'" target="_blank">'+row.aplPaymentTypeId+'<a/>';
