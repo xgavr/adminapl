@@ -559,6 +559,31 @@ class CarController extends AbstractActionController
         ]);         
     }
     
+    public function updateGoodCarByAttrAction()
+    {
+        $goodId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($goodId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+        
+        $this->carManager->updateCarsByAttr($good, true);
+
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);         
+    }
+    
     public function deleteGoodCarsAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);
