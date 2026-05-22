@@ -282,4 +282,27 @@ class AttributeRepository  extends EntityRepository{
         
         return 1 + ($row['tdId'] ?? 0);        
     }
+    
+    /**
+     * 
+     * @param Goods $good
+     * @param string $type
+     */
+    public function findNormsForUpdateCar($good, $type)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('av')
+                ->from(AttributeValue::class, 'av')
+                ->join('av.attributeValues', 'gav')
+                ->join('gav.attribute', 'a')
+                ->where('gav.good = :goodId')
+                ->setParamentr('goodId', $good->getId())
+                ->andWhere('a.valueType = :valueType')
+                ->setParametr('valueType', $type)
+                ;
+        
+        return $queryBuilder->getQuery()->getResult(2);
+    }
 }
