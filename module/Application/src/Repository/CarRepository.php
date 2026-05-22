@@ -520,4 +520,23 @@ class CarRepository extends EntityRepository
         
         return $result;        
     }
+    
+    /**
+     * Поиск авто с нормой
+     * @param string $norm
+     */
+    public function findCarByNorm($norm) 
+    {
+        $entityManager = $this->getEntityManager();
+        $queryBuilder = $entityManager->createQueryBuilder();
+        $queryBuilder->select('с')
+                ->distinct()
+                ->from(Car::class, 'c')
+                ->join('c.carFillVolumes', 'cfv')
+                ->where('cfv.volumeNorm = :norm')
+                ->setParameter('norm', $norm)
+            ;
+        
+        return $queryBuilder->getQuery()->getResult();
+    }
 }
