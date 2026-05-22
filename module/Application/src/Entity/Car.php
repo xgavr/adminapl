@@ -160,7 +160,7 @@ class Car {
     protected $carAttributeValues;    
     
     /**
-    * @ORM\OneToMany(targetEntity="Application\Entity\CarFillVolume", mappedBy="car")
+    * @ORM\OneToMany(targetEntity="\Application\Entity\CarFillVolume", mappedBy="car")
     * @ORM\JoinColumn(name="id", referencedColumnName="car_id")
      */
     protected $carFillVolumes;    
