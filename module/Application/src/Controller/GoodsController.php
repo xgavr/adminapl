@@ -751,6 +751,11 @@ class GoodsController extends AbstractActionController
                     ->normsList(8);
         }
         
+        if ($goods->inMotorOilCategory()){
+            $norms = $this->entityManager->getRepository(Car::class)
+                    ->normsList(2);
+        }
+        
 
         // Render the view template.
         return new ViewModel([
