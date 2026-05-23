@@ -968,7 +968,8 @@ class CarManager
         $newVolume->setVolume($sourceCarFillVolume->getVolume());
         $newVolume->setVolumeNorm($newNormVolume);
 
-        $this->entityManager->persist($newVolume);        
+        $this->entityManager->persist($newVolume);   
+        $this->entityManager->flush();
     }
     
     /**
@@ -1133,14 +1134,13 @@ class CarManager
                 
                 $fillVolumeToUpdate->setVolumeNorm($row[0]);
                 $this->entityManager->persist($fillVolumeToUpdate);
+                $this->entityManager->flush();
                 
                 $k=1;
                 while(!empty($row[$k])){
                     $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
                 }               
-            }
-
-            $this->entityManager->flush();
+            }            
             
             usleep(100);
         }        
