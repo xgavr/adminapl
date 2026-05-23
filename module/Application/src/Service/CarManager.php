@@ -933,40 +933,211 @@ class CarManager
                 
                 $fillVolumeToUpdate->setVolumeNorm($row[0]);
                 $this->entityManager->persist($fillVolumeToUpdate);
-                
-                
-                if (!empty($row[1])){
-                    $newVolume = new CarFillVolume();
-                    $newVolume->setCar($fillVolumeToUpdate->getCar());
-                    $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
-                    $newVolume->setCarFillType($doubleType);
-                    $newVolume->setCarFillUnit($fillVolumeToUpdate->getCarFillUnit());
-                    $newVolume->setInfo($fillVolumeToUpdate->getInfo());
-                    $newVolume->setLang($fillVolumeToUpdate->getLang());
-                    $newVolume->setStatus($fillVolumeToUpdate->getStatus());
-                    $newVolume->setVolume($fillVolumeToUpdate->getVolume());
-                    $newVolume->setVolumeNorm($row[1]);
-                    
-                    $this->entityManager->persist($newVolume);
+                               
+                $k=1;
+                while(!empty($row[$k])){
+                    $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
+                }           
+            }
 
-                }
-                
-                if (!empty($row[2])){
-                    
-                    $newVolume = new CarFillVolume();
-                    $newVolume->setCar($fillVolumeToUpdate->getCar());
-                    $newVolume->setCarFillTitle($fillVolumeToUpdate->getCarFillTitle());
-                    $newVolume->setCarFillType($doubleType);
-                    $newVolume->setCarFillUnit($fillVolumeToUpdate->getCarFillUnit());
-                    $newVolume->setInfo($fillVolumeToUpdate->getInfo());
-                    $newVolume->setLang($fillVolumeToUpdate->getLang());
-                    $newVolume->setStatus($fillVolumeToUpdate->getStatus());
-                    $newVolume->setVolume($fillVolumeToUpdate->getVolume());
-                    $newVolume->setVolumeNorm($row[2]);
-                    
-                    $this->entityManager->persist($newVolume);
+            $this->entityManager->flush();
+            
+            usleep(100);
+        }        
+        
+        return;
+    } 
+    
+    /**
+     * Разбить значение нормы
+     * 
+     * @param CarFillVolume $sourceCarFillVolume
+     * @param CarFillType $doubleType
+     * @param string $newNormVolume
+     */
+    private function doubleCarFillVolume($sourceCarFillVolume, $doubleType, $newNormVolume)
+    {
+        $newVolume = new CarFillVolume();
+        $newVolume->setCar($sourceCarFillVolume->getCar());
+        $newVolume->setCarFillTitle($sourceCarFillVolume->getCarFillTitle());
+        $newVolume->setCarFillType($doubleType);
+        $newVolume->setCarFillUnit($sourceCarFillVolume->getCarFillUnit());
+        $newVolume->setInfo($sourceCarFillVolume->getInfo());
+        $newVolume->setLang($sourceCarFillVolume->getLang());
+        $newVolume->setStatus($sourceCarFillVolume->getStatus());
+        $newVolume->setVolume($sourceCarFillVolume->getVolume());
+        $newVolume->setVolumeNorm($newNormVolume);
 
-                }                                
+        $this->entityManager->persist($newVolume);        
+    }
+    
+    /**
+     * Обновить нормы антифриза
+     * @return null
+     */
+    public function updateCarOilVolumeNorms()
+    {
+        
+        $singleUpdates = [
+            'VW 503 00' => 'VW 503 00',
+            'RN0700' => 'Renault RN0700',
+            'WSS-M2C913-B' => 'Ford WSS-M2C913-B',
+            'API SG' => 'API SG',
+            'ACEA E2' => 'ACEA E2',
+            'API CD' => 'API CD',
+            'WSS-M2C913-A' => 'Ford WSS-M2C913-A',
+            'VW 506 00' => 'VW 506 00',
+            'ACEA E1' => 'ACEA E1',
+            'Porsche A40' => 'Porsche A40',
+            'ACEA C4' => 'ACEA C4',
+            'ACEA E3' => 'ACEA E3',
+            'MS-6395' => 'Chrysler MS-6395',
+            'API CF-4' => 'API CF-4',
+            'ACEA C1' => 'ACEA C1',
+            'API SM' => 'API SM',
+            'VW 505 00' => 'VW 505 00',
+            'API SH' => 'API SH',
+            'WSS-M2C912-A1' => 'Ford WSS-M2C912-A1',
+            'API CF' => 'API CF',
+            'ACEA E7' => 'ACEA E7',
+            'ACEA E6' => 'ACEA E6',
+            'PSA B71 2296' => 'PSA B71 2296',
+            'API SJ' => 'API SJ',
+            'API CH-4' => 'API CH-4',
+            'WSS-M2C912-A' => 'Ford WSS-M2C912-A',
+            'VW 506 01' => 'VW 506 01',
+            'MS-10725' => 'Chrysler MS-10725',
+            'API SE' => 'API SE',
+            'WSS-M2C917-A' => 'Ford WSS-M2C917-A',
+            'GM-LL-B-025' => 'GM-LL-B-025',
+            'ACEA A1/B1' => 'ACEA A1/B1',
+            'VW 503 01' => 'VW 503 01',
+            'MB 229.3' => 'MB 229.3',
+            'ACEA E4' => 'ACEA E4',
+            'WSS-M2C913-A1' => 'Ford WSS-M2C913-A', // Исправлена опечатка каталога
+            'WSS-M2C153-H' => 'Ford WSS-M2C153-H',
+            'WSS-M2C937-A' => 'Ford WSS-M2C937-A',
+            'Porsche C30' => 'Porsche C30',
+            'VW 500 00' => 'VW 500 00',
+            'MB 226.9' => 'MB 226.9',
+            'MB 224.1' => 'MB 224.1',
+            'Scania Low Ash' => 'Scania Low Ash'
+        ];
+
+        
+        foreach($singleUpdates as $key => $value){
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key]);
+            usleep(100);
+        }
+        
+        $splitUpdates = [
+            'ACEA E2|ACEA E3' => ['ACEA E2', 'ACEA E3'],
+            'ACEA A3/B3|ACEA A3/B4' => ['ACEA A3/B3', 'ACEA A3/B4'],
+            'FIAT 9.55535-S1' => ['Fiat 9.55535-S1'], // Переведен в единый регистр бренда
+            'MB 228.51|MB 229.31|MB 229.51' => ['MB 228.51', 'MB 229.31', 'MB 229.51'],
+            'ACEA A2/B2|ACEA A3/B3' => ['ACEA A2/B2', 'ACEA A3/B3'],
+            'WSS-M2C913-A|WSS-M2C912-A1' => ['Ford WSS-M2C913-A', 'Ford WSS-M2C912-A1'],
+            'MB 228.1|MB 228.3|MB 228.5|MB 229.1|MB 229.3|MB 229.5' => ['MB 228.1', 'MB 228.3', 'MB 228.5', 'MB 229.1', 'MB 229.3', 'MB 229.5'],
+            'MB 228.3|MB 228.5|MB 228.51|MB 229.3|MB 229.5|MB 229.31|MB 229.51' => ['MB 228.3', 'MB 228.5', 'MB 228.51', 'MB 229.3', 'MB 229.5', 'MB 229.31', 'MB 229.51'],
+            'API SL|API SM' => ['API SL', 'API SM'],
+            'MB 229.3|MB 229.5|MB 229.31|MB 229.51' => ['MB 229.3', 'MB 229.5', 'MB 229.31', 'MB 229.51'],
+            'PSA B71 2290|PSA B71 2296' => ['PSA B71 2290', 'PSA B71 2296'],
+            'FIAT 9.55535-S2' => ['Fiat 9.55535-S2'],
+            'PSA B71 2290|PSA B71 2312' => ['PSA B71 2290', 'PSA B71 2312'],
+            'VDS-3|VDS-4' => ['Volvo VDS-3', 'Volvo VDS-4'],
+            'ACEA A1/B1|ACEA A2/B2|ACEA A3/B3' => ['ACEA A1/B1', 'ACEA A2/B2', 'ACEA A3/B3'],
+            'API SH|API SJ' => ['API SH', 'API SJ'],
+            'API SJ|API SL' => ['API SJ', 'API SL'],
+            'MB 229.1|MB 229.3' => ['MB 229.1', 'MB 229.3'],
+            'ACEA E5|ACEA E7' => ['ACEA E5', 'ACEA E7'],
+            'API SG|API SH' => ['API SG', 'API SH'],
+            'VW 501 01|VW 502 00|VW 504 00' => ['VW 501 01', 'VW 502 00', 'VW 504 00'],
+            'MB 228.51|MB 229.31' => ['MB 228.51', 'MB 229.31'],
+            'API CF|API CF-4' => ['API CF', 'API CF-4'],
+            'ACEA C2|ACEA C3' => ['ACEA C2', 'ACEA C3'],
+            'VDS-2|VDS-3|VDS-4' => ['Volvo VDS-2', 'Volvo VDS-3', 'Volvo VDS-4'],
+            'VW 505 00|VW 501 01' => ['VW 505 00', 'VW 501 01'],
+            'VW 503 01|VW 504 00' => ['VW 503 01', 'VW 504 00'],
+            'MB 229.3|MB 229.5' => ['MB 229.3', 'MB 229.5'],
+            'API SL|API SM|API SN' => ['API SL', 'API SM', 'API SN'],
+            'API SG|API SH|API SJ|API SL|API SM' => ['API SG', 'API SH', 'API SJ', 'API SL', 'API SM'],
+            'ACEA A1/B1|ACEA A3/B3' => ['ACEA A1/B1', 'ACEA A3/B3'],
+            'VW 502 00|VW 505 01' => ['VW 502 00', 'VW 505 01'],
+            'API SG|API SH|API SJ' => ['API SG', 'API SH', 'API SJ'],
+            'MB 229.5|MB 229.51' => ['MB 229.5', 'MB 229.51'],
+            'FIAT 9.55535-N2' => ['Fiat 9.55535-N2'],
+            'ACEA E2|ACEA E3|ACEA E5' => ['ACEA E2', 'ACEA E3', 'ACEA E5'],
+            'MB 228.5|MB 228.51' => ['MB 228.5', 'MB 228.51'],
+            'API SE|API SF|API SG|API SH|API SJ|API SL' => ['API SE', 'API SF', 'API SG', 'API SH', 'API SJ', 'API SL'],
+            'API SE|API SF|API SG|API SH' => ['API SE', 'API SF', 'API SG', 'API SH'],
+            'VW 502 00|VW 504 00' => ['VW 502 00', 'VW 504 00'],
+            'ACEA C1|ACEA C2|ACEA C3|ACEA C4' => ['ACEA C1', 'ACEA C2', 'ACEA C3', 'ACEA C4'],
+            'VW 506 00|VW 507 00' => ['VW 506 00', 'VW 507 00'],
+            'FIAT 9.55535-M2' => ['Fiat 9.55535-M2'],
+            'PSA B71 2296|PSA B71 2300' => ['PSA B71 2296', 'PSA B71 2300'],
+            'MB 228.1|MB 228.3|MB 228.5|MB 228.51' => ['MB 228.1', 'MB 228.3', 'MB 228.5', 'MB 228.51'],
+            'FIAT 9.55535-T2' => ['Fiat 9.55535-T2'],
+            'PSA B71 2290|PSA B71 2296|PSA B71 2300|PSA B71 2312' => ['PSA B71 2290', 'PSA B71 2296', 'PSA B71 2300', 'PSA B71 2312'],
+            'ACEA A3/B4|ACEA C3' => ['ACEA A3/B4', 'ACEA C3'],
+            'FIAT 9.55535-G2' => ['Fiat 9.55535-G2'],
+            'VW 506 00|VW 506 01' => ['VW 506 00', 'VW 506 01'],
+            'FIAT 9.55535-H2' => ['Fiat 9.55535-H2'],
+            'API SD|API SE' => ['API SD', 'API SE'],
+            'MS-11106' => ['Chrysler MS-11106'],
+            'VW 505 01|VW 507 00' => ['VW 505 01', 'VW 507 00'],
+            'ACEA A1/B1|ACEA A3/B3|ACEA A3/B4|ACEA A5/B5' => ['ACEA A1/B1', 'ACEA A3/B3', 'ACEA A3/B4', 'ACEA A5/B5'],
+            'API SG|API SH|API SJ|API SM' => ['API SG', 'API SH', 'API SJ', 'API SM'],
+            'ACEA A1/B1|ACEA A3/B3|ACEA A5/B5' => ['ACEA A1/B1', 'ACEA A3/B3', 'ACEA A5/B5'],
+            'ACEA E2|ACEA E3|ACEA E4|ACEA E5' => ['ACEA E2', 'ACEA E3', 'ACEA E4', 'ACEA E5'],
+            'VW 500 00|VW 501 01|VW 502 00|VW 505 00' => ['VW 500 00', 'VW 501 01', 'VW 502 00', 'VW 505 00'],
+            'ACEA A1/B1|ACEA A3/B3|ACEA A3/B4' => ['ACEA A1/B1', 'ACEA A3/B3', 'ACEA A3/B4'],
+            'VW 505 01|VW 506 01|VW 507 00' => ['VW 505 01', 'VW 506 01', 'VW 507 00'],
+            'MB 228.3|MB 228.5|MB 229.3|MB 229.5|MB 229.31' => ['MB 228.3', 'MB 228.5', 'MB 229.3', 'MB 229.5', 'MB 229.31'],
+            'MB 228.0|MB 228.1|MB 228.2|MB 228.3' => ['MB 228.0', 'MB 228.1', 'MB 228.2', 'MB 228.3'],
+            'VW 500 00|VW 501 01|VW 505 00' => ['VW 500 00', 'VW 501 01', 'VW 505 00'],
+            'API SG|API SH|API SJ|API SL' => ['API SG', 'API SH', 'API SJ', 'API SL'],
+            'API CC|API CD' => ['API CC', 'API CD'],
+            'API SG|API SF' => ['API SG', 'API SF'],
+            'MB 227.0|MB 227.1|MB 228.0|MB 228.1|MB 228.2|MB 228.3|MB 228.5' => ['MB 227.0', 'MB 227.1', 'MB 228.0', 'MB 228.1', 'MB 228.2', 'MB 228.3', 'MB 228.5'],
+            'API SE|API SF|API SG|API SH|API SJ' => ['API SE', 'API SF', 'API SG', 'API SH', 'API SJ'],
+            'ACEA A3/B3|ACEA A3/B4|ACEA A5/B5' => ['ACEA A3/B3', 'ACEA A3/B4', 'ACEA A5/B5'],
+            'API SH|API SG' => ['API SH', 'API SG'],
+            'MB 228.1|MB 228.3|MB 228.5' => ['MB 228.1', 'MB 228.3', 'MB 228.5'],
+            'MB 228.3|MB 228.5|MB 228.51|MB 229.3|MB 229.5|MB 229.31' => ['MB 228.3', 'MB 228.5', 'MB 228.51', 'MB 229.3', 'MB 229.5', 'MB 229.31'],
+            'PSA B71 2290|PSA B71 2295|PSA B71 2296|PSA B71 2300' => ['PSA B71 2290', 'PSA B71 2295', 'PSA B71 2296', 'PSA B71 2300'],
+            'API SE|API SF' => ['API SE', 'API SF'],
+            'VDS|VDS-2' => ['Volvo VDS', 'Volvo VDS-2'],
+            'FIAT 9.55535-G1' => ['Fiat 9.55535-G1'],
+            'API CF-4|API CG-4' => ['API CF-4', 'API CG-4'],
+            'FIAT 9.55535-H3' => ['Fiat 9.55535-H3'],
+            'API SC|API SD|API SE|API SF' => ['API SC', 'API SD', 'API SE', 'API SF'],
+            'API SD|API SE|API SF' => ['API SD', 'API SE', 'API SF'],
+            'ACEA E7|Scania LDF|Scania Low Ash' => ['ACEA E7', 'Scania LDF', 'Scania Low Ash'],
+            'VW 505 01|VW 507 00|VW 506 01' => ['VW 505 01', 'VW 507 00', 'VW 506 01'],
+            'VW 506 00|VW 506 01|VW 507 00' => ['VW 506 00', 'VW 506 01', 'VW 507 00'],
+            'ACEA A2/B2|ACEA A3/B3|ACEA A3/B4' => ['ACEA A2/B2', 'ACEA A3/B3', 'ACEA A3/B4'],
+            'VW 502 00|VW 505 01|VW 503 01' => ['VW 502 00', 'VW 505 01', 'VW 503 01'],
+            'FIAT 9.55535-Z2' => ['Fiat 9.55535-Z2'],
+            'VW 505 01|VW 505 00|VW 507 00' => ['VW 505 01', 'VW 505 00', 'VW 507 00']
+        ];
+
+        
+        $doubleType = $this->entityManager->getRepository(CarFillType::class)
+                ->find(2);
+        
+        foreach($splitUpdates as $key => $row){
+            $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
+                    ->findBy(['volume' => $key, 'carFillTitile' => 2]);
+            
+            foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
+                
+                $fillVolumeToUpdate->setVolumeNorm($row[0]);
+                $this->entityManager->persist($fillVolumeToUpdate);
+                
+                $k=1;
+                while(!empty($row[$k])){
+                    $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
+                }               
             }
 
             $this->entityManager->flush();
