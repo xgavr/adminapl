@@ -519,6 +519,8 @@ class CarManager
 //            return;            
         }
         
+        $allCars = [];
+        
         foreach ($norms as $norm){
             
             $cars = $this->entityManager->getRepository(Car::class)
@@ -526,14 +528,17 @@ class CarManager
             
             foreach ($cars as $car){
 //                var_dump($oem['oe'], $goodsWithCar->getCode());
-                    
-                $this->entityManager->getRepository(Goods::class)
-                        ->removeGoodCar($good, $car);
-                    
-                $this->entityManager->getRepository(Goods::class)
-                        ->addGoodCar($good, $car);                
+                 $allCars[$car->getId()] = $car;                   
             }    
-        }           
+        }  
+        
+        foreach ($allCars as $allCar){
+            $this->entityManager->getRepository(Goods::class)
+                    ->removeGoodCar($good, $allCar);
+
+            $this->entityManager->getRepository(Goods::class)
+                    ->addGoodCar($good, $allCar);             
+        }
         
         $this->entityManager->getRepository(Goods::class)
             ->updateGoodId($good->getId(), [
