@@ -1897,6 +1897,21 @@ class Goods {
     }
     
     /**
+     * Возвращает что это антифриз
+     * @return str|bool
+     */
+    public function inMotorOilCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '187-188') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Возвращает что не недо составных наименований
      * @return str|bool
      */
