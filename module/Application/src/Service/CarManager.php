@@ -1139,6 +1139,7 @@ class CarManager
                 $k=1;
                 while(!empty($row[$k])){
                     $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
+                    $k++;
                 }               
             }            
             
