@@ -1418,7 +1418,9 @@ class GoodsManager
 //        var_dump($attrCount, $part['properties'], $part['dimensions']); exit;
         
         if ($attrCount > 0){
+            
 //            return;
+            
             $goodAttributeValues = $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->findBy(['good' => $good->getId()]);
             foreach ($goodAttributeValues as $goodAttributeValue){
