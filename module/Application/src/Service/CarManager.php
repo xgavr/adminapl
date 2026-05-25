@@ -978,7 +978,7 @@ class CarManager
     }
     
     /**
-     * Обновить нормы антифриза
+     * Обновить нормы моторного масла
      * @return null
      */
     public function updateCarOilVolumeNorms()
@@ -1192,6 +1192,323 @@ class CarManager
         foreach($splitUpdates as $key => $row){
             $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
                     ->findBy(['volume' => $key, 'carFillTitile' => 2]);
+            
+            foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
+                
+                $fillVolumeToUpdate->setVolumeNorm($row[0]);
+                $this->entityManager->persist($fillVolumeToUpdate);
+                $this->entityManager->flush();
+                
+                $k=1;
+                while(!empty($row[$k])){
+                    $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
+                    $k++;
+                }               
+            }            
+            
+            usleep(100);
+        }        
+        
+        return;
+    }   
+    
+    /**
+     * Обновить нормы трансм масла
+     * @return null
+     */
+    public function updateCarTransOilVolumeNorms()
+    {
+        set_time_limit(0);
+        
+        $singleUpdates = [
+            'G 052 145 A1' => 'VAG G 052 145',
+            'API GL5 SAE 80W-90' => 'API GL-5 80W-90',
+            'API GL5 SAE 75W-90' => 'API GL-5 75W-90',
+            'SAE 75W-90' => 'SAE 75W-90',
+            'MB 235.1' => 'MB 235.1',
+            'G 052 182 A2' => 'VAG G 052 182', // Жидкость DSG
+            'API GL4 SAE 75W-85' => 'API GL-4 75W-85',
+            'API GL5' => 'API GL-5',
+            'ZF TE-ML 14E' => 'ZF TE-ML 14E',
+            'WSS-M2C200-D2' => 'Ford WSS-M2C200-D2',
+            'ESP-M2C-166-H' => 'Ford ESP-M2C166-H',
+            'WSD-M2C200-C' => 'Ford WSD-M2C200-C',
+            'MAN 339 Typ Z4' => 'MAN 339 Typ Z4',
+            'MAN 339 Typ Z3' => 'MAN 339 Typ Z3',
+            'G 052 512 A2' => 'VAG G 052 512',
+            'ESSO 75W80 EZL 848' => 'PSA EZL 848',
+            'MB 236.15' => 'MB 236.15',
+            'ATF+4' => 'Mopar ATF+4',
+            'ZF TE-ML 02D' => 'ZF TE-ML 02D',
+            'API GL3 SAE 80W-90' => 'API GL-3 80W-90',
+            'TOTAL H6965' => 'Total H6965',
+            'ATF SP-III' => 'ATF SP-III',
+            'API GL4 PLUS SAE 75W-80' => 'API GL-4+ 75W-80',
+            'ATF Dexron VI' => 'GM Dexron VI',
+            '1161 540' => 'Volvo 1161540',
+            'MB 236.2' => 'MB 236.2',
+            'G 052 726 A2' => 'VAG G 052 726',
+            'ZF TE-ML 02E' => 'ZF TE-ML 02E',
+            'MAN 339 Typ D' => 'MAN 339 Typ D',
+            'MAN 339 Typ F' => 'MAN 339 Typ F',
+            'ATF AW-1' => 'ATF AW-1',
+            'ZF TE-ML 02H' => 'ZF TE-ML 02H',
+            '31280771' => 'Volvo 31280771',
+            'ESSO JWS 3309' => 'JWS 3309',
+            'SAE 75W' => 'SAE 75W',
+            'G 060 162 A2' => 'VAG G 060 162',
+            'ESSO LT 71141' => 'ZF Lifeguardfluid 5', // Промышленный стандарт LT 71141
+            'G 055 025 A2' => 'VAG G 055 025',
+            'G 052 180 A2' => 'VAG G 052 180', // Жидкость CVT
+            'ATF Dexron II E' => 'GM Dexron II-E',
+            'MB 236.12' => 'MB 236.12',
+            'MTF-LT-2' => 'BMW MTF-LT-2',
+            'Total Transmission BV 75W-80' => 'PSA B71 2330', // Прямое соответствие масла BV
+            'G 052 516 A2' => 'VAG G 052 516',
+            'WSS-M2C938-A' => 'Ford WSS-M2C938-A',
+            'G 052 513 A2' => 'VAG G 052 513',
+            'WSS-M2C936-A' => 'Ford WSS-M2C936-A',
+            'API GL3' => 'API GL-3',
+            'MAN 341' => 'MAN 341 Typ E1',
+            'G 060 726 A2' => 'VAG G 060 726',
+            'API GL4 PLUS SAE 75W-85' => 'API GL-4+ 75W-85',
+            'API GL4 SAE 75W' => 'API GL-4 75W',
+            'API GL5 SAE 80W' => 'API GL-5 80W',
+            'ATF 3309' => 'JWS 3309',
+            'CCMC D4' => 'CCMC D4',
+            'MTF-94' => 'Rover MTF-94',
+            'FIAT 9.55550-MX3' => 'Fiat 9.55550-MX3',
+            'Shell ATF M-1375.4' => 'ZF Lifeguardfluid 6', // Формула M-1375.4 это шестая жидкость ZF
+            'ATF Dexron' => 'GM Dexron IID',
+            'API GL4 SAE 80W-90' => 'API GL-4 80W-90',
+            'SAE 80W-90' => 'SAE 80W-90',
+            'SQM-2C9008-A' => 'Ford SQM-2C9008-A',
+            'MTF-LT-3' => 'BMW MTF-LT-3',
+            'MTF 0063' => 'Saab MTF 0063',
+            'ATF SP-IV' => 'ATF SP-IV',
+            'G 052 532 A2' => 'VAG G 052 532',
+            '93165147' => 'GM 1940182', // Нормализация старого артикула Opel
+            'Shell L 12108' => 'ZF Lifeguardfluid 8', // Спецификация Shell L12108 это ZF 8
+            'ZF TE-ML 02L' => 'ZF TE-ML 02L',
+            'MTF' => 'API GL-4',
+            'G 055 532 A2' => 'VAG G 055 532',
+            'MTF-LT-4' => 'BMW MTF-LT-4',
+            'WSS-M2C919-E' => 'Ford WSS-M2C919-E',
+            'WSS-M2C928-A' => 'Ford WSS-M2C928-A',
+            'MIL-L-2105' => 'MIL-L-2105',
+            'FIAT 9.55550-MZ6' => 'Fiat 9.55550-MZ6',
+            'MB 236.10' => 'MB 236.10',
+            'ATF T-IV' => 'Toyota ATF Type T-IV',
+            'G 052 527 A2' => 'VAG G 052 527',
+            'ESD-M2C186-A' => 'Ford ESD-M2C186-A',
+            'G 052 178 A2' => 'VAG G 052 178',
+            'G 052 990 A2' => 'VAG G 052 990',
+            'FIAT 9.55550-MZ1' => 'Fiat 9.55550-MZ1',
+            'G 50' => 'VAG G 050 000',
+            'MAN 341 Typ E3' => 'MAN 341 Typ E3',
+            'MAN 341 Typ E4' => 'MAN 341 Typ E4',
+            'ATF WS' => 'Toyota ATF WS',
+            'WSS-M2C924-A' => 'Ford WSS-M2C924-A',
+            'ATF Z1' => 'Honda ATF-Z1',
+            '31256 774' => 'Volvo 31256774',
+            'VW ATF' => 'VAG G 052 162',
+            'G 052 025 A2' => 'VAG G 052 025',
+            'ATF M-V' => 'Mazda ATF M-V',
+            'Suzuki ATF 3317' => 'Suzuki ATF 3317',
+            'Texaco ETL 7045E' => 'GM ETL-7045E',
+            '1161 838' => 'Volvo 1161838',
+            'WSS-M2C922-A1' => 'Ford WSS-M2C922-A1',
+            '31256774' => 'Volvo 31256774',
+            'TOYOTA Genuine ATF WS' => 'Toyota ATF WS',
+            '9163335' => 'Volvo 9163335',
+            'API GL4 SAE 90' => 'API GL-4 90',
+            'G 009 317 A2' => 'VAG G 009 317',
+            'FIAT 9.55550-AV2' => 'Fiat 9.55550-AV2',
+            'SAE 75W-85' => 'SAE 75W-85',
+            'Mobil ATF 3309' => 'JWS 3309',
+            'ATF LT 71141' => 'ZF Lifeguardfluid 5',
+            'ZF TE-ML 02F' => 'ZF TE-ML 02F',
+            'PSA B71 2330' => 'PSA B71 2330',
+            'MB 235.71' => 'MB 235.71',
+            '9736 22' => 'PSA 9736.22',
+            'TUTELA GI/A' => 'Fiat 9.55550-AG1',
+            'SAE 70W' => 'SAE 70W',
+            'WSS-M2C202-B' => 'Ford WSS-M2C202-B',
+            'FIAT 9.55550-AV4' => 'Fiat 9.55550-AV4',
+            'G 055 005 A2' => 'VAG G 055 005',
+            '1940182' => 'GM 1940182',
+            'ATF FZ' => 'Mazda ATF FZ',
+            'MB 235.72' => 'MB 235.72',
+            'G 055 540 A2' => 'VAG G 055 540',
+            '1161 745' => 'Volvo 1161745',
+            'SAE 80W' => 'SAE 80W',
+            'MB 236.20' => 'MB 236.20', // Вариатор Autotronic
+            'Castrol Transmax J' => 'JWS 3309',
+            'API GL-4' => 'API GL-4',
+            'FIAT 9.55530-MX3' => 'Fiat 9.55550-MX3', // Коррекция опечатки в группе кода
+            'MB 236.11' => 'MB 236.11',
+            'ESSO ATF D' => 'GM Dexron IID',
+            'ATF SP-II' => 'ATF SP-II',
+            'ATF Dexron III G' => 'GM Dexron III-G',
+            'ELFMATIC J6' => 'Renault Elfmatic J6',
+            '400 108247' => 'Ford 400108247',
+            'TUTELA GI/V' => 'Fiat 9.55550-AV1',
+            'ATF SP-II M' => 'ATF SP-II M',
+            'Texaco ETL 8997B' => 'GM ETL-8997B',
+            'Nissan NS-2 CVT Fluid' => 'Nissan NS-2',
+            'ATF+3' => 'Mopar ATF+3',
+            'API GL3 SAE 75W-90' => 'API GL-3 75W-90',
+            'Nissan ATF' => 'Nissan Matic-D',
+            'Shell ATF 3353' => 'MB 236.12', // Жидкость 3353 создана под 236.12
+            'Mopar NV1500' => 'Mopar NV1500',
+            'Texaco N402' => 'Rover N402',
+            'Mopar NV3550' => 'Mopar NV3550',
+            'C2S 19889' => 'Jaguar C2S19889',
+            'Castrol BOT 350 M3' => 'Fiat 9.55550-MZ1',
+            'VW TL 521 78' => 'VAG G 052 178', // Кросс инженерного кода на артикул
+            'CVTF+4' => 'Mopar CVTF+4',
+            'G 055 538 A2' => 'VAG G 055 538',
+            'DIA QUEEN CVTF J1' => 'Mitsubishi CVTF-J1',
+            'MS-9224' => 'Chrysler MS-9224',
+            'API GL3 SAE 75W-85' => 'API GL-3 75W-85',
+            'TOTAL ATF H50235' => 'Hyundai ATF H50235',
+            'API GL3 SAE 85W-90' => 'API GL-3 85W-90',
+            'FIAT 9.55550' => 'Fiat 9.55550',
+            'Nippon AW-1' => 'ATF AW-1',
+            'G 055 162 A2' => 'VAG G 055 162',
+            'Nissan AT-Matic D' => 'Nissan Matic-D',
+            'ESSO JWS 227' => 'JWS 227',
+            'ESSO CVT EZL 799' => 'BMW EZL 799',
+            'MB 236.6' => 'MB 236.6',
+            'N052162-VX00' => 'VAG G 052 162',
+            'Mercon V' => 'Ford Mercon V',
+            'G 052 798 A2' => 'VAG G 052 798',
+            'ATF RED-1K' => 'KIA ATF Red-1K',
+            'XT-2-QDX' => 'Ford Mercon',
+            'Suzuki 99000-22B21-036' => 'Suzuki 99000-22B21-036',
+            'ESSO JWS 3314' => 'JWS 3314',
+            'Nissan NS-1 CVT Fluid' => 'Nissan NS-1',
+            '9196089' => 'Saab 9196089',
+            '9730 94' => 'Volvo 97309',
+            'Castrol MTF 97309' => 'Volvo 97309',
+            'Castrol MTF BOT 338' => 'GM 1940182',
+            '1940768' => 'GM 1940768',
+            '00009979A7' => 'PSA 9979.A7',
+            'ESP-M2C-202-B' => 'Ford ESP-M2C202-B',
+            'NO52171-VX00' => 'VAG G 052 171',
+            'G 055 726 A2' => 'VAG G 055 726',
+            'MAN 341 Typ Z2' => 'MAN 341 Typ Z2',
+            '000 043 304 00' => 'Porsche 00004330400',
+            'VOLVO 97308' => 'Volvo 97308',
+            'MAN 341 Typ Z3' => 'MAN 341 Typ Z3',
+            'Mitsubishi Diaqueen SSTF-1' => 'Mitsubishi SSTF-I', // Робот Эво/Раллиарт
+            'MB 236.5' => 'MB 236.5',
+            'ATF Dexron I' => 'GM Dexron IID',
+            'ATF RED-1' => 'KIA ATF Red-1',
+            '7711428122' => 'Renault 7711428122',
+            'Shell ATF 3403 M115' => 'MB 236.10',
+            '000 043 300 38' => 'Porsche 00004330038',
+            'MAN 341 Typ Z1' => 'MAN 341 Typ Z1',
+            'ESSO D21065' => 'GM Dexron IID',
+            'MTF HQ Multi 75W-85' => 'Hyundai MTF 75W-85',
+            'Nissan AT-Matic S' => 'Nissan Matic-S',
+            'Mercon' => 'Ford Mercon',
+            'G 51' => 'VAG G 051 000',
+            'N052990-VX00' => 'VAG G 052 990',
+            'WSD-M2C200-C3' => 'Ford WSD-M2C200-C3',
+            '77 11 218 368' => 'Renault 7711218368',
+            'API GL5 SAE 75W' => 'API GL-5 75W',
+            'WSS-M2C203-A1' => 'Ford WSS-M2C203-A1',
+            'Mobil ATF 220D' => 'GM Dexron IID',
+            'MB 235.12' => 'MB 235.12',
+            'G 005 100 A1' => 'VAG G 005 100',
+            'TOTAL EP 80' => 'API GL-4 80W',
+            'XR8 50057' => 'Jaguar XR850057',
+            'ATF PA' => 'Toyota ATF PA',
+            '000 043 205 28' => 'Porsche 00004320528',
+            'VW TL 521 57' => 'VAG G 052 157',
+            'TOYOTA Genuine CVTF TC' => 'Toyota CVTF TC',
+            'AF 40' => 'GM AW-1',
+            'Castrol TQ 95' => 'BTR Type 95', // Спецификация автомата SsangYong/Ford
+            'MB 235.4' => 'MB 235.4',
+            'XR8 50056' => 'Jaguar XR850056',
+            'ESP-M2C-166-A' => 'Ford ESP-M2C166-A',
+            'G 052 157 A2' => 'VAG G 052 157',
+            'DIA QUEEN ATF J3' => 'Mitsubishi ATF-J3',
+            'WSS-M2C932-A' => 'Ford WSS-M2C932-A',
+            'ATF SP' => 'ATF SP-III',
+            '88862472' => 'GM 88862472',
+            'MTF 2' => 'Rover MTF-94',
+            'Castrol Transmax Z' => 'ZF TE-ML 14C',
+            'Suzuki CVT Fluid Green 1' => 'Suzuki CVT Green 1',
+            'Nissan AT-Matic J' => 'Nissan Matic-J',
+            'TOYOTA GEAR OIL V160' => 'Toyota V160', // Спецификация МКПП Getrag V160 (Supra)
+            'Texaco MTF 94' => 'Rover MTF-94',
+            '09120541/1940768' => 'GM 1940768',
+            '09117946/1940767' => 'GM 1940767',
+            '9117946/1940767' => 'GM 1940767',
+            '90001777/1940750' => 'GM 1940750',
+            '90188629/1940759' => 'GM 1940759',
+            '93165290/1940182' => 'GM 1940182',
+            '93165147/1940773' => 'GM 1940773',
+            '90540998/1940764' => 'GM 1940764',
+            '9121964/1940708' => 'GM 1940708',
+            '93160393/1940771' => 'GM 1940771',
+            '90350342/1940700' => 'GM 1940700',
+            '9120541/1970768' => 'GM 1940768', // Исправлена жесткая опечатка в годе/коде 197->194
+            '93160536/1940713' => 'GM 1940713'            
+        ];
+               
+
+        foreach($singleUpdates as $key => $value){
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key]);
+            usleep(100);
+        }
+        
+        $splitUpdates = [
+           'VOLVO 97307|VOLVO 97315' => ['Volvo 97307', 'Volvo 97315'],
+           'MB 235.4|MB 235.11' => ['MB 235.4', 'MB 235.11'],
+           'MB 236.6|MB 236.7' => ['MB 236.6', 'MB 236.7'],
+           'MAN 341 Typ Z3|MAN 341 Typ Z4' => ['MAN 341 Typ Z3', 'MAN 341 Typ Z4'],
+           'ZF TE-ML 02D|ZF TE-ML 02L' => ['ZF TE-ML 02D', 'ZF TE-ML 02L'],
+           'MB 235.1|MB 235.11' => ['MB 235.1', 'MB 235.11'],
+           'ZF TE-ML 02B|ZF TE-ML 02C|ZF TE-ML 02D|ZF TE-ML 02H|ZF TE-ML 02L' => ['ZF TE-ML 02B', 'ZF TE-ML 02C', 'ZF TE-ML 02D', 'ZF TE-ML 02H', 'ZF TE-ML 02L'],
+           'ZF TE-ML 02C|ZF TE-ML 02D|ZF TE-ML 02H|ZF TE-ML 02L' => ['ZF TE-ML 02C', 'ZF TE-ML 02D', 'ZF TE-ML 02H', 'ZF TE-ML 02L'],
+           'ZF TE-ML 02B|ZF TE-ML 02C|ZF TE-ML 02G|ZF TE-ML 02H' => ['ZF TE-ML 02B', 'ZF TE-ML 02C', 'ZF TE-ML 02G', 'ZF TE-ML 02H'],
+           'MB 236.9|MB 236.91' => ['MB 236.9', 'MB 236.91'],
+           'ZF TE-ML 02H|API GL3' => ['ZF TE-ML 02H', 'API GL-3'],
+           'ATF M-III|ATF Dexron II' => ['Mazda ATF M-III', 'GM Dexron IID'],
+           'Dexron II / III' => ['GM Dexron IID', 'GM Dexron III-G'],
+           'ZF TE-ML 02B|ZF TE-ML 02D|ZF TE-ML 02F|ZF TE-ML 02G|ZF TE-ML 02H' => ['ZF TE-ML 02B', 'ZF TE-ML 02D', 'ZF TE-ML 02F', 'ZF TE-ML 02G', 'ZF TE-ML 02H'],
+           'MB 236.1|MB 236.6|MB 236.7|MB 236.8|MB 236.81' => ['MB 236.1', 'MB 236.6', 'MB 236.7', 'MB 236.8', 'MB 236.81'],
+           'API GL4|API GL5' => ['API GL-4', 'API GL-5'],
+           'MB 236.12|MB 236.14' => ['MB 236.12', 'MB 236.14'],
+           'API GL3 SAE 75W-90|API GL4 SAE 75W-90' => ['API GL-3 75W-90', 'API GL-4 75W-90'],
+           'MB 235.10|MB 236.2|MB 236.6' => ['MB 235.10', 'MB 236.2', 'MB 236.6'],
+           'MB 236.14|MB 236.15' => ['MB 236.14', 'MB 236.15'],
+           'API GL4 SAE 75W-80|API GL5 SAE 75W-80' => ['API GL-4 75W-80', 'API GL-5 75W-80'],
+           'ATF Dexron II E|ATF Dexron III' => ['GM Dexron II-E', 'GM Dexron III-G'],
+           'API GL3 SAE 75W-85|API GL4 SAE 75W-85' => ['API GL-3 75W-85', 'API GL-4 75W-85'],
+           'API GL4 SAE 90|API GL5 SAE 90' => ['API GL-4 90', 'API GL-5 90'],
+           'API GL4 SAE 80W-90|API GL5 SAE 80W-90' => ['API GL-4 80W-90', 'API GL-5 80W-90'],
+           'MB 236.1|MB 236.8|MB 236.81' => ['MB 236.1', 'MB 236.8', 'MB 236.81'],
+           'API GL3|API GL4' => ['API GL-3', 'API GL-4'],
+           'API GL3 SAE 75W-80|API GL4 SAE 75W-80' => ['API GL-3 75W-80', 'API GL-4 75W-80'],
+           'ATF M-III|ATF Dexron III' => ['Mazda ATF M-III', 'GM Dexron III-G'],
+           'Dexron II / IIE / III' => ['GM Dexron IID', 'GM Dexron II-E', 'GM Dexron III-G'],
+           'ATF M-V|ATF Dexron II' => ['Mazda ATF M-V', 'GM Dexron IID'],
+           'Dexron   IIE / III' => ['GM Dexron II-E', 'GM Dexron III-G'],
+           'API SF|API CC' => ['API SF', 'API CC'], // Древний стандарт МКПП под моторное масло
+           'API SF|API SG' => ['API SF', 'API SG']
+       ];
+
+        
+        $doubleType = $this->entityManager->getRepository(CarFillType::class)
+                ->find(2);
+        
+        foreach($splitUpdates as $key => $row){
+            $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
+                    ->findBy(['volume' => $key]);
             
             foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
                 
