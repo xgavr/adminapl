@@ -1462,7 +1462,7 @@ class CarManager
 
         foreach($singleUpdates as $key => $value){
             $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key]);
-            usleep(100);
+//            usleep(100);
         }
         
         $splitUpdates = [
@@ -1523,7 +1523,7 @@ class CarManager
                 }               
             }            
             
-            usleep(100);
+//            usleep(100);
         }        
         
         return;
