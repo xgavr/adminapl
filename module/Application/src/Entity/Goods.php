@@ -1927,6 +1927,21 @@ class Goods {
     }
     
     /**
+     * Возвращает что это тормозная жидкость
+     * @return str|bool
+     */
+    public function inBrakeOilCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '115-132-133') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Возвращает что не недо составных наименований
      * @return str|bool
      */
