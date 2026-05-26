@@ -1527,5 +1527,79 @@ class CarManager
         }        
         
         return;
+    }  
+    
+    /**
+     * Обновить нормы тормозной жидкости
+     * @return null
+     */
+    public function updateCarBrakeOilVolumeNorms()
+    {
+        set_time_limit(0);
+        
+        $singleUpdates = [
+            'DOT 4' => 'DOT 4',
+            'DOT4' => 'DOT 4', // Убираем пробел
+            'VW 501 14' => 'VW 501 14', // Современный стандарт VAG (низкая вязкость Class 6) [1]
+            'DOT 4 Plus' => 'DOT 4 Plus',
+            'DOT 4 +' => 'DOT 4 Plus', // Приводим к единому написанию
+            'DOT 4 Class 6' => 'DOT 4 Class 6', // Низковязкая жидкость для ABS/ESP [1]
+            'Низкая вязкость DOT 4' => 'DOT 4 Class 6', // Переводим техническое описание в стандарт
+            'DOT 3' => 'DOT 3',
+            'MB 331.0' => 'MB 331.0',
+            'DOT 5.1' => 'DOT 5.1',
+            'B 000 750 M3' => 'VAG B 000 750', // Оригинальный артикул жидкости VAG
+            'Super DOT 4' => 'Super DOT 4',
+            'Супер DOT 4' => 'Super DOT 4', // Убираем кириллицу
+            'SEAT 501 14' => 'VW 501 14', // SEAT входит в VAG, стандарт единый
+            'VW 501 14-B 000 750-' => 'VW 501 14', // Очищаем склеенный мусорный артикул
+            'TUTELA TOP 4' => 'Fiat 9.55597', // Коммерческая Tutela Top 4 соответствует официальному допуску Fiat
+
+            // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ БЕЗОПАСНОСТИ:
+            // Pentosin CHF 11S — это жидкость ГУР/гидравлики. Перенаправляем её на официальный 
+            // тормозной допуск для тех машин (в основном BMW), где парсер перепутал бачки под капотом.
+            'Pentosin CHF 11S' => 'DOT 4' 
+        ];
+
+
+        foreach($singleUpdates as $key => $value){
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'carFillTitile' => 1]);
+//            usleep(100);
+        }
+        
+        $splitUpdates = [
+            'DOT 3|DOT 4' => ['DOT 3', 'DOT 4'],
+            'MB 330.1|MB 331.0' => ['MB 330.1', 'MB 331.0'],
+            'ESD-M6C57-A|WSS-M6C57-A2' => ['Ford ESD-M6C57-A', 'Ford WSS-M6C57-A2'],
+
+            // Исправление опечатки каталога (лишние нули в конце стандартов Mercedes) 
+            // и замена запятой на разделитель элементов
+            'MB 330.01, MB 331.00' => ['MB 330.1', 'MB 331.0'] 
+        ];
+
+        $doubleType = $this->entityManager->getRepository(CarFillType::class)
+                ->find(2);
+        
+        foreach($splitUpdates as $key => $row){
+            $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
+                    ->findBy(['volume' => $key, 'carFillTitile' => 1]);
+            
+            foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
+                
+                $fillVolumeToUpdate->setVolumeNorm($row[0]);
+                $this->entityManager->persist($fillVolumeToUpdate);
+                $this->entityManager->flush();
+                
+                $k=1;
+                while(!empty($row[$k])){
+                    $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
+                    $k++;
+                }               
+            }            
+            
+//            usleep(100);
+        }        
+        
+        return;
     }    
 }
