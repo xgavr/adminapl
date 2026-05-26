@@ -761,6 +761,11 @@ class GoodsController extends AbstractActionController
                     ->normsList([4, 6, 17, 18, 21, 23, 28, 40, 43, 49]);
         }
         
+        if ($goods->inBrakeOilCategory()){
+            $norms = $this->entityManager->getRepository(Car::class)
+                    ->normsList([10, 26]);
+        }
+        
 //        var_dump($goods->inTransOilCategory(), $norms); exit;
         
 
