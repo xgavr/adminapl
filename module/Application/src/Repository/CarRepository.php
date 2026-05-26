@@ -517,12 +517,12 @@ class CarRepository extends EntityRepository
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
         $data = $queryBuilder->getQuery()->getResult();
-        
+        var_dump(count($data));
         $result = [];
         foreach($data as $row){
             $result[] = $row['volumeNorm'];
         }
-        var_dump($result);
+        var_dump(count($result));
         return $result;        
     }
     
