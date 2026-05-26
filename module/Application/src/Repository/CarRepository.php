@@ -512,7 +512,7 @@ class CarRepository extends EntityRepository
                 ->from(CarFillVolume::class, 'cfv')
                 ->where('cfv.volumeNorm is not null')
                 ->andWhere('identity(cfv.carFillTitile) in (:type)')
-                ->setParameter('type', implode($type))
+                ->setParameter('type', implode(',', $type))
             ;
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
