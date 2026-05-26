@@ -1563,7 +1563,7 @@ class CarManager
 
 
         foreach($singleUpdates as $key => $value){
-            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'carFillType' => 1]);
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'car_fill_type_id' => 1]);
 //            usleep(100);
         }
         
