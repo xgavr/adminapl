@@ -761,6 +761,8 @@ class GoodsController extends AbstractActionController
                     ->normsList([4, 6, 17, 18, 21, 23, 28, 40, 43, 49]);
         }
         
+        var_dump($goods->inTransOilCategory(), $norms);
+        
 
         // Render the view template.
         return new ViewModel([
