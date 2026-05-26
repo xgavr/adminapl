@@ -498,6 +498,11 @@ class CarRepository extends EntityRepository
         
     }
     
+    /**
+     * 
+     * @param array $type
+     * @return type
+     */
     public function normsList($type)
     {
         $entityManager = $this->getEntityManager();
@@ -506,8 +511,8 @@ class CarRepository extends EntityRepository
                 ->distinct()
                 ->from(CarFillVolume::class, 'cfv')
                 ->where('cfv.volumeNorm is not null')
-                ->andWhere('identity(cfv.carFillTitile) = :type')
-                ->setParameter('type', $type)
+                ->andWhere('identity(cfv.carFillTitile) in (:type)')
+                ->setParameter('type', implode($type))
             ;
         
 //        var_dump($queryBuilder->getQuery()->getSQL());
