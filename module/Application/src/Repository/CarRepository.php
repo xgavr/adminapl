@@ -516,9 +516,9 @@ class CarRepository extends EntityRepository
                 ->setParameter('type', $type)
             ;
         
-        var_dump($queryBuilder->getQuery()->getSQL());
+//        var_dump($queryBuilder->getQuery()->getSQL());
         $data = $queryBuilder->getQuery()->getResult();
-        var_dump(implode(',', $type), count($data)); exit;
+//        var_dump(implode(',', $type), count($data)); exit;
         
         $result = [];
         foreach($data as $row){
