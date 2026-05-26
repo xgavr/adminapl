@@ -748,12 +748,17 @@ class GoodsController extends AbstractActionController
         $norms = [];
         if ($goods->inAntifreezCategory()){
             $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList(8);
+                    ->normsList([8]);
         }
         
         if ($goods->inMotorOilCategory()){
             $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList(2);
+                    ->normsList([2]);
+        }
+        
+        if ($goods->inTransOilCategory()){
+            $norms = $this->entityManager->getRepository(Car::class)
+                    ->normsList([4, 6, 17, 18, 21, 23, 28, 40, 43, 49]);
         }
         
 
