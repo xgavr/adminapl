@@ -1218,7 +1218,7 @@ class CarManager
      */
     public function updateCarTransOilVolumeNorms()
     {
-        set_time_limit(0);
+        //set_time_limit(0);
         
         $singleUpdates = [
             'G 052 145 A1' => 'VAG G 052 145',
@@ -1535,7 +1535,7 @@ class CarManager
      */
     public function updateCarBrakeOilVolumeNorms()
     {
-        set_time_limit(0);
+        //set_time_limit(0);
         
         $singleUpdates = [
             'DOT 4' => 'DOT 4',
@@ -1563,7 +1563,7 @@ class CarManager
 
 
         foreach($singleUpdates as $key => $value){
-            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'carFillTitile' => 1]);
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'carFillType' => 1]);
 //            usleep(100);
         }
         
@@ -1582,7 +1582,7 @@ class CarManager
         
         foreach($splitUpdates as $key => $row){
             $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
-                    ->findBy(['volume' => $key, 'carFillTitile' => 1]);
+                    ->findBy(['volume' => $key, 'carFillType' => 1]);
             
             foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
                 
