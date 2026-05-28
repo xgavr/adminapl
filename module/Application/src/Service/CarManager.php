@@ -1888,6 +1888,7 @@ class CarManager
             'API GL5 SAE 90|API GL6 SAE 90' => ['API GL-5 90', 'API GL-6 90'],
             'ACEA E2|ACEA E3' => ['ACEA E2', 'ACEA E3'],
             'API GL3 SAE 75W-80' => ['API GL-3 75W-80'],
+            'API GL5 SAE 85W-140' => ['API GL-5 75W-140'],
             'MB 310.01|MB 325.02' => ['MB 310.0', 'MB 325.0'],
             'API SG|API SH' => ['API SG', 'API SH'],
             'API CD/CE/CF/ACEA E1/E2/E3' => ['API CD', 'API CE', 'API CF', 'ACEA E1', 'ACEA E2', 'ACEA E3'],
