@@ -791,7 +791,7 @@ class GoodsController extends AbstractActionController
             'rbacManager' => $this->rbacManager,
             'tab' => $tab,
             'tdOems' => $tdOems,
-            'norms' => implode(',', $norms),
+            'norms' => implode(', ', $norms),
         ]);
     }      
 
