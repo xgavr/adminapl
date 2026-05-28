@@ -125,7 +125,7 @@
             <div class="tab-pane fade" role="tabpanel" id="home" aria-labelledby="home-tab">
                 <table class="table table-bordered">
                     <tr>
-                        <th colspan="2">Характеристики</th>
+                        <th colspan="2">Характеристики <a href="#" class="attributes-from-json">JSON</a></th>
                         <th width="10">
                             <button class="btn btn-default btn-xs attributes-from-json"
                                     title="Загрузить характеристики из Json">
@@ -878,7 +878,10 @@
             });          
         });
         
-        $('.attributes-from-json').click(function (){
+        $('.attributes-from-json').click(function (e){
+            
+            e.preventDefault();
+            
             var message = "Сделай строку в формате JSON с основными характеристиками (узлы, состав, свойства, цвет, вес, температура, спецификациии и т.п.) для <?= $goods->getCode()?> <?= $goods->getProducer()->getName()?> \n\
     в виде [{type:xxx, name: xxxx, 'value': 'xxxx', 'unit': 'xxxx'}], где name - название характеристики (цвет, вес, спецификация и т.п.), value - значение характеристики, unit - размерность (кг, л. и т.п.). \n\
     type - тип характеристики. Для спецификаций антифриза, масла, жидкостей type = A, для остальных случаев type = G."
