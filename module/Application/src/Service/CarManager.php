@@ -1610,71 +1610,123 @@ class CarManager
     public function updateCarGurOilVolumeNorms()
     {
         //set_time_limit(0);
-        
+//        
+//        $singleUpdates = [
+//            'ATF Dexron II D' => 'GM Dexron II-D',
+//            'ATF Dexron III' => 'GM Dexron III-G',
+//            'ATF Dexron II' => 'GM Dexron II-D',
+//            'G 004 000 M2' => 'VAG G 004 000', // Зеленая минералка/синтетика VAG
+//            'MB 236.3' => 'MB 236.3',         // Специальное желтое масло ГУР Mercedes
+//            'MB 345.0' => 'MB 345.0',         // Зеленая гидравлика Mercedes (аналог CHF 11S)
+//            'PSA S71 2710' => 'PSA S71 2710', // Жидкость ГУР/подвески LDS для Citroen/Peugeot
+//            'WSS-M2C204-A2' => 'Ford WSS-M2C204-A2',
+//            'WSA-M2C195-A' => 'Ford WSA-M2C195-A',
+//            'PSF-3' => 'Hyundai PSF-3',       // Корейский стандарт ГУР (красный/коричневый)
+//            'WSS-M2C204-A' => 'Ford WSS-M2C204-A',
+//            'ATF 22' => 'GM Dexron II-D',       // Спецификация масла Mobil ATF 220 соответствовала Dexron II
+//            'TOTAL H50126' => 'Hyundai PSF-3', // Total H50126 — это и есть оригинальный PSF-3 для KIA/Hyundai
+//            'SQM-2C9010-A' => 'Ford SQM-2C9010-A',
+//            'Pentosin CHF 202' => 'Pentosin CHF 202',
+//            'MB 344.0' => 'MB 344.0',         // Масло для систем регулировки дорожного просвета MB
+//            'FIAT 9.55550-AG3' => 'Fiat 9.55550-AG3',
+//            'TUTELLA GI/E' => 'Fiat 9.55550-AG2', // Исправлена опечатка в Tutela + кросс на допуск
+//            'TUTELA GI/E' => 'Fiat 9.55550-AG2',
+//            'G 002 000 A2' => 'VAG G 002 000', // Легендарный Pentosin CHF 11S в оригинальной упаковке VAG
+//            'ELF RENAULT MATIC D2' => 'GM Dexron II-D',
+//            'Pentosin CHF 7.1' => 'Pentosin CHF 7.1', // Старая минеральная гидравлика (зеленая)
+//            'MB 231.1' => 'MB 231.1',
+//            'G 009 300 A2' => 'VAG G 009 300',
+//            'Saab 1890' => 'Saab 4634281',     // Привязка к оригинальному артикулу ГУР старых Saab 9000/900
+//            'Texaco Cold Climata Fluid 33270' => 'Texaco Cold Climate PSF', // Исправлена опечатка в Climata
+//            'MB 343.0' => 'MB 343.0',
+//            'Texaco PSF 14315' => 'Texaco Cold Climate PSF', // Это один и тот же продукт Land Rover/Volvo
+//            'TUTELLA GI/R' => 'Fiat 9.55550-AG3', // Исправлена опечатка Tutela + кросс на допуск (зеленый CHF)
+//            'JLM 21703' => 'Jaguar JLM 21703',
+//            'APOLLOIL PSF-2M' => 'Honda PSF-S', // Спецификация Apolloil PSF-2M полностью заменяется на PSF-S
+//            'MS-9602' => 'Chrysler MS-9602',   // Он же ATF+4, официально используемый в ГУР Chrysler/Jeep
+//            'MS-11655' => 'Chrysler MS-11655', // Низкотемпературная гидравлика (аналог CHF 11S)
+//            'PSF-V' => 'Nissan PSF-II',       // Соответствие для японских ГУР
+//            'ATF M-III' => 'Mazda ATF M-III',
+//            'PSF-2' => 'Honda PSF-S',
+//            'PSF-S' => 'Honda PSF-S',         // Оригинальная жидкость ГУР Honda
+//            'MOPAR Power Steering Fluid' => 'Chrysler MS-5931', // Спецификация классической прозрачной PSF Mopar
+//            'PSF-4' => 'Hyundai PSF-4',       // Современная зеленая синтетика для корейцев
+//
+//            // Блок оригинальных OEM номеров GM (Opel/Saab):
+//            '90350341/1940699' => 'GM 1940699',
+//            '93160548/1949715' => 'GM 1940715', // Исправлена опечатка в коде (1949->1940)
+//            '90513486/1940707' => 'GM 1940707',
+//            '1940691/1940699' => 'GM 1940699',
+//            '90544116/1940766' => 'GM 1940766',
+//            '08886-01206' => 'Toyota PSF New Generation' // Жидкость ГУР для Land Rover / Toyota от японского завода
+//        ];
+
         $singleUpdates = [
-            'ATF Dexron II D' => 'GM Dexron II-D',
-            'ATF Dexron III' => 'GM Dexron III-G',
-            'ATF Dexron II' => 'GM Dexron II-D',
-            'G 004 000 M2' => 'VAG G 004 000', // Зеленая минералка/синтетика VAG
-            'MB 236.3' => 'MB 236.3',         // Специальное желтое масло ГУР Mercedes
-            'MB 345.0' => 'MB 345.0',         // Зеленая гидравлика Mercedes (аналог CHF 11S)
-            'PSA S71 2710' => 'PSA S71 2710', // Жидкость ГУР/подвески LDS для Citroen/Peugeot
-            'WSS-M2C204-A2' => 'Ford WSS-M2C204-A2',
-            'WSA-M2C195-A' => 'Ford WSA-M2C195-A',
-            'PSF-3' => 'Hyundai PSF-3',       // Корейский стандарт ГУР (красный/коричневый)
-            'WSS-M2C204-A' => 'Ford WSS-M2C204-A',
-            'ATF 22' => 'GM Dexron II-D',       // Спецификация масла Mobil ATF 220 соответствовала Dexron II
-            'TOTAL H50126' => 'Hyundai PSF-3', // Total H50126 — это и есть оригинальный PSF-3 для KIA/Hyundai
-            'SQM-2C9010-A' => 'Ford SQM-2C9010-A',
-            'Pentosin CHF 202' => 'Pentosin CHF 202',
-            'MB 344.0' => 'MB 344.0',         // Масло для систем регулировки дорожного просвета MB
-            'FIAT 9.55550-AG3' => 'Fiat 9.55550-AG3',
-            'TUTELLA GI/E' => 'Fiat 9.55550-AG2', // Исправлена опечатка в Tutela + кросс на допуск
-            'TUTELA GI/E' => 'Fiat 9.55550-AG2',
-            'G 002 000 A2' => 'VAG G 002 000', // Легендарный Pentosin CHF 11S в оригинальной упаковке VAG
-            'ELF RENAULT MATIC D2' => 'GM Dexron II-D',
-            'Pentosin CHF 7.1' => 'Pentosin CHF 7.1', // Старая минеральная гидравлика (зеленая)
-            'MB 231.1' => 'MB 231.1',
-            'G 009 300 A2' => 'VAG G 009 300',
-            'Saab 1890' => 'Saab 4634281',     // Привязка к оригинальному артикулу ГУР старых Saab 9000/900
-            'Texaco Cold Climata Fluid 33270' => 'Texaco Cold Climate PSF', // Исправлена опечатка в Climata
-            'MB 343.0' => 'MB 343.0',
-            'Texaco PSF 14315' => 'Texaco Cold Climate PSF', // Это один и тот же продукт Land Rover/Volvo
-            'TUTELLA GI/R' => 'Fiat 9.55550-AG3', // Исправлена опечатка Tutela + кросс на допуск (зеленый CHF)
-            'JLM 21703' => 'Jaguar JLM 21703',
-            'APOLLOIL PSF-2M' => 'Honda PSF-S', // Спецификация Apolloil PSF-2M полностью заменяется на PSF-S
-            'MS-9602' => 'Chrysler MS-9602',   // Он же ATF+4, официально используемый в ГУР Chrysler/Jeep
-            'MS-11655' => 'Chrysler MS-11655', // Низкотемпературная гидравлика (аналог CHF 11S)
-            'PSF-V' => 'Nissan PSF-II',       // Соответствие для японских ГУР
-            'ATF M-III' => 'Mazda ATF M-III',
-            'PSF-2' => 'Honda PSF-S',
-            'PSF-S' => 'Honda PSF-S',         // Оригинальная жидкость ГУР Honda
-            'MOPAR Power Steering Fluid' => 'Chrysler MS-5931', // Спецификация классической прозрачной PSF Mopar
-            'PSF-4' => 'Hyundai PSF-4',       // Современная зеленая синтетика для корейцев
+            'VOLVO 97305' => 'Volvo 97305',
+            'API GL4 SAE 75W-90' => 'API GL-4 75W-90',
+            'API GL4' => 'API GL-4',
+            'MAN 341 Typ Z5' => 'MAN 341 Typ Z5',
+            'MB 235.10' => 'MB 235.10',
+            'API GL4 SAE 80W' => 'API GL-4 80W',
+            'G 052 171 A2' => 'VAG G 052 171',
+            'G 052 162 A2' => 'VAG G 052 162', // Масло ATF, используемое в ряде раздаток
+            'API GL5 SAE 90' => 'API GL-5 90',
+            '83 22 0 397 244' => 'BMW TF 0870', // Легендарное масло для раздаток xDrive (ATC300/ATC400/ATC500)
+            'G 052 145 S2' => 'VAG G 052 145', // Символ S2 нормализуем к базовому семейству G052145
+            'G 052 515 A2' => 'VAG G 052 515', // Масло раздатки Touareg / Q7
+            'API GL5 SAE 75W-85' => 'API GL-5 75W-85',
+            'MAN 342' => 'MAN 342 Typ M1',     // Базовый MAN 342 без типа приравнивается к минеральному M1
+            'G 055 145 A2' => 'VAG G 055 145', // Масло для дифференциалов Торсен с модификатором трения Sturaco
+            'WSL-M2C192-A' => 'Ford WSL-M2C192-A',
+            '83 22 9 408 942' => 'BMW MTF-LT-1',
+            'API GL5 SAE 75W-140' => 'API GL-5 75W-140',
+            '31259380' => 'Volvo 31259380',     // Оригинальное масло угловой передачи/раздатки Volvo
+            'Shell TF 0753' => 'BMW TF 0753',   // Ранняя спецификация для раздаток БМВ (заменяется на TF 0870)
+            '93 165 383' => 'GM 1940182',       // Внутренний артикул трансмиссионного масла Opel/GM
+            'API GL5 SAE 85W-90' => 'API GL-5 85W-90',
+            'MB 236.13' => 'MB 236.13',
+            'WSP-M2C197-A' => 'Ford WSP-M2C197-A',
+            '81 22 9 400 272' => 'BMW 81229400272',
+            'G 052 536 A2' => 'VAG G 052 536',
+            'MAN 342 Typ S1' => 'MAN 342 Typ S1',
+            'MAN 342 Typ M1' => 'MAN 342 Typ M1',
+            '83 22 9 407 858' => 'BMW MTF-LT-2',
+            '000 043 301 36' => 'Porsche 00004330136',
+            'Mopar NV146' => 'Mopar NV146',     // Эксклюзивное масло для раздаток Jeep Grand Cherokee SRT8
+            'Castrol BOT 118' => 'VAG G 052 171', // Продукт BOT 118 поставлялся на конвейер VAG под этим кодом
+            'JLM 20771' => 'Jaguar JLM 20771',
+            'FIAT 9.55550-DA3' => 'Fiat 9.55550-DA3',
+            '8U7J-19G518-BA' => 'Ford 19G518',  // Инженерный код масла раздатки Ford Kuga / Land Rover
+            'G 052 533 A2' => 'VAG G 052 533',
+            'Mopar 05016796' => 'Mopar MS-10216', // Жидкость раздаточных коробок NV245 / NV247 / NV249
+            'ATC 700' => 'BMW TF 0870',         // Раздатка ATC 700 (BMW X5 E70) жестко требует масло класса TF 0870
 
-            // Блок оригинальных OEM номеров GM (Opel/Saab):
-            '90350341/1940699' => 'GM 1940699',
-            '93160548/1949715' => 'GM 1940715', // Исправлена опечатка в коде (1949->1940)
-            '90513486/1940707' => 'GM 1940707',
-            '1940691/1940699' => 'GM 1940699',
-            '90544116/1940766' => 'GM 1940766',
-            '08886-01206' => 'Toyota PSF New Generation' // Жидкость ГУР для Land Rover / Toyota от японского завода
+            // Блок OEM-кодов GM (Opel)
+            '90443530/1940703' => 'GM 1940703'
         ];
-
+        
         foreach($singleUpdates as $key => $value){
             $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'car_fill_type_id' => 1]);
 //            usleep(100);
         }
         
-        $splitUpdates = [
-            'MB 236.2|MB 236.3' => ['MB 236.2', 'MB 236.3'],
-            'ATF Dexron II|ATF Dexron III' => ['GM Dexron II-D', 'GM Dexron III-G'],
-            'Pentosin CHF 202|Pentosin CHF 11S' => ['Pentosin CHF 202', 'Pentosin CHF 11S'],
-            'ATF Dexron II D|ATF Dexron II E' => ['GM Dexron II-D', 'GM Dexron II-E'],
-            'ATF M-III|ATF Dexron II E' => ['Mazda ATF M-III', 'GM Dexron II-E'],
-            'Dexron II E / II / III' => ['GM Dexron II-E', 'GM Dexron II-D', 'GM Dexron III-G']
-        ];
+//        $splitUpdates = [
+//            'MB 236.2|MB 236.3' => ['MB 236.2', 'MB 236.3'],
+//            'ATF Dexron II|ATF Dexron III' => ['GM Dexron II-D', 'GM Dexron III-G'],
+//            'Pentosin CHF 202|Pentosin CHF 11S' => ['Pentosin CHF 202', 'Pentosin CHF 11S'],
+//            'ATF Dexron II D|ATF Dexron II E' => ['GM Dexron II-D', 'GM Dexron II-E'],
+//            'ATF M-III|ATF Dexron II E' => ['Mazda ATF M-III', 'GM Dexron II-E'],
+//            'Dexron II E / II / III' => ['GM Dexron II-E', 'GM Dexron II-D', 'GM Dexron III-G']
+//        ];
 
+        $splitUpdates = [
+            // Универсальные масла, удовлетворяющие обоим классам (обычно это продукты 75W-90 GL-4/5)
+            'API GL4 SAE 75W-90|API GL5 SAE 75W-90' => ['API GL-4 75W-90', 'API GL-5 75W-90'],
+
+            // Разделение грузовых гипоидных спецификаций Mercedes-Benz
+            'MB 235.1|MB 235.5' => ['MB 235.1', 'MB 235.5']
+        ];
+        
 
         $doubleType = $this->entityManager->getRepository(CarFillType::class)
                 ->find(2);
