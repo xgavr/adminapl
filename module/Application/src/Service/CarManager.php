@@ -1885,7 +1885,9 @@ class CarManager
 
             // Специфические составные коробки
             'ZF TE-ML 05A  API GL-5' => ['ZF TE-ML 05A', 'API GL-5'],
-            'API GL5 SAE 90|API GL6 SAE 90' => ['API GL-5 90', 'API GL-6 90']
+            'API GL5 SAE 90|API GL6 SAE 90' => ['API GL-5 90', 'API GL-6 90'],
+            'ACEA E2|ACEA E3' => ['ACEA E2', 'ACEA E3'],
+            'API GL3 SAE 75W-80' => ['API GL-3 75W-80'],
         ];
         
 
