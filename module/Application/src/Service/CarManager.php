@@ -1609,7 +1609,8 @@ class CarManager
      */
     public function updateCarGurOilVolumeNorms()
     {
-        //set_time_limit(0);
+        set_time_limit(900);
+        $startTime = time();
 //        
 //        $singleUpdates = [
 //            'ATF Dexron II D' => 'GM Dexron II-D',
@@ -1909,9 +1910,12 @@ class CarManager
                 while(!empty($row[$k])){
                     $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
                     $k++;
-                }               
+                }                     
             }            
             
+            if (time() > $startTime + 840){
+                break;
+            }                
 //            usleep(100);
         }        
         
