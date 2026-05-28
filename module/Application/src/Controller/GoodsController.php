@@ -758,7 +758,7 @@ class GoodsController extends AbstractActionController
         
         if ($goods->inTransOilCategory()){
             $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList([4, 6, 17, 18, 21, 23, 28, 40, 43, 49]);
+                    ->normsList([4, 6, 11, 13, 15, 17, 18, 21, 23, 28, 30, 32, 34, 36, 40, 43, 46, 49, 61, 74, 76, 78]);
         }
         
         if ($goods->inBrakeOilCategory()){
@@ -791,7 +791,7 @@ class GoodsController extends AbstractActionController
             'rbacManager' => $this->rbacManager,
             'tab' => $tab,
             'tdOems' => $tdOems,
-            'norms' => implode(', ', $norms),
+            'norms' => implode(',', $norms),
         ]);
     }      
 
