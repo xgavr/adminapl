@@ -1837,7 +1837,7 @@ class CarManager
         ];
 
         foreach($singleUpdates as $key => $value){
-            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'car_fill_type_id' => 1]);
+            //$this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'car_fill_type_id' => 1]);
 //            usleep(100);
         }
         
@@ -1896,6 +1896,10 @@ class CarManager
                     ->findBy(['volume' => $key, 'carFillType' => 1]);
             
             foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
+                
+                if (!empty($fillVolumeToUpdate->getVolumeNorm())){
+                    continue;
+                }
                 
                 $fillVolumeToUpdate->setVolumeNorm($row[0]);
                 $this->entityManager->persist($fillVolumeToUpdate);
