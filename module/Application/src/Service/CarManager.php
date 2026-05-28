@@ -1602,4 +1602,103 @@ class CarManager
         
         return;
     }    
+    
+    /**
+     * Обновить нормы масло ГУР
+     * @return null
+     */
+    public function updateCarGurOilVolumeNorms()
+    {
+        //set_time_limit(0);
+        
+        $singleUpdates = [
+            'ATF Dexron II D' => 'GM Dexron II-D',
+            'ATF Dexron III' => 'GM Dexron III-G',
+            'ATF Dexron II' => 'GM Dexron II-D',
+            'G 004 000 M2' => 'VAG G 004 000', // Зеленая минералка/синтетика VAG
+            'MB 236.3' => 'MB 236.3',         // Специальное желтое масло ГУР Mercedes
+            'MB 345.0' => 'MB 345.0',         // Зеленая гидравлика Mercedes (аналог CHF 11S)
+            'PSA S71 2710' => 'PSA S71 2710', // Жидкость ГУР/подвески LDS для Citroen/Peugeot
+            'WSS-M2C204-A2' => 'Ford WSS-M2C204-A2',
+            'WSA-M2C195-A' => 'Ford WSA-M2C195-A',
+            'PSF-3' => 'Hyundai PSF-3',       // Корейский стандарт ГУР (красный/коричневый)
+            'WSS-M2C204-A' => 'Ford WSS-M2C204-A',
+            'ATF 22' => 'GM Dexron II-D',       // Спецификация масла Mobil ATF 220 соответствовала Dexron II
+            'TOTAL H50126' => 'Hyundai PSF-3', // Total H50126 — это и есть оригинальный PSF-3 для KIA/Hyundai
+            'SQM-2C9010-A' => 'Ford SQM-2C9010-A',
+            'Pentosin CHF 202' => 'Pentosin CHF 202',
+            'MB 344.0' => 'MB 344.0',         // Масло для систем регулировки дорожного просвета MB
+            'FIAT 9.55550-AG3' => 'Fiat 9.55550-AG3',
+            'TUTELLA GI/E' => 'Fiat 9.55550-AG2', // Исправлена опечатка в Tutela + кросс на допуск
+            'TUTELA GI/E' => 'Fiat 9.55550-AG2',
+            'G 002 000 A2' => 'VAG G 002 000', // Легендарный Pentosin CHF 11S в оригинальной упаковке VAG
+            'ELF RENAULT MATIC D2' => 'GM Dexron II-D',
+            'Pentosin CHF 7.1' => 'Pentosin CHF 7.1', // Старая минеральная гидравлика (зеленая)
+            'MB 231.1' => 'MB 231.1',
+            'G 009 300 A2' => 'VAG G 009 300',
+            'Saab 1890' => 'Saab 4634281',     // Привязка к оригинальному артикулу ГУР старых Saab 9000/900
+            'Texaco Cold Climata Fluid 33270' => 'Texaco Cold Climate PSF', // Исправлена опечатка в Climata
+            'MB 343.0' => 'MB 343.0',
+            'Texaco PSF 14315' => 'Texaco Cold Climate PSF', // Это один и тот же продукт Land Rover/Volvo
+            'TUTELLA GI/R' => 'Fiat 9.55550-AG3', // Исправлена опечатка Tutela + кросс на допуск (зеленый CHF)
+            'JLM 21703' => 'Jaguar JLM 21703',
+            'APOLLOIL PSF-2M' => 'Honda PSF-S', // Спецификация Apolloil PSF-2M полностью заменяется на PSF-S
+            'MS-9602' => 'Chrysler MS-9602',   // Он же ATF+4, официально используемый в ГУР Chrysler/Jeep
+            'MS-11655' => 'Chrysler MS-11655', // Низкотемпературная гидравлика (аналог CHF 11S)
+            'PSF-V' => 'Nissan PSF-II',       // Соответствие для японских ГУР
+            'ATF M-III' => 'Mazda ATF M-III',
+            'PSF-2' => 'Honda PSF-S',
+            'PSF-S' => 'Honda PSF-S',         // Оригинальная жидкость ГУР Honda
+            'MOPAR Power Steering Fluid' => 'Chrysler MS-5931', // Спецификация классической прозрачной PSF Mopar
+            'PSF-4' => 'Hyundai PSF-4',       // Современная зеленая синтетика для корейцев
+
+            // Блок оригинальных OEM номеров GM (Opel/Saab):
+            '90350341/1940699' => 'GM 1940699',
+            '93160548/1949715' => 'GM 1940715', // Исправлена опечатка в коде (1949->1940)
+            '90513486/1940707' => 'GM 1940707',
+            '1940691/1940699' => 'GM 1940699',
+            '90544116/1940766' => 'GM 1940766',
+            '08886-01206' => 'Toyota PSF New Generation' // Жидкость ГУР для Land Rover / Toyota от японского завода
+        ];
+
+        foreach($singleUpdates as $key => $value){
+            $this->entityManager->getConnection()->update('car_fill_volume', ['volume_norm' => $value], ['volume' => $key, 'car_fill_type_id' => 1]);
+//            usleep(100);
+        }
+        
+        $splitUpdates = [
+            'MB 236.2|MB 236.3' => ['MB 236.2', 'MB 236.3'],
+            'ATF Dexron II|ATF Dexron III' => ['GM Dexron II-D', 'GM Dexron III-G'],
+            'Pentosin CHF 202|Pentosin CHF 11S' => ['Pentosin CHF 202', 'Pentosin CHF 11S'],
+            'ATF Dexron II D|ATF Dexron II E' => ['GM Dexron II-D', 'GM Dexron II-E'],
+            'ATF M-III|ATF Dexron II E' => ['Mazda ATF M-III', 'GM Dexron II-E'],
+            'Dexron II E / II / III' => ['GM Dexron II-E', 'GM Dexron II-D', 'GM Dexron III-G']
+        ];
+
+
+        $doubleType = $this->entityManager->getRepository(CarFillType::class)
+                ->find(2);
+        
+        foreach($splitUpdates as $key => $row){
+            $fillVolumesToUpdate = $this->entityManager->getRepository(CarFillVolume::class)
+                    ->findBy(['volume' => $key, 'carFillType' => 1]);
+            
+            foreach ($fillVolumesToUpdate as $fillVolumeToUpdate){
+                
+                $fillVolumeToUpdate->setVolumeNorm($row[0]);
+                $this->entityManager->persist($fillVolumeToUpdate);
+                $this->entityManager->flush();
+                
+                $k=1;
+                while(!empty($row[$k])){
+                    $this->doubleCarFillVolume($fillVolumeToUpdate, $doubleType, $row[$k]);
+                    $k++;
+                }               
+            }            
+            
+//            usleep(100);
+        }        
+        
+        return;
+    }        
 }
