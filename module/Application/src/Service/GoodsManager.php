@@ -1473,6 +1473,11 @@ class GoodsManager
                     ->addGoodAttributeValue($good, $attr);                   
         }
         
+
+        $good->setFasadeEx(Goods::FASADE_EX_NEW); 
+        $this->entityManager->persist($good);
+        $this->entityManager->flush();        
+        
         return;
     }   
     
