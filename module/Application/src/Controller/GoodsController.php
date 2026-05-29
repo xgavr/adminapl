@@ -2200,4 +2200,24 @@ class GoodsController extends AbstractActionController
             'ok'
         ]);           
     }     
+    
+    public function resetFasadeExAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+    
+        // Находим существующий пост в базе данных.    
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId);  
+        	
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(401);
+            return;                        
+        } 
+                
+        $this->goodsManager->resetFasadeEx($good);
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
 }
