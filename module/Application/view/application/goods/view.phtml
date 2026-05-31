@@ -725,6 +725,28 @@
 
     var $optsTable = $('#optsTable');
     
+   function setCookies(cookieKey){
+        let expires = 30;
+        $('.cookie-control').each(function () {
+            Cookies.set(cookieKey+'_'+$(this).attr('id'), $(this).val(), { expires: expires});        
+        });        
+    }
+    
+    function getCookies(cookieKey){
+        $('.cookie-control').each(function () {
+            var cookieVal = Cookies.get(cookieKey+'_'+$(this).attr('id'));
+            if (cookieVal !== undefined){
+                $(this).val(cookieVal);                
+            }
+        });     
+        
+        var activeTab = Cookies.get('goodSaveId_tab');
+        if (activeTab !== undefined){
+            $('.nav-tabs #'+activeTab).tab('show');
+        } else {
+            $('.nav-tabs a:first').tab('show');
+        } 
+    }    
     
     function setOemBrandCookie(oemBrand){
         let expires = 30;
@@ -792,7 +814,17 @@
         $balanceTable.on('load-success.bs.table', function (e, res) {
             $('.fold').editable();
         });        
+        
+        $('#featureTab').click(function (){
+            setCookies('goodSaveId');
+        })
+        
+        getCookies('goodSaveId');
 
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            Cookies.set('goodSaveId_tab', $(this).attr('id'), { expires: 30});
+        }); 
+        
         $('#updateReserve').click(function (){
             var url = $(this).attr('url');
             if (url){
