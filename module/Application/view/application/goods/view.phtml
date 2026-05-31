@@ -741,7 +741,7 @@
         });     
         
         var activeTab = Cookies.get('goodSaveId_tab');
-        console.log(activeTab);
+//        console.log(activeTab);
         if (activeTab !== undefined){
             $('.nav-tabs #'+activeTab).tab('show');
         } else {
@@ -763,8 +763,6 @@
         $(window).on('load', function() {
             <?php if (!empty($tab)):?>
                 $('.nav-tabs #<?= $tab ?>').tab('show');
-            <?php else: ?>    
-                $('.nav-tabs a:first').tab('show');
             <?php endif; ?>  
                 
             $('.editable').editable();
@@ -824,7 +822,7 @@
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             Cookies.set('goodSaveId_tab', $(this).attr('id'), { expires: 30});
-            console.log('goodSaveId_tab:saved');
+//            console.log('goodSaveId_tab:saved');
         }); 
         
         $('#updateReserve').click(function (){
