@@ -741,6 +741,7 @@
         });     
         
         var activeTab = Cookies.get('goodSaveId_tab');
+        console.log(activeTab);
         if (activeTab !== undefined){
             $('.nav-tabs #'+activeTab).tab('show');
         } else {
@@ -823,6 +824,7 @@
 
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             Cookies.set('goodSaveId_tab', $(this).attr('id'), { expires: 30});
+            console.log('goodSaveId_tab:saved');
         }); 
         
         $('#updateReserve').click(function (){
