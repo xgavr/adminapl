@@ -27,6 +27,8 @@ class Producer {
     const ORIGINAL_IS       = 1; // original producer.
     const ORIGINAL_NO      = 2; // not original producer.   
 
+    const LINK_MAIN  = 'main';
+    const LINK_OEM  = 'oem';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -68,6 +70,11 @@ class Producer {
      * @ORM\Column(name="description")  
      */
     protected $description;     
+
+    /**
+     * @ORM\Column(name="links")  
+     */
+    protected $links;     
 
     /**
      * @ORM\Column(name="is_original")  
@@ -226,6 +233,48 @@ class Producer {
         $this->description = $description;
     }
 
+    public function getLinks() {
+        return $this->links;
+    }
+    
+    public function getLinksAsArray()
+    {
+        $result = [];
+        
+        if ($this->links){
+            try{
+                $result = json_decode($this->links, \Laminas\Json\Json::TYPE_ARRAY);
+            } catch (Exception $ex) {
+
+            }
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 
+     * @return string $code
+     */
+    public function getMainLink($code = null)
+    {
+        $links = $this->getLinksAsArray();
+        
+        if (!empty($links[self::LINK_MAIN])){
+            $result = $links[self::LINK_MAIN];
+            if (!empty($code)){
+                $result = str_replace('#code', $code, $result);
+            }
+            return $result;
+        }
+        
+        return;
+    }
+
+    public function setLinks($links) {
+        $this->links = $links;
+    }
+    
     public function getIsOriginal() {
         return $this->isOriginal;
     }
