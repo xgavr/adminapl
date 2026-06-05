@@ -20,10 +20,14 @@
 
 <div class="row">
     <div class="col-md-3">
-        <h3>
+        <h4>
             <?php $search = $goods->getCode().' '.$goods->getProducer()->getName() . ' '. $goods->getNameShort()?>
             <?php $search2 = $goods->getCode().' '.$goods->getProducer()->getName()?>
-            <?= $search?>
+            <?= $goods->getCode() ?> 
+            <?php if($goods->getProducer()->getMainLink()):?>
+            <a href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
+            <?php endif; ?>
+            <?= $goods->getProducer()->getName() ?>
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
             <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
@@ -32,8 +36,15 @@
                         data-toggle='tooltip' data-original-title="Заменить производителя">
                     <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
                 </button>
-            </sup>    
-        </h3>
+                <button class="btn btn-default btn-xs producer-link-modal-show" type="button" 
+                        <?= ($rbacManager->isGranted(null, 'rb.manage')) ? '':'disabled' ?> 
+                        modal-url="/producer/add-link-form/<?= $goods->getProducer()->getId() ?>" 
+                        data-toggle='tooltip' data-original-title="Добавить или обновить ссылки">
+                    <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+                </button>
+            </sup>
+        </h4>    
+        <h5><?= $goods->getNameShort() ?></h5>
         <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в гугле</a> <a href="https://www.google.com/search?q=<?= $search2?>" target="_blank">Поиск в гугле 2</a></h5>
         <h5>
             Цена: <?= $goods->getPrice(); ?>
@@ -880,6 +891,26 @@
                 });
             }); 
             return;            
+        });
+        
+        $('.producer-link-modal-show').click(function (){        
+            bootbox.prompt({
+                title: 'Ссылка на страницу товара производителя',
+                message: 'Укажите ссылку на страницу товара на сайте производителя. Вместо артикула подставить <b>#code</b>',
+                inputType: 'text',
+                value: '<?= $goods->getProducer()->getMainLink()?>',    
+                rows: 20, 
+                callback: function (result) {
+//                    console.log(result);              
+                    if (result){
+                        $.post('/producer/add-producer-links/<?= $goods->getProducer()->getId()?>', {link: result}, function( data ) {
+                            if (data == 'ok'){
+                                window.location.href = '/goods/view/<?= $goods->getId()?>';
+                            }
+                        });    
+                    };    
+                }
+            });          
         });
         
         $('.oem-from-json').click(function (){
