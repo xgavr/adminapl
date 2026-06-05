@@ -904,7 +904,7 @@
 //                    console.log(result);              
                     if (result){
                         $.post('/producer/add-producer-links/<?= $goods->getProducer()->getId()?>', {link: result}, function( data ) {
-                            if (data == 'ok'){
+                            if (data.result == 'ok-reload'){
                                 window.location.href = '/goods/view/<?= $goods->getId()?>';
                             }
                         });    
