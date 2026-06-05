@@ -255,6 +255,23 @@ class ProducerManager
     }
     
     /**
+     * 
+     * @param Producer $producer
+     * @param string $linkType
+     * @param string $link
+     */
+    public function addOrUpdateLink($producer, $linkType, $link)
+    {
+        $links = $producer->getLinksAsArray();
+        $links[$linkType] = $link;
+        $producer->setLinks(json_encode($links));
+        $this->entityManager->persist($producer);
+        $this->entityManager->flush();
+        
+        return;
+    }
+    
+    /**
      * Создать производителя из неизвестного производителя
      *@param UnknownProducer $unknownProducer
      *  
