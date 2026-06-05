@@ -457,6 +457,40 @@ class ProducerController extends AbstractActionController
         exit;
     }    
     
+    public function addProducerLinksAction()
+    {
+        $producerId = (int)$this->params()->fromRoute('id', -1);
+        $linkType = $this->params()->fromPost('type', Producer::LINK_MAIN);
+        $link = $this->params()->fromPost('link');
+        
+        // Validate input parameter
+        if ($producerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Validate input parameter
+        if (empty($link)) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the producer by ID
+        $producer = $this->entityManager->getRepository(Producer::class)
+                ->find($producerId);
+        
+        if ($producer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->producerManager->addOrUpdateLink($producer, $linkType, $link);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }        
+    
     public function unknownAction()
     {
         $stages = $this->entityManager->getRepository(Article::class)
