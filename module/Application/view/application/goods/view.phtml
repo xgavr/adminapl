@@ -27,7 +27,7 @@
             <a href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
             <?php endif; ?>
             <?= $goods->getProducer()->getName() ?>
-            <?= $goods->getCode() ?> 
+            <span class="code-to-copy"><?= $goods->getCode() ?></span> 
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
             <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
@@ -911,6 +911,20 @@
                     };    
                 }
             });          
+        });
+        
+        $('.code-to-copy').click(function (e){
+            // 1. Копируем текст в буфер обмена
+            var textToCopy = $(this).text();
+            navigator.clipboard.writeText(textToCopy);
+
+            // 2. Визуально выделяем текст внутри span
+            var range = document.createRange();
+            range.selectNodeContents(this); // Выбираем всё содержимое текущего span
+
+            var selection = window.getSelection();
+            selection.removeAllRanges();    // Сбрасываем старые выделения, если они были
+            selection.addRange(range);      // Применяем новое выделение         
         });
         
         $('.oem-from-json').click(function (){
