@@ -79,6 +79,12 @@ class GoodsController extends AbstractActionController
     private $externalManager;
     
     /**
+     * Менеджер Oem.
+     * @var \Application\Service\OemManager 
+     */
+    private $oemManager;
+    
+    /**
      * Log manager.
      * @var \Admin\Service\LogManager 
      */
@@ -93,7 +99,7 @@ class GoodsController extends AbstractActionController
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $goodsManager, $assemblyManager, 
             $articleManager, $nameManager, $externalManager, $rateManager, 
-            $logManager, $rbacManager) 
+            $logManager, $rbacManager, $oemManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
@@ -104,6 +110,7 @@ class GoodsController extends AbstractActionController
         $this->logManager = $logManager;
         $this->rateManager = $rateManager;
         $this->rbacManager = $rbacManager;
+        $this->oemManager = $oemManager;
     }  
     
     public function autocompleteGoodAction()
@@ -2183,6 +2190,36 @@ class GoodsController extends AbstractActionController
         
             $this->goodsManager->fromJsonToAttributes($good, json_encode($json['attr']));
         }
+        
+        return new JsonModel([
+            'ok'
+        ]);           
+    }     
+    
+    public function goodFromJsonAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        $jsonStr = $this->params()->fromPost('jsonStr');
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId); 
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }       
+        
+        //Проверка json
+        $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
+        if (!empty($json['attr'])){
+//        var_dump($json); exit;        
+        
+            $this->goodsManager->fromJsonToAttributes($good, json_encode($json['attr']));
+        }
+        if (!empty($json['oems'])){       
+        
+            $this->oemManager->fromJsonToOem($good, json_encode($json['oems']));
+        }        
         
         return new JsonModel([
             'ok'
