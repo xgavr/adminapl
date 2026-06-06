@@ -42,6 +42,10 @@
                         data-toggle='tooltip' data-original-title="Добавить или обновить ссылки">
                     <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
                 </button>
+                <button class="btn btn-default btn-xs good-from-json" type="button"  
+                        data-toggle='tooltip' data-original-title="Добавить аттрибуты и номера">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                </button>                
             </sup>
         </h4>    
         <h5><?= $goods->getNameShort() ?></h5>
@@ -925,6 +929,39 @@
             var selection = window.getSelection();
             selection.removeAllRanges();    // Сбрасываем старые выделения, если они были
             selection.addRange(range);      // Применяем новое выделение         
+        });
+        
+        $('.good-from-json').click(function (e){
+            
+            e.preventDefault();
+            
+            var message = "<?= $goodPrompt?>"
+            
+            var $temp = $("<textarea>");
+            $("body").append($temp);
+            
+            $temp.val(message).select();
+            document.execCommand("copy");   
+            
+            $temp.remove();
+        
+            bootbox.prompt({
+                title: 'Вставьте промпт в ИИ и введите ответ в формате json',
+                message: '<h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Промпт для ИИ</a>:</h5><p>' + message.slice(0, 205) + ' (скопировано в буфер обмена)...</p>',
+                inputType: 'textarea',
+                value: '',    
+                rows: 15, 
+                callback: function (result) {
+//                    console.log(result);              
+                    if (result){
+                        $.post('/goods/good-from-json/<?= $goods->getId()?>', {jsonStr: result}, function( data ) {
+                            if (data == 'ok'){
+                                window.location.href = '/goods/view/<?= $goods->getId()?>?tab=attr-tab';
+                            }
+                        });    
+                    };    
+                }
+            });         
         });
         
         $('.oem-from-json').click(function (){
