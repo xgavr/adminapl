@@ -42,7 +42,7 @@ class GoodPrompt extends AbstractFilter
     
     /**
      * 
-     * @param Good $good
+     * @param Goods $good
      * @param string $type
      * @return string
      */
@@ -77,7 +77,7 @@ class GoodPrompt extends AbstractFilter
                 . "type - тип характеристики. Для спецификаций антифриза, масла, жидкостей type = A, для остальных случаев type = G.";
         
         if(!empty($norms)){
-            $resultAttr .= " Нормализованные значения спецификаций - $norms. ";
+            $resultAttr .= " Используй нормализованные значения спецификаций - $norms. ";
         } 
         
         $resultAttr .= " Если имеется несколько характеристик с одинаковым наименованием, но разными значениями, то для каждого значения делается новая строка."
