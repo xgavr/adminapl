@@ -51,6 +51,12 @@ class GoodPrompt extends AbstractFilter
         $norms = null;
         
         if ($type == 'attr' || empty($type)){
+            
+            if ($good->inAntifreezCategory()){
+                $norms = $this->entityManager->getRepository(Car::class)
+                        ->normsList([8]);
+            }
+        
             if ($good->inMotorOilCategory()){
                 $norms = $this->entityManager->getRepository(Car::class)
                         ->normsList([2]);
