@@ -31,6 +31,7 @@ use Application\Entity\GoodToken;
 use GoodMap\Entity\FoldBalance;
 use Application\Entity\GoodAttributeValue;
 use Application\Entity\Car;
+use Application\Filter\GoodPrompt;
 
 class GoodsController extends AbstractActionController
 {
@@ -745,28 +746,11 @@ class GoodsController extends AbstractActionController
         $tdOems = $this->entityManager->getRepository(Oem::class)
                 ->findGoodsTdOem($goods);
         
-        $norms = [];
-        if ($goods->inAntifreezCategory()){
-            $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList([8]);
-        }
+        $goodPromptFilter = new GoodPrompt($this->entityManager);
         
-        if ($goods->inMotorOilCategory()){
-            $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList([2]);
-        }
-        
-        if ($goods->inTransOilCategory()){
-            $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList([4, 6, 11, 13, 15, 17, 18, 21, 23, 28, 30, 32, 34, 36, 40, 43, 46, 49, 61, 74, 76, 78]);
-        }
-        
-        if ($goods->inBrakeOilCategory()){
-            $norms = $this->entityManager->getRepository(Car::class)
-                    ->normsList([10, 26]);
-        }
-        
-//        var_dump($goods->inTransOilCategory(), $norms); exit;
+        $oemPrompt = $goodPromptFilter->filter($goods, 'oem');
+        $attrPrompt = $goodPromptFilter->filter($goods, 'attr');
+        $goodPrompt = $goodPromptFilter->filter($goods);
         
 
         // Render the view template.
@@ -791,7 +775,9 @@ class GoodsController extends AbstractActionController
             'rbacManager' => $this->rbacManager,
             'tab' => $tab,
             'tdOems' => $tdOems,
-            'norms' => implode(',', $norms),
+            'oemPrompt' => $oemPrompt,
+            'attrPrompt' => $attrPrompt,
+            'goodPrompt' => $goodPrompt,
         ]);
     }      
 
@@ -2192,9 +2178,11 @@ class GoodsController extends AbstractActionController
         
         //Проверка json
         $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
+        if (!empty($json['attr'])){
 //        var_dump($json); exit;        
         
-        $this->goodsManager->fromJsonToAttributes($good, $jsonStr);
+            $this->goodsManager->fromJsonToAttributes($good, json_encode($json['attr']));
+        }
         
         return new JsonModel([
             'ok'
