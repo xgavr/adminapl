@@ -77,6 +77,7 @@ class GoodPrompt extends AbstractFilter
                 . "type - тип характеристики. Для спецификаций антифриза, масла, жидкостей type = A, для остальных случаев type = G.";
         
         if(!empty($norms)){
+            $norms = implode(', ', $norms);
             $resultAttr .= " Используй нормализованные значения спецификаций - $norms. ";
         } 
         
