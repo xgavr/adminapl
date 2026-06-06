@@ -1942,6 +1942,15 @@ class Goods {
     }
     
     /**
+     * Возвращает что это тормозная жидкость
+     * @return str|bool
+     */
+    public function inSpecAttrCategory()
+    {        
+        return $this->inAntifreezCategory() || $this->inBrakeOilCategory() || $this->inMotorOilCategory() || $this->inTransOilCategory();
+    }
+    
+    /**
      * Возвращает что не недо составных наименований
      * @return str|bool
      */
