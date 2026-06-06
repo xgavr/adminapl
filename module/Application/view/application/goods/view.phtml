@@ -23,10 +23,10 @@
         <h4>
             <?php $search = $goods->getCode().' '.$goods->getProducer()->getName() . ' '. $goods->getNameShort()?>
             <?php $search2 = $goods->getCode().' '.$goods->getProducer()->getName()?>
-            <?php if($goods->getProducer()->getMainLink()):?>
-            <a href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
-            <?php endif; ?>
             <?= $goods->getProducer()->getName() ?>
+            <?php if($goods->getProducer()->getMainLink()):?>
+                <a href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
+            <?php endif; ?>
             <span class="code-to-copy"><?= $goods->getCode() ?></span> 
             <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
             <sup>
