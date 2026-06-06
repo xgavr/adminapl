@@ -378,8 +378,10 @@ class OemController extends AbstractActionController
         //Проверка json
         $json = json_decode($jsonStr, \Laminas\Json\Json::TYPE_ARRAY);
 //        var_dump($json); exit;        
+        if (!empty($json['oems'])){
         
-        $this->oemManager->fromJsonToOem($good, $jsonStr);
+            $this->oemManager->fromJsonToOem($good, json_encode($json['oems']));
+        }
         
         return new JsonModel([
             'ok'
