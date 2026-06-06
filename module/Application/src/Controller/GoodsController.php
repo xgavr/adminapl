@@ -85,6 +85,12 @@ class GoodsController extends AbstractActionController
     private $oemManager;
     
     /**
+     * Менеджер Car.
+     * @var \Application\Service\CarManager 
+     */
+    private $carManager;
+    
+    /**
      * Log manager.
      * @var \Admin\Service\LogManager 
      */
@@ -99,7 +105,7 @@ class GoodsController extends AbstractActionController
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $goodsManager, $assemblyManager, 
             $articleManager, $nameManager, $externalManager, $rateManager, 
-            $logManager, $rbacManager, $oemManager) 
+            $logManager, $rbacManager, $oemManager, $carManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
@@ -111,6 +117,7 @@ class GoodsController extends AbstractActionController
         $this->rateManager = $rateManager;
         $this->rbacManager = $rbacManager;
         $this->oemManager = $oemManager;
+        $this->carManager = $carManager;
     }  
     
     public function autocompleteGoodAction()
@@ -2219,6 +2226,10 @@ class GoodsController extends AbstractActionController
         if (!empty($json['oems'])){       
         
             $this->oemManager->fromJsonToOem($good, json_encode($json['oems']));
+            
+            if (!$good->inSpecAttrCategory()){
+                $this->carManager->updateCarsByOem($good);
+            }
         }        
         
         return new JsonModel([
