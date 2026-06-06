@@ -469,12 +469,6 @@ class ProducerController extends AbstractActionController
             return;
         }
         
-        // Validate input parameter
-        if (empty($link)) {
-            $this->getResponse()->setStatusCode(404);
-            return;
-        }
-        
         // Find the producer by ID
         $producer = $this->entityManager->getRepository(Producer::class)
                 ->find($producerId);
