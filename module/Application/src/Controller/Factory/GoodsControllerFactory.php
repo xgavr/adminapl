@@ -18,6 +18,7 @@ use Application\Service\ExternalManager;
 use Application\Service\RateManager;
 use Admin\Service\LogManager;
 use User\Service\RbacManager;
+use Application\Service\OemManager;
 
 /**
  * Description of GoodsControllerFactory
@@ -38,10 +39,11 @@ class GoodsControllerFactory implements FactoryInterface {
         $rateManager = $container->get(RateManager::class);
         $logManager = $container->get(LogManager::class);
         $rbacManager = $container->get(RbacManager::class);
+        $oemManager = $container->get(OemManager::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
         return new GoodsController($entityManager, $goodsManager, $assemblyManager, 
                 $articleManager, $nameManager, $externalManager, $rateManager,
-                $logManager, $rbacManager);
+                $logManager, $rbacManager, $oemManager);
     }
 }
