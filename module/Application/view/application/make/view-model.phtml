@@ -66,13 +66,13 @@ $this->headScript()
                 <? //if ($car->getStatus() == $car::STATUS_ACTIVE):?>
                     <tr>
                         <td>
-                            <?= $car->getId()?>
+                            <b>Id: </b><?= $car->getId()?>
                         </td>
                         <td>
-                            <?= $car->getTdId()?>
+                            <b>TdId: </b><?= $car->getTdId()?>
                         </td>
                         <td>
-                            <?= $car->getAplId()?>
+                            <b>AplId: </b><?= $car->getAplId()?>
                         </td>
                         <td colspan="3">
                             <span>
@@ -85,17 +85,17 @@ $this->headScript()
                             </small>
                         </td>
                         <td width="20">
-                            <?= $car->getGoodCount()?>
+                            <b>T: </b><?= $car->getGoodCount()?>
                         </td>
                         <td width="20">
-                            <?= $car->getSaleCount()?>
+                            <b>П: </b><?= $car->getSaleCount()?>
                         </td>
                         <td width="20">
-                            <?= $car->getSaleMonth()?>
+                            <b>M: </b><?= $car->getSaleMonth()?>
                         </td>
                     </tr>    
                     <tr>
-                        <td colspan="9">
+                        <td colspan="8">
                             <div>
                                 <small>
                                     <b>Конструкция: </b>
@@ -117,9 +117,12 @@ $this->headScript()
                                 </small>                                
                             </div>
                         </td>                    
+                        <td>
+                            
+                        </td>                    
                     </tr>
                     <tr>
-                        <td colspan="9">
+                        <td colspan="8">
                             <div>
                                 <small>
                                     <b>Автонормы: </b>
@@ -138,7 +141,10 @@ $this->headScript()
                                     <?php endif ?>             
                                 </small>                                
                             </div>
-                        </td>                    
+                        </td> 
+                        <td>
+                            
+                        </td>
                     </tr>
                 <?// endif;?>    
             <?php endforeach;?>    
