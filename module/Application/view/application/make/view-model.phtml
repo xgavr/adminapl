@@ -23,12 +23,12 @@ $this->headScript()
 
 ?>
 
-<h1>
+<h3>
     <?= $model->getMake()->getName().' '.$model->getName();?>
     <sup>
         <?= $model->getTdId();?>
     </sup>
-</h1>
+</h3>
 <p>
     <small>
         <span><?= $model->getInterval()?></span>
@@ -47,7 +47,7 @@ $this->headScript()
     </small>
 </p>
 <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-10">
 
         <table class="table table-striped">
             <tr>
@@ -113,13 +113,30 @@ $this->headScript()
                                     <?php endif ?>             
                                 </small>                                
                             </div>
+                            <div>
+                                <small>
+                                   <?php if (count($car->getCarFillVolumesAsArray())): ?> 
+                                        <?php foreach ($car->getCarFillVolumesAsArray() as $fillVoume):?>
+                                            <span><?= $fillVoume->getCarFillTitle()->getTitle(); ?></span>: 
+                                            <span>
+                                                <?= $fillVoume->getVolume(); ?>
+                                                <?php if ($fillVoume->getVolumeNorm()): ?>
+                                                    (<?= $fillVoume->getVolumeNorm() ?>)
+                                                <?php endif;?>
+                                            </span>; 
+                                         <?php endforeach;?>
+                                    <?php else: ?>          
+                                            <i>Нет автонорм</i>         
+                                    <?php endif ?>             
+                                </small>                                
+                            </div>
                         </td>                    
                     </tr>
                 <?// endif;?>    
             <?php endforeach;?>    
         </table>
     </div>
-    <div class="col-md-3" id="side-nav" >
+    <div class="col-md-2" id="side-nav" >
         <div class="nav nav-stacked nav-list affix">
             <div class="panel-group">
                 <div class="panel panel-info">
