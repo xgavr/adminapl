@@ -48,7 +48,7 @@
             </sup>
         </h4>    
         <h5><?= $goods->getNameShort() ?></h5>
-        <p> style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></p>
+        <p style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></p>
         <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в гугле</a> <a href="https://www.google.com/search?q=<?= $search2?>" target="_blank">Поиск в гугле 2</a></h5>
         <h5>
             Цена: <?= $goods->getPrice(); ?>
