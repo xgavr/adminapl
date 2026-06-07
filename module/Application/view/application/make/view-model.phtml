@@ -117,11 +117,11 @@ $this->headScript()
                                 <small>
                                    <?php if (count($car->getCarFillVolumesAsArray())): ?> 
                                         <?php foreach ($car->getCarFillVolumesAsArray() as $fillVoume):?>
-                                            <span><?= $fillVoume->getCarFillTitle()->getTitle(); ?></span>: 
+                                            <span><?= $fillVoume['title']; ?></span>: 
                                             <span>
-                                                <?= $fillVoume->getVolume(); ?>
-                                                <?php if ($fillVoume->getVolumeNorm()): ?>
-                                                    (<?= $fillVoume->getVolumeNorm() ?>)
+                                                <?= $fillVoume['volume']; ?>
+                                                <?php if ($fillVoume['volumeNorm']): ?>
+                                                    (<?= $fillVoume['volumeNorm'] ?>)
                                                 <?php endif;?>
                                             </span>; 
                                          <?php endforeach;?>
