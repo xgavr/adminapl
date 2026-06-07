@@ -76,10 +76,10 @@ $this->headScript()
                         <td>
                             <b>AplId: </b><?= $car->getAplId()?>
                         </td>
-                        <td colspan="2">
+                        <td colspan="3">
                             <span>
                                 <a href="/car/view/<?= $car->getId()?>">
-                                    <?= $car->getName()?>
+                                    <?= $car->getFullName()?>
                                 </a>                               
                             </span>
                             <small>
@@ -95,12 +95,9 @@ $this->headScript()
                         <td width="20">
                             <nobr><b>M: </b><?= $car->getSaleMonth()?></nobr>
                         </td>
-                        <td>
-                            
-                        </td>
                     </tr>    
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div>
                                 <small>
                                     <b>Конструкция: </b>
@@ -121,16 +118,13 @@ $this->headScript()
                                     <?php endif ?>             
                                 </small>                                
                             </div>
-                        </td>                    
-                        <td>
-                            
-                        </td>                    
+                        </td>                                      
                     </tr>
                     <tr>
-                        <td colspan="8">
+                        <td colspan="9">
                             <div>
                                 <small>
-                                    <b>Автонормы: </b>
+                                    <a href="#" class="fill-volumes-from-json" data-car-id="<?= $car->getId()?>" data-car-name="<?= $car->getFullName()?>"><b>Автонормы: </b></a>
                                    <?php if (count($car->getCarFillVolumesAsArray())): ?> 
                                         <?php foreach ($car->getCarFillVolumesAsArray() as $fillVoume):?>
                                             <span><?= $fillVoume['title']; ?></span>: 
@@ -147,9 +141,6 @@ $this->headScript()
                                 </small>                                
                             </div>
                         </td> 
-                        <td>
-                            
-                        </td>
                     </tr>
                 <?// endif;?>    
             <?php endforeach;?>    
@@ -215,58 +206,112 @@ $this->headScript()
 </div>
 
 <script type="text/javascript">
-    $(window).on('load', function() {
-        $('.bootstrapEdit').editable();
-    });
+    $(function () {
+        $(window).on('load', function() {
+            $('.bootstrapEdit').editable();
+        });
 
-    $('.show-button').on('click', function(e) {
-        var url = e.currentTarget.value;
+        $('.show-button').on('click', function(e) {
+            var url = e.currentTarget.value;
 
-        if (url){
+            if (url){
+                var dialog = bootbox.dialog({
+                    message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                    closeButton: false
+                });
+
+                $.ajax({
+                    type: 'GET',
+                    url: url
+                })
+                    .done(function (data) {
+                        dialog.modal('hide');
+                        dialog = bootbox.dialog({
+                            message: '<div><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
+                            closeButton: true,
+                            size: 'large'
+                        });
+                    })
+                    .fail(function () {
+                        dialog.modal('hide');
+                        bootbox.alert("Произошла ошибка при выполнении операции.");
+                    });        
+            }        
+        });
+
+        $('.download-csv').on('click', function(){
             var dialog = bootbox.dialog({
                 message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-                closeButton: false
+                closeButton: true
             });
-
             $.ajax({
-                type: 'GET',
-                url: url
-            })
-                .done(function (data) {
+                url: $(this).attr('value'),
+                dataType: 'binary',
+                xhrFields: {
+                    'responseType': 'blob'
+                },
+                success: function(data, status, xhr) {
+                    var blob = new Blob([data], {type: xhr.getResponseHeader('Content-Type')});
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = '<?= $model->getFileName()?>.csv';
+                    link.click();
                     dialog.modal('hide');
-                    dialog = bootbox.dialog({
-                        message: '<div><i class="fa fa-spin fa-spinner"></i>'+objectToHtml(data.message)+'</div>',
-                        closeButton: true,
-                        size: 'large'
-                    });
-                })
-                .fail(function () {
-                    dialog.modal('hide');
-                    bootbox.alert("Произошла ошибка при выполнении операции.");
-                });        
-        }        
-    });
+                }
+            });
+        });    
     
-    $('.download-csv').on('click', function(){
-        var dialog = bootbox.dialog({
-            message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
-            closeButton: true
-        });
-        $.ajax({
-            url: $(this).attr('value'),
-            dataType: 'binary',
-            xhrFields: {
-                'responseType': 'blob'
-            },
-            success: function(data, status, xhr) {
-                var blob = new Blob([data], {type: xhr.getResponseHeader('Content-Type')});
-                var link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = '<?= $model->getFileName()?>.csv';
-                link.click();
-                dialog.modal('hide');
-            }
-        });
-    });    
-    
+        $('.fill-volumes-from-json').click(function (e){
+            
+            e.preventDefault();
+            
+            var carId = $(this).data('car-id');
+            var carName = $(this).data('car-name');
+            
+            var message = [
+                "Заполни автонормы - требуемые объемы при замене и спецификации масел и технических жидкостей\n\
+                    для автомобиля " + carName + " в формате JSON: {norms:{",
+                "Спецификация моторного масла: #допуск,",
+                "Масло коробки переключения передач: #литр,",
+                "Спецификация масла ступенчатой коробки передач: #допуск,",
+                "Масло коробки переключения передач: #литр,",
+                "Спецификация охлаждающей жидкости: #допуск,",
+                "Охлаждающая жидкость: #литр,",
+                "Спецификация тормозной жидкости: #допуск,",
+                "Тормозная жидкость при замене: #литр,",
+                "Спецификация хладагента: #допуск,",
+                "Хладагент для кондиционера: #литр,",
+                "Спецификация масла кондиционерa: #допуск,",
+                "Масло кондиционер: #литр",
+                "}}. Где #допуск - значение спецификации, #литр - объем или вес масла/жидкости при замене.",
+                "Если имеется несколько вариантов спецификаций или объемов одново вида, то для каждого значения надо добавить новую строку в массив."
+            ].join(' ');
+            
+            var $temp = $("<textarea>");
+            $("body").append($temp);
+            
+            $temp.val(message).select();
+            document.execCommand("copy");   
+            
+            $temp.remove();
+        
+            bootbox.prompt({
+                title: 'Вставьте промпт в ИИ и введите ответ в формате json',
+                message: '<h5><a href="https://www.google.com/search?q='+carName+'" target="_blank">Промпт для ИИ</a>:</h5><p>' + message.slice(0, 205) + ' (скопировано в буфер обмена)...</p>',
+                inputType: 'textarea',
+                value: '',    
+                rows: 15, 
+                callback: function (result) {
+//                    console.log(result);              
+                    if (result){
+                        $.post('/car/fill-volumes-from-json/'+carId, {jsonStr: result}, function( data ) {
+                            if (data == 'ok'){
+                                window.location.reload();
+                            }
+                        });    
+                    };    
+                }
+            });         
+        });   
+    });        
 </script>
