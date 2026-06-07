@@ -98,6 +98,7 @@ $this->headScript()
                         <td colspan="9">
                             <div>
                                 <small>
+                                    <b>Конструкция: </b>
                                    <?php if (count($car->getVehicleDetailsCar())): ?> 
                                         <?php foreach ($car->getVehicleDetailsCar() as $vehicleDetailCar):?>
                                              <?php if ($vehicleDetailCar->getVehicleDetailValue()->getVehicleDetail()->getNameApl()):?>
@@ -121,6 +122,7 @@ $this->headScript()
                         <td colspan="9">
                             <div>
                                 <small>
+                                    <b>Автонормы: </b>
                                    <?php if (count($car->getCarFillVolumesAsArray())): ?> 
                                         <?php foreach ($car->getCarFillVolumesAsArray() as $fillVoume):?>
                                             <span><?= $fillVoume['title']; ?></span>: 
