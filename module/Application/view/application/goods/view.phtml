@@ -27,8 +27,7 @@
             <?php if($goods->getProducer()->getMainLink()):?>
                 <a href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
             <?php endif; ?>
-            <span class="code-to-copy"><?= $goods->getCode() ?></span> 
-            <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup>
+            <span class="code-to-copy"><?= $goods->getCode() ?></span>             
             <sup>
                 <button class="btn btn-default btn-xs producer-union-modal-show" type="button" 
                         <?= ($rbacManager->isGranted(null, 'rb.manage')) ? '':'disabled' ?> 
@@ -49,6 +48,7 @@
             </sup>
         </h4>    
         <h5><?= $goods->getNameShort() ?></h5>
+        <p> style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></p>
         <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в гугле</a> <a href="https://www.google.com/search?q=<?= $search2?>" target="_blank">Поиск в гугле 2</a></h5>
         <h5>
             Цена: <?= $goods->getPrice(); ?>
