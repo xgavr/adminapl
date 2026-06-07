@@ -105,11 +105,13 @@ $this->headScript()
                                                  <span><?= $vehicleDetailCar->getVehicleDetailValue()->getNameApl(); ?></span>; 
                                              <?php endif;?>
                                          <?php endforeach;?>
-                                    <?php else: ?>          
+                                    <?php elseif(count($car->getDetailsAsArray())): ?>          
                                         <?php foreach ($car->getDetailsAsArray() as $key => $value):?>                                            
                                             <span><?= $key; ?></span>: 
                                             <span><?= $value; ?></span>;                                              
                                          <?php endforeach;?>
+                                    <?php else: ?>          
+                                            <i class="text-warning">Нет технической информации</i>                                                     
                                     <?php endif ?>             
                                 </small>                                
                             </div>
@@ -126,7 +128,7 @@ $this->headScript()
                                             </span>; 
                                          <?php endforeach;?>
                                     <?php else: ?>          
-                                            <i>Нет автонорм</i>         
+                                            <i class="text-warning">Нет автонорм</i>         
                                     <?php endif ?>             
                                 </small>                                
                             </div>
