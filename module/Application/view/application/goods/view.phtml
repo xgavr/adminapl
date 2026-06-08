@@ -25,7 +25,7 @@
             <?php $search2 = $goods->getCode().' '.$goods->getProducer()->getName()?>
             <?= $goods->getProducer()->getName() ?>
             <?php if($goods->getProducer()->getMainLink()):?>
-                <a href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
+                <a class="brand-main-link" href="<?= $goods->getProducer()->getMainLink($goods->getCode()) ?>" target="_blank" title="Перейти на страницу товара производителя"><span class="glyphicon glyphicon-link"></span></a>
             <?php endif; ?>
             <span class="code-to-copy"><?= $goods->getCode() ?></span>             
             <sup>
@@ -916,7 +916,7 @@
             });          
         });
         
-        $('.code-to-copy').click(function (e){
+        $('.code-to-copy, .brand-main-link').click(function (e){
             // 1. Копируем текст в буфер обмена
             var textToCopy = $(this).text();
             navigator.clipboard.writeText(textToCopy);
