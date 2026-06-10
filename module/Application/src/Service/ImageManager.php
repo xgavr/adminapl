@@ -196,6 +196,8 @@ class ImageManager {
         // 1. Генерируем новый путь с расширением .webp
         $pathInfo = pathinfo($source);
         $destination = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.webp';
+        
+        $image = $result = null;
 
         // 2. Определяем расширение оригинала
         $extension = strtolower($pathInfo['extension']);
@@ -224,9 +226,11 @@ class ImageManager {
 
 //        var_dump($source, $destination, $quality); exit;
         
-        // 4. Сохраняем в ту же папку
-        $result = imagewebp($image, $destination, $quality);
-        imagedestroy($image);
+        if ($image){
+            // 4. Сохраняем в ту же папку        
+            $result = imagewebp($image, $destination, $quality);
+            imagedestroy($image);
+        }
         
         if ($result){
             unlink($source);
