@@ -1723,16 +1723,16 @@ class GoodsController extends AbstractActionController
             // Заполняем форму данными.
             $form->setData($data);
             if($form->isValid()) {
-                
-                //преобразование в webp
-                $webpFile = $this->imageManager->convertToWebpSamePath($data['name']['tmp_name']);
-                
-                if ($webpFile){
+                                    
                     // Получаем валадированные данные формы.
                     $data = $form->getData();
-                    $this->entityManager->getRepository(Images::class)
-                            ->uploadImageGood($good, $webpFile, Images::STATUS_HAND, Images::SIMILAR_MATCH);
-                }
+                    
+                    $webpFile = $this->imageManager->convertToWebpSamePath($data['name']['tmp_name']);
+                    
+                    if (file_exists($webpFile)){
+                        $this->entityManager->getRepository(Images::class)
+                            ->uploadImageGood($good, $data['name']['tmp_name'], Images::STATUS_HAND, Images::SIMILAR_MATCH);
+                    }
               
                 return new JsonModel(
                    ['ok']
