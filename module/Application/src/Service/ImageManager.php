@@ -185,4 +185,41 @@ class ImageManager {
         return $this->entityManager->getRepository(Images::class)
                 ->goodsByFileName($filename);
     }
+    
+    /**
+     * 
+     * @param string $source исходный файл с полным путем
+     * @param type $quality качество
+     * @return boolean
+     */
+    function convertToWebpSamePath($source, $quality = 85) {
+        // 1. Генерируем новый путь с расширением .webp
+        $pathInfo = pathinfo($source);
+        $destination = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.webp';
+
+        // 2. Определяем расширение оригинала
+        $extension = strtolower($pathInfo['extension']);
+
+        // 3. Создаем ресурс изображения
+        switch ($extension) {
+            case 'jpeg':
+            case 'jpg':
+                $image = imagecreatefromjpeg($source);
+                break;
+            case 'png':
+                $image = imagecreatefrompng($source);
+                imagepalettetotruecolor($image);
+                imagealphablending($image, true);
+                imagesavealpha($image, true);
+                break;
+            default:
+                return false; 
+        }
+
+        // 4. Сохраняем в ту же папку
+        $result = imagewebp($image, $destination, $quality);
+        imagedestroy($image);
+
+        return $result ? $destination : false; // Возвращает путь к новому файлу или false
+    }    
 }
