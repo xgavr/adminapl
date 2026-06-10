@@ -55,7 +55,7 @@ $form->prepare();
 
         $.ajax({
             type: 'POST',
-            url: '/goods/upload-image-form/<?= $good->getId() ?>',
+            url: '/goods/upload-image-form/<?= $good->getId() ?>?mode=<?= $mode?>',
             contentType: false,
             processData: false,
             data: form_data
