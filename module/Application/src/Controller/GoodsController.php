@@ -1756,6 +1756,7 @@ class GoodsController extends AbstractActionController
         return new ViewModel([
             'good' => $good,
             'form' => $form,
+            'mode' => $mode, 
         ]);
         
     }
