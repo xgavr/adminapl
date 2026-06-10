@@ -1688,6 +1688,7 @@ class GoodsController extends AbstractActionController
     public function uploadImageFormAction()
     {
         $goodId = (int)$this->params()->fromRoute('id', -1);
+        $mode = $this->params()->fromQuery('mode');
 
         // Validate input parameter
         if ($goodId<0) {
@@ -1732,6 +1733,15 @@ class GoodsController extends AbstractActionController
                     if (file_exists($webpFile)){
                         $this->entityManager->getRepository(Images::class)
                             ->uploadImageGood($good, $webpFile, Images::STATUS_HAND, Images::SIMILAR_MATCH);
+                        
+                        if ($mode == 'deleteSimilar'){
+                            foreach($good->getImages() as $image){
+                                if ($image->getSimilar() === Images::SIMILAR_SIMILAR){
+                                    $this->entityManager->getRepository(Images::class)
+                                        ->removeImage($image);
+                                }
+                            }
+                        }
                     }
               
                 return new JsonModel(
