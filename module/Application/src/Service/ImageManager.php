@@ -218,12 +218,17 @@ class ImageManager {
                 return $source; 
         }
 
-        var_dump($source, $destination, $quality); exit;
+//        var_dump($source, $destination, $quality); exit;
         
         // 4. Сохраняем в ту же папку
         $result = imagewebp($image, $destination, $quality);
         imagedestroy($image);
+        
+        if ($result){
+            unlink($source);
+            return $destination;
+        }
 
-        return $result ? $destination : false; // Возвращает путь к новому файлу или false
+        return $source; // Возвращает путь к новому файлу или false
     }    
 }
