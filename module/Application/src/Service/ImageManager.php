@@ -200,7 +200,7 @@ class ImageManager {
         // 2. Определяем расширение оригинала
         $extension = strtolower($pathInfo['extension']);
 
-//        var_dump($source, $destination, $extension); exit;
+        var_dump($source, $destination, $extension); exit;
         
         // 3. Создаем ресурс изображения
         switch ($extension) {
