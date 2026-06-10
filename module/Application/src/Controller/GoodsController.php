@@ -1731,7 +1731,7 @@ class GoodsController extends AbstractActionController
                     
                     if (file_exists($webpFile)){
                         $this->entityManager->getRepository(Images::class)
-                            ->uploadImageGood($good, $data['name']['tmp_name'], Images::STATUS_HAND, Images::SIMILAR_MATCH);
+                            ->uploadImageGood($good, $webpFile, Images::STATUS_HAND, Images::SIMILAR_MATCH);
                     }
               
                 return new JsonModel(
