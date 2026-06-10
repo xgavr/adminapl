@@ -200,7 +200,7 @@ class ImageManager {
         // 2. Определяем расширение оригинала
         $extension = strtolower($pathInfo['extension']);
 
-        var_dump($source, $destination, $extension); exit;
+//        var_dump($source, $destination, $extension); exit;
         
         // 3. Создаем ресурс изображения
         switch ($extension) {
@@ -218,6 +218,8 @@ class ImageManager {
                 return $source; 
         }
 
+        var_dump($source, $destination, $quality); exit;
+        
         // 4. Сохраняем в ту же папку
         $result = imagewebp($image, $destination, $quality);
         imagedestroy($image);
