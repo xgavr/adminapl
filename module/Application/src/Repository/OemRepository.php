@@ -996,13 +996,18 @@ class OemRepository  extends EntityRepository{
      */
     public function findGoodsWithCarsByOem($good, $oe)
     {
+        $categoryIds = $good->getCategoryIdsAsArray();
+        
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
         
+        
         $orX = $queryBuilder->expr()->orX();
         $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MAN));
-        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD));        
-        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MY_CODE));        
+        $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD)); 
+        if (count($categoryIds)){
+            $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MY_CODE));        
+        }
         
         $queryBuilder->select('g')
                 ->from(Goods::class, 'g')
@@ -1016,9 +1021,13 @@ class OemRepository  extends EntityRepository{
                 ->andWhere('o.oe = :oe')
                 ->andWhere($orX)
                 ->setParameter('oe', $oe)
-                ->join('g.categories', 'cat')
-                ->andWhere($queryBuilder->expr()->in('cat.id', $good->getCategoryIdsAsArray()))
                 ;
+        
+                if (count($categoryIds)){                
+                    $queryBuilder->join('g.categories', 'cat')
+                        ->andWhere($queryBuilder->expr()->in('cat.id', $categoryIds))
+                        ;
+                }
         
         return $queryBuilder->getQuery()->getResult();
     }
