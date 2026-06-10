@@ -85,6 +85,12 @@ class GoodsController extends AbstractActionController
     private $oemManager;
     
     /**
+     * Менеджер Image.
+     * @var \Application\Service\ImageManager 
+     */
+    private $imageManager;
+    
+    /**
      * Менеджер Car.
      * @var \Application\Service\CarManager 
      */
@@ -105,7 +111,7 @@ class GoodsController extends AbstractActionController
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $goodsManager, $assemblyManager, 
             $articleManager, $nameManager, $externalManager, $rateManager, 
-            $logManager, $rbacManager, $oemManager, $carManager) 
+            $logManager, $rbacManager, $oemManager, $carManager, $imageManager) 
     {
         $this->entityManager = $entityManager;
         $this->goodsManager = $goodsManager;
@@ -118,6 +124,7 @@ class GoodsController extends AbstractActionController
         $this->rbacManager = $rbacManager;
         $this->oemManager = $oemManager;
         $this->carManager = $carManager;
+        $this->imageManager = $imageManager;
     }  
     
     public function autocompleteGoodAction()
@@ -1716,11 +1723,16 @@ class GoodsController extends AbstractActionController
             // Заполняем форму данными.
             $form->setData($data);
             if($form->isValid()) {
-                                
-                // Получаем валадированные данные формы.
-                $data = $form->getData();
-                $this->entityManager->getRepository(Images::class)
-                        ->uploadImageGood($good, $data['name']['tmp_name'], Images::STATUS_HAND, Images::SIMILAR_MATCH);
+                
+                //преобразование в webp
+                $webpFile = $this->imageManager->convertToWebpSamePath($data['name']['tmp_name']);
+                
+                if ($webpFile){
+                    // Получаем валадированные данные формы.
+                    $data = $form->getData();
+                    $this->entityManager->getRepository(Images::class)
+                            ->uploadImageGood($good, $webpFile, Images::STATUS_HAND, Images::SIMILAR_MATCH);
+                }
               
                 return new JsonModel(
                    ['ok']
