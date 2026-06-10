@@ -203,20 +203,24 @@ class ImageManager {
 //        var_dump($source, $destination, $extension); exit;
         
         // 3. Создаем ресурс изображения
-        switch ($extension) {
-            case 'jpeg':
-            case 'jpg':
-                $image = imagecreatefromjpeg($source);
-                break;
-            case 'png':
-                $image = imagecreatefrompng($source);
-                imagepalettetotruecolor($image);
-                imagealphablending($image, true);
-                imagesavealpha($image, true);
-                break;
-            default:
-                return $source; 
-        }
+        try{
+            switch ($extension) {
+                case 'jpeg':
+                case 'jpg':
+                    $image = imagecreatefromjpeg($source);
+                    break;
+                case 'png':
+                    $image = imagecreatefrompng($source);
+                    imagepalettetotruecolor($image);
+                    imagealphablending($image, true);
+                    imagesavealpha($image, true);
+                    break;
+                default:
+                    return $source; 
+            }
+        } catch (Throwable $e){
+            return $source;
+        }    
 
 //        var_dump($source, $destination, $quality); exit;
         
