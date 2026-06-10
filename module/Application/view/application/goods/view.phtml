@@ -67,7 +67,28 @@
         </h3>-->
         <?php if ($goods->getDescription()): ?>
         
-        <?php endif;?>                    
+        <?php endif;?>  
+
+        <div class="thumbnail">
+            <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-default btn-xs"
+                    data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку">
+                <span class="glyphicon glyphicon-plus" ></span>
+            </button>                 
+            <button value="/goods/upload-image-form/<?= $goods->getId() ?>?mode=deleteSimilar" class="btn btn-default btn-xs"
+                    data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку и удалить похожие">
+                <span class="glyphicon glyphicon-plus" ></span><span class="glyphicon glyphicon-minus" ></span>
+            </button>                 
+            <?php if(count($images)):?>
+                <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
+                        title="Обновить в apl">
+                    <span class="glyphicon glyphicon-export" ></span>
+                </button>            
+            <?php endif; ?>    
+<!--                <button value="/goods/external-api-image/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
+                        title="Обновить картинку из TecDoc">
+                    <span class="glyphicon glyphicon-refresh" ></span>
+                </button>                             -->
+        </div>
                 
         <?php if(!count($images)):?>
             <div class="thumbnail">
@@ -111,22 +132,6 @@
                 </div>    
             <?php endif; ?>    
         <?php endforeach;?>
-        <div class="thumbnail">
-            <button value="/goods/upload-image-form/<?= $goods->getId() ?>" class="btn btn-default btn-xs"
-                    data-toggle="modal" data-target="#modal-dialog" title="Добавить картинку">
-                <span class="glyphicon glyphicon-plus" ></span>
-            </button>                 
-            <?php if(count($images)):?>
-                <button value="/apl/ex-img/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-button"
-                        title="Обновить в apl">
-                    <span class="glyphicon glyphicon-export" ></span>
-                </button>            
-            <?php endif; ?>    
-<!--                <button value="/goods/external-api-image/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
-                        title="Обновить картинку из TecDoc">
-                    <span class="glyphicon glyphicon-refresh" ></span>
-                </button>                             -->
-        </div>
     </div>
     <div class="col-md-9">        
         <ul class="nav nav-tabs" id="featureTab" role="tablist">
