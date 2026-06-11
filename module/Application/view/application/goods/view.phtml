@@ -119,6 +119,7 @@
                             <span><?= $image->getStatusAsString();?></span> 
                             <span><?= $image->getSimilarAsString();?></span> 
                             <?php if (file_exists($image->getPath())):?>
+                                <span><?= mime_content_type($image->getPath()) ?></span>
                                 <span><?= round(filesize($image->getPath()) / 1024, 2) . ' KB'; ?></span>
                             <?php endif; ?>
                         </div>
