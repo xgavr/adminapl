@@ -208,6 +208,7 @@ class ImageManager {
         try{
             switch ($extension) {
                 case 'jpeg':
+                case 'jfif':
                 case 'jpg':
                     $image = imagecreatefromjpeg($source);
                     break;
