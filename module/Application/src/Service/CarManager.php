@@ -461,9 +461,13 @@ class CarManager
             return;            
         }
         
+        $categoryIds = $good->getCategoryIdsAsArray();
+        
+        var_dump($categoryIds);
+        
         foreach ($oems as $oem){
             $goodsWithCars = $this->entityManager->getRepository(Oem::class)
-                    ->findGoodsWithCarsByOem($good, $oem['oe']);
+                    ->findGoodsWithCarsByOem($good, $oem['oe'], $categoryIds);
             foreach ($goodsWithCars as $goodsWithCar){
 //                var_dump($oem['oe'], $goodsWithCar->getCode());
                 foreach ($goodsWithCar->getCars() as $car){
