@@ -451,6 +451,8 @@ class CarManager
         $oems = $this->entityManager->getRepository(Oem::class)
                 ->findOemForUpdateCar($good);
         
+        var_dump(count($oems));
+        
         if (empty($oems)){
             $this->entityManager->getRepository(Goods::class)
                 ->updateGoodId($good->getId(), [
