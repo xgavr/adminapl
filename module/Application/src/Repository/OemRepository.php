@@ -992,16 +992,15 @@ class OemRepository  extends EntityRepository{
      * Найти товары с машинами по номеру
      * @param Goods $good
      * @param string $oe
+     * @param array $categoryIds
      * @return array
      */
-    public function findGoodsWithCarsByOem($good, $oe)
+    public function findGoodsWithCarsByOem($good, $oe, $categoryIds)
     {
-        $categoryIds = $good->getCategoryIdsAsArray();
         
         $entityManager = $this->getEntityManager();
         $queryBuilder = $entityManager->createQueryBuilder();
-        
-        
+                
         $orX = $queryBuilder->expr()->orX();
         $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_MAN));
         $orX->add($queryBuilder->expr()->eq('o.source', Oem::SOURCE_TD)); 
