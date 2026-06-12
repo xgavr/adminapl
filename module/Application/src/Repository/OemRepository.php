@@ -1027,7 +1027,8 @@ class OemRepository  extends EntityRepository{
                         ->andWhere($queryBuilder->expr()->in('cat.id', $categoryIds))
                         ;
                 }
-        
+        var_dump($queryBuilder->getQuery()->getSQL());
+        var_dump($queryBuilder->getQuery()->getDQL());
         return $queryBuilder->getQuery()->getResult();
     }
     
