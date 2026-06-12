@@ -200,7 +200,11 @@ class ImageManager {
         $image = $result = null;
 
         // 2. Определяем расширение оригинала
-        $extension = strtolower($pathInfo['extension']);
+        if (empty($pathInfo['extension'])){
+            $extension = 'jpg';
+        } else {
+            $extension = strtolower($pathInfo['extension']);
+        }
 
 //        var_dump($source, $destination, $extension); exit;
         
