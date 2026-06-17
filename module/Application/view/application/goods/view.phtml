@@ -1064,7 +1064,8 @@
         });
         
         $('.update-similar').click(function (){
-            $.getJSON($(this).attr('value')), function( data ) {
+            var url = $(this).attr('value');
+            $.getJSON(url, function( data ) {
 //                console.log(data);
                 if (data.result == 'ok-reload'){
                     window.location.href = '/goods/view/<?= $goods->getId()?>';
