@@ -24,17 +24,17 @@ class ImageManager {
     
     /**
      * Doctrine entity manager.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
     /*
-     * @var Admin\Service\PostManager
+     * @var \Admin\Service\PostManager
      */
     private $postManager;
   
     /*
-     * @var Admin\Service\FtpManager
+     * @var \Admin\Service\FtpManager
      */
     private $ftpManager;
   
@@ -243,5 +243,18 @@ class ImageManager {
         }
 
         return $source; // Возвращает путь к новому файлу или false
-    }    
+    } 
+    
+    /**
+     * Обновить похожесть
+     * @param Images $image
+     */
+    public function updateSimilar($image, $newSimilar)
+    {
+        $image->setSimilar($newSimilar);
+        $this->entityManager->persist($image);
+        $this->entityManager->flush();
+        
+        return;
+    }
 }
