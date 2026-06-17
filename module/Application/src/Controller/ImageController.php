@@ -18,7 +18,7 @@ class ImageController extends AbstractActionController
     
     /**
      * Менеджер сущностей.
-     * @var Doctrine\ORM\EntityManager
+     * @var \Doctrine\ORM\EntityManager
      */
     private $entityManager;
     
@@ -175,5 +175,23 @@ class ImageController extends AbstractActionController
             'ok',
         ]);
     }
+    
+    
+    public function updateSimilarAction()
+    {
+        $imageId = $this->params()->fromRoute('id', -1);
+        $newSimilar = $this->params()->fromQuery('similar', Images::SIMILAR_MATCH);
+
+        $image = $this->entityManager->getRepository(Images::class)
+                ->find($imageId);
+        
+        if ($image){
+            $this->imageManager->updateSimilar($image, $newSimilar);
+        }
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);
+    }    
     
 }
