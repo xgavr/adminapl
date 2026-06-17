@@ -7,6 +7,7 @@
     use Application\Entity\Goods;
     use ApiMarketPlace\Entity\MarketSaleReport;
     use Fasade\Entity\GroupSite;
+    use Application\Entity\Images;
     
     $priceCols = $goodsManager->priceCols($goods);
     $retailCount = ($goods->getRetailCount()) ? $goods->getRetailCount():'';
@@ -123,7 +124,13 @@
                                 <span><?= round(filesize($image->getPath()) / 1024, 2) . ' KB'; ?></span>
                             <?php endif; ?>
                         </div>
-                        <div class="pull-right">                                    
+                        <div class="pull-right">            
+                            <?php if($image->getSimilar() === Images::SIMILAR_SIMILAR):?>
+                                <button value="/images/update-similar/<?= $image->getId()?>" class="btn btn-default btn-xs update-similar"
+                                        title="Изменить статус похожести">
+                                    <span class="glyphicon glyphicon-check" ></span>
+                                </button>                             
+                            <?php endif;?>
                             <button value="/goods/delete-image/<?= $image->getId()?>" class="btn btn-default btn-xs this-delete"
                                     title="Удалить">
                                 <span class="glyphicon glyphicon-trash" ></span>
@@ -1056,9 +1063,19 @@
             });          
         });
         
+        $('.update-similar').click(function (){
+            $.getJSON($(this).attr('value')), function( data ) {
+//                console.log(data);
+                if (data.result == 'ok-reload'){
+                    window.location.href = '/goods/view/<?= $goods->getId()?>';
+                }
+            });    
+            return;            
+        });
+        
         $('.update-token-group').click(function (){
             $.getJSON('/name/goods-token-group/<?= $goods->getId()?>', function( data ) {
-                console.log(data);
+//                console.log(data);
                 if (data.result == 'ok-reload'){
                     window.location.href = '/goods/view/<?= $goods->getId()?>?tab=attr-tab';
                 }
