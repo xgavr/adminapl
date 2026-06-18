@@ -12,6 +12,7 @@ use Application\Validator\FileExtensionValidator;
 use Application\Entity\Images;
 use Laminas\Validator\File\IsCompressed;
 use Laminas\Filter\Decompress;
+use Application\Entity\Goods;
 
 /**
  * Description of ImageManager
@@ -253,6 +254,11 @@ class ImageManager {
     {
         $image->setSimilar($newSimilar);
         $this->entityManager->persist($image);
+        
+        $good = $image->getGood();
+        $good->setFasadeEx(Goods::FASADE_EX_NEW);
+        $this->entityManager->persist($good);
+        
         $this->entityManager->flush();
         
         return;
