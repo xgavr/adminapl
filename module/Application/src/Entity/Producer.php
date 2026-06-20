@@ -263,7 +263,12 @@ class Producer {
         if (!empty($links[self::LINK_MAIN])){
             $result = $links[self::LINK_MAIN];
             if (!empty($code)){
-                $result = str_replace('#code', $code, $result);
+                if (str_contains($result, '#code')){
+                    $result = str_replace('#code', $code, $result);
+                }
+                if (str_contains($result, '#dcode')){
+                    $result = str_replace('#dcode', preg_replace('/[^0-9]/', '', $code), $result);
+                }
             }
             return $result;
         }
