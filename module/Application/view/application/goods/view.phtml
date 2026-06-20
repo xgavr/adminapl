@@ -912,7 +912,7 @@
         $('.producer-link-modal-show').click(function (){        
             bootbox.prompt({
                 title: 'Ссылка на страницу товара производителя',
-                message: 'Укажите ссылку на страницу товара на сайте производителя. Вместо артикула подставить <b>#code</b>',
+                message: 'Укажите ссылку на страницу товара на сайте производителя. Вместо артикула подставить <b>#code</b>, <b>#dcode</b>',
                 inputType: 'text',
                 value: '<?= $goods->getProducer()->getMainLink()?>',    
                 rows: 20, 
