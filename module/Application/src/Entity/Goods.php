@@ -627,7 +627,7 @@ class Goods {
                 }
                 
                 // Проверка на концентрат
-                if (str_contains($name, 'линейка')) {
+                if (str_contains($name, 'линейка') && empty($model)) {
                     $model = $value . ' ';
                 }
             }
