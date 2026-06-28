@@ -579,6 +579,7 @@ class Goods {
         $viscosity = null;
         $volume = null;
         $weight = null;
+        $model = null;
         $isConcentrate = false;
         $baseName = null;
             
@@ -587,7 +588,7 @@ class Goods {
                 return  $this->getNameFasade();
             } 
             
-            $baseName = $this->tokenGroup->getName();
+            $baseName = $this->tokenGroup->getName() . ' ';
         }        
         
         $attributes = $this->getAttributeValuesAsArray(); 
@@ -624,6 +625,11 @@ class Goods {
                 if (str_contains($name, 'концентрат')) {
                     $isConcentrate = true;
                 }
+                
+                // Проверка на концентрат
+                if (str_contains($name, 'линейка')) {
+                    $model = $value . ' ';
+                }
             }
             
             // Формируем дополнительные параметры
@@ -643,13 +649,16 @@ class Goods {
 
 //            var_dump($params); exit;
             
-            $paramsString = implode(' ', $params);  
+            $paramsString = implode(' ', $params);
+            if (!empty(trim($paramsString))){
+                $paramsString .= ' ';
+            }
             
-            $brand = $this->getProducer()->getName();
+            $brand = $this->getProducer()->getName() . ' ';
             $code = $this->getCode();
             
             //характеристики после базового имени, но перед брендом (лучше видно)
-            return "{$baseName} {$paramsString} {$brand} {$code}";
+            return "{$baseName}{$paramsString}{$brand}{$model}{$code}";
         } 
         
         return $this->getNameFasade();    
