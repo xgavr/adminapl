@@ -601,20 +601,16 @@ class Goods {
                 $value = trim($attr['value'] ?? '');
 
                 // Поиск вязкости
-                if (str_contains($name, 'вязкость') || str_contains($name, 'sae')) {
+                if (str_contains($name, 'sae')) {
                     if (!empty($value)) {
                         $viscosity = $value;
                     }
                 }
 
                 // Поиск объема
-                if (str_contains($name, 'объем') && !empty($value)) {
-                    // Извлекаем число из значения (например "4 л" -> "4")
-                    if (preg_match('/(\d+(?:\.\d+)?)\s*л/i', $value, $matches)) {
-                        $volume = $matches[1] . 'л';
-                    } else {
-                        $volume = $value;
-                    }
+                if (str_contains($name, 'объем') && str_contains($name, '[л]') && !empty($value)) {                  
+                    $volume = $value . 'л';
+                    
                 }
 
                 // Поиск веса (для антифриза-концентрата)
@@ -645,7 +641,7 @@ class Goods {
                 $params[] = 'конц.';
             }
 
-            var_dump($params); exit;
+//            var_dump($params); exit;
             
             $paramsString = implode(' ', $params);  
             
