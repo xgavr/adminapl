@@ -612,7 +612,7 @@ class Goods {
                     $viscosity = $value;
                 }
 
-                if (str_contains($name, 'dot')) {
+                if (str_contains($name, 'dot') && !str_contains($name, 'линейка')) {
                     if (!empty($value)) {
                         $viscosity = $value;
                     }
