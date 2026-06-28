@@ -591,6 +591,8 @@ class Goods {
         }        
         
         $attributes = $this->getAttributeValuesAsArray(); 
+        
+        var_dump($attributes); exit;
        
         if (count($attributes)){       
 
