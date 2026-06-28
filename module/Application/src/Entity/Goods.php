@@ -569,6 +569,92 @@ class Goods {
         return $this->getName();
     }
     
+    public function getNameTitle() 
+    {
+        if (!$this->inSpecAttrCategory()){
+            return $this->getNameFasade();
+        }
+        
+        // Ищем ключевые характеристики
+        $viscosity = null;
+        $volume = null;
+        $weight = null;
+        $isConcentrate = false;
+        $baseName = null;
+            
+        if ($this->tokenGroup){
+            if (empty($this->tokenGroup->getName())){
+                return  $this->getNameFasade();
+            } 
+            
+            $baseName = $this->tokenGroup->getName();
+        }        
+        
+        $attributes = $this->getAttributeValuesAsArray(); 
+       
+        if (count($attributes)){       
+
+            foreach ($attributes as $attr) {
+                $name = mb_strtolower(trim($attr['name'] ?? ''));
+                $value = trim($attr['value'] ?? '');
+
+                // Поиск вязкости
+                if (str_contains($name, 'вязкость') || str_contains($name, 'sae')) {
+                    if (!empty($value)) {
+                        $viscosity = $value;
+                    }
+                }
+
+                // Поиск объема
+                if (str_contains($name, 'объем') && !empty($value)) {
+                    // Извлекаем число из значения (например "4 л" -> "4")
+                    if (preg_match('/(\d+(?:\.\d+)?)\s*л/i', $value, $matches)) {
+                        $volume = $matches[1] . 'л';
+                    } else {
+                        $volume = $value;
+                    }
+                }
+
+                // Поиск веса (для антифриза-концентрата)
+                if (str_contains($name, 'вес') && !empty($value)) {
+                    if (preg_match('/(\d+(?:\.\d+)?)\s*кг/i', $value, $matches)) {
+                        $weight = $matches[1] . 'кг';
+                    }
+                }
+
+                // Проверка на концентрат
+                if (str_contains($name, 'концентрат')) {
+                    $isConcentrate = true;
+                }
+            }
+            
+            // Формируем дополнительные параметры
+            $params = [];
+            if ($viscosity) {
+                $params[] = $viscosity;
+            }
+            if ($volume) {
+                $params[] = $volume;
+            }
+            if ($weight) {
+                $params[] = $weight;
+            }
+            if ($isConcentrate) {
+                $params[] = 'конц.';
+            }
+
+            $paramsString = implode(' ', $params);  
+            
+            $brand = $this->getProducer()->getName();
+            $code = $this->getCode();
+            
+            //характеристики после базового имени, но перед брендом (лучше видно)
+            return "{$baseName} {$paramsString} {$brand} {$code}";
+        } 
+        
+        return $this->getNameFasade();    
+    }
+    
     public function getNameFasade() 
     {
         if ($this->tokenGroup){
@@ -2015,6 +2101,7 @@ class Goods {
             'opts' => $this->getOpts(),
             'nameShort' => $this->getNameShort(),
             'nameInput' => $this->getInputName(),
+            'nameTitle' => $this->getNameTitle(),
             'producer' => $this->getProducer()->toArray(),
             'group' => $this->getGenericGroup()->toArray(),
             'tokenGroup' => ($this->getTokenGroup()) ? $this->getTokenGroup()->toArray():[],
