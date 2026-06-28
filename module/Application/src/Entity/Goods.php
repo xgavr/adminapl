@@ -612,6 +612,16 @@ class Goods {
                     $viscosity = $value;
                 }
 
+                if (str_contains($name, 'dot')) {
+                    if (!empty($value)) {
+                        $viscosity = $value;
+                    }
+                }
+                
+                if (empty($viscosity) && !empty($value) && str_contains(mb_strtolower($value ?? ''), 'dot')) {                    
+                    $viscosity = $value;
+                }
+
                 // Поиск объема
                 if (str_contains($name, 'объем') && str_contains($name, '[л]') && !empty($value)) {                  
                     $volume = $value . 'л';
