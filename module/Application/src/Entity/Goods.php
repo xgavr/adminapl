@@ -607,6 +607,10 @@ class Goods {
                         $viscosity = $value;
                     }
                 }
+                
+                if (empty($viscosity) && !empty($value) && str_contains($value, 'sae')) {                    
+                    $viscosity = $value;
+                }
 
                 // Поиск объема
                 if (str_contains($name, 'объем') && str_contains($name, '[л]') && !empty($value)) {                  
