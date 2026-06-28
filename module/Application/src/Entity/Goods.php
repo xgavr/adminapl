@@ -592,7 +592,7 @@ class Goods {
         
         $attributes = $this->getAttributeValuesAsArray(); 
         
-        var_dump($attributes); exit;
+//        var_dump($attributes); exit;
        
         if (count($attributes)){       
 
@@ -645,6 +645,8 @@ class Goods {
                 $params[] = 'конц.';
             }
 
+            var_dump($params); exit;
+            
             $paramsString = implode(' ', $params);  
             
             $brand = $this->getProducer()->getName();
