@@ -623,16 +623,18 @@ class Goods {
                 }
 
                 // Поиск объема
-                if (str_contains($name, 'объем') && str_contains($name, '[л]') && !empty($value)) {                  
+                if (empty($volume) && empty($weight) && str_contains($name, 'объем') && str_contains($name, '[л]') && !empty($value)) {                  
                     $volume = $value . 'л';
                     
                 }
 
                 // Поиск веса (для антифриза-концентрата)
-                if (str_contains($name, 'вес') && !empty($value)) {
-                    if (preg_match('/(\d+(?:\.\d+)?)\s*кг/i', $value, $matches)) {
-                        $weight = $matches[1] . 'кг';
-                    }
+                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]') && !empty($value)) {                    
+                    $weight = $value . 'кг';
+                }
+                
+                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[г]') && !empty($value)) {                    
+                    $weight = $value . 'г';
                 }
 
                 // Проверка на концентрат
