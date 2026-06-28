@@ -618,7 +618,7 @@ class Goods {
                     }
                 }
                 
-                if (empty($viscosity) && !empty($value) && str_contains(mb_strtolower($value ?? ''), 'dot')) {                    
+                if (empty($viscosity) && !empty($value) && str_contains(mb_strtolower($value ?? ''), 'dot') && !str_contains($name, 'линейка')) {                    
                     $viscosity = $value;
                 }
 
