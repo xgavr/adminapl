@@ -633,7 +633,7 @@ class Goods {
                 }
 
                 // Поиск объема
-                if (empty($volume) && empty($weight) && str_contains($name, 'объем') && str_contains($name, '[л]')) {                  
+                if (empty($volume) && empty($weight) && (str_contains($name, 'объем') || str_contains($name, 'объём')) && str_contains($name, '[л]')) {                  
                     $volume = $value . 'л';                    
                 }
 
