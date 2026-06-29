@@ -631,13 +631,13 @@ class Goods {
                 }
 
                 // Поиск емкости
-                if (empty($volumeAh) && str_contains($name, '[Ач]') && !empty($value)) {                  
+                if (empty($volumeAh) && str_contains($name, '[ач]') && !empty($value)) {                  
                     $volumeAh = $value . 'Ач';
                     
                 }
                 
                 // Поиск тока
-                if (empty($volumeA) && str_contains($name, '[А]') && !empty($value)) {                  
+                if (empty($volumeA) && str_contains($name, '[а]') && !empty($value)) {                  
                     $volumeA = $value . 'А';
                     
                 }
@@ -683,7 +683,7 @@ class Goods {
                 $params[] = 'конц.';
             }
 
-            var_dump($params); exit;
+//            var_dump($params); exit;
             
             $paramsString = implode(' ', $params);
             if (!empty(trim($paramsString))){
