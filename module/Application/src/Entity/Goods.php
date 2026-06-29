@@ -578,6 +578,8 @@ class Goods {
         // Ищем ключевые характеристики
         $viscosity = null;
         $volume = null;
+        $volumeAh = null;
+        $volumeA = null;
         $weight = null;
         $model = null;
         $isConcentrate = false;
@@ -628,6 +630,18 @@ class Goods {
                     
                 }
 
+                // Поиск емкости
+                if (empty($volumeAh) && str_contains($name, '[Ач]') && !empty($value)) {                  
+                    $volume = $value . 'Ач';
+                    
+                }
+                
+                // Поиск тока
+                if (empty($volumeA) && str_contains($name, '[А]') && !empty($value)) {                  
+                    $volume = $value . 'А';
+                    
+                }
+
                 // Поиск веса (для антифриза-концентрата)
                 if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]') && !empty($value)) {                    
                     $weight = $value . 'кг';
@@ -655,6 +669,12 @@ class Goods {
             }
             if ($volume) {
                 $params[] = $volume;
+            }
+            if ($volumeAh) {
+                $params[] = $volumeAh;
+            }
+            if ($volumeA) {
+                $params[] = $volumeA;
             }
             if ($weight) {
                 $params[] = $weight;
@@ -2056,7 +2076,7 @@ class Goods {
      * Возвращает что это АКБ
      * @return str|bool
      */
-    public function inAkbOilCategory()
+    public function inAkbCategory()
     {
         foreach ($this->getCategories() as $groupSite) {
             if ($groupSite->getCode() == '115-189-302-303') {
@@ -2077,7 +2097,7 @@ class Goods {
                 || $this->inBrakeOilCategory() 
                 || $this->inMotorOilCategory() 
                 || $this->inTransOilCategory()
-                || $this->inAkbOilCategory()
+                || $this->inAkbCategory()
                 ;
     }
     
