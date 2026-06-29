@@ -602,6 +602,10 @@ class Goods {
             foreach ($attributes as $attr) {
                 $name = mb_strtolower(trim($attr['name'] ?? ''));
                 $value = trim($attr['value'] ?? '');
+                
+                if (empty($value)){
+                    continue;
+                }
 
                 // Поиск вязкости
                 if (str_contains($name, 'sae')) {
@@ -610,44 +614,41 @@ class Goods {
                     }
                 }
                 
-                if (empty($viscosity) && !empty($value) && str_contains(mb_strtolower($value ?? ''), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($value ?? ''), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j')) {                    
                     $viscosity = $value;
                 }
 
                 if (str_contains($name, 'dot') && !str_contains($name, 'линейка')) {
-                    if (!empty($value)) {
-                        $viscosity = $value;
-                    }
+                    $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && !empty($value) && str_contains(mb_strtolower($value ?? ''), 'dot') && !str_contains($name, 'линейка')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($value ?? ''), 'dot') && !str_contains($name, 'линейка')) {                    
                     $viscosity = $value;
                 }
 
                 // Поиск объема
-                if (empty($volume) && empty($weight) && str_contains($name, 'объем') && str_contains($name, '[л]') && !empty($value)) {                  
-                    $volume = $value . 'л';
-                    
+                if (empty($volume) && empty($weight) && str_contains($name, 'объем') && str_contains($name, '[л]')) {                  
+                    $volume = $value . 'л';                    
                 }
 
                 // Поиск емкости
-                if (empty($volumeAh) && str_contains($name, '[ач]') && !empty($value)) {                  
+                if (empty($volumeAh) && str_contains($name, '[ач]')) {                  
                     $volumeAh = $value . 'Ач';
                     
                 }
                 
                 // Поиск тока
-                if (empty($weight) && str_contains($name, '[а]') && !empty($value)) {                  
+                if (empty($weight) && (str_contains($name, '[а]') || str_contains($name, '[a]'))) {                  
                     $weight = $value . 'А';
                     
                 }
 
                 // Поиск веса (для антифриза-концентрата)
-                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]') && !empty($value)) {                    
+                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]')) {                    
                     $weight = $value . 'кг';
                 }
                 
-                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[г]') && !empty($value)) {                    
+                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[г]')) {                    
                     $weight = $value . 'г';
                 }
 
