@@ -615,16 +615,14 @@ class Goods {
 
                 // Поиск вязкости
                 if (str_contains($name, 'sae')) {
-                    if (!empty($value)) {
-                        $viscosity = $value;
-                    }
-                }
-                
-                if (empty($viscosity) && str_contains(mb_strtolower($value), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j')) {                    
                     $viscosity = $value;
                 }
-
-                if (empty($viscosity) && str_contains(mb_strtolower($value), 'вязкость')) {                    
+                
+                if (empty($viscosity) && str_contains(mb_strtolower($name), 'вязкость')) {                    
+                    $viscosity = $value;
+                }                
+                
+                if (empty($viscosity) && str_contains(mb_strtolower($value), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j')) {                    
                     $viscosity = $value;
                 }
 
