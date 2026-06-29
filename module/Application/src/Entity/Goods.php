@@ -637,8 +637,8 @@ class Goods {
                 }
                 
                 // Поиск тока
-                if (empty($volumeA) && str_contains($name, '[а]') && !empty($value)) {                  
-                    $volumeA = $value . 'А';
+                if (empty($weight) && str_contains($name, '[а]') && !empty($value)) {                  
+                    $weight = $value . 'А';
                     
                 }
 
