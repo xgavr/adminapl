@@ -2053,12 +2053,32 @@ class Goods {
     }
     
     /**
-     * Возвращает что это тормозная жидкость
+     * Возвращает что это АКБ
+     * @return str|bool
+     */
+    public function inAkbOilCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '115-189-302-303') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Возвращает что это категории для поиска машин по атрибутам
      * @return str|bool
      */
     public function inSpecAttrCategory()
     {        
-        return $this->inAntifreezCategory() || $this->inBrakeOilCategory() || $this->inMotorOilCategory() || $this->inTransOilCategory();
+        return $this->inAntifreezCategory() 
+                || $this->inBrakeOilCategory() 
+                || $this->inMotorOilCategory() 
+                || $this->inTransOilCategory()
+                || $this->inAkbOilCategory()
+                ;
     }
     
     /**
