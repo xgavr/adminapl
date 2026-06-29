@@ -620,7 +620,11 @@ class Goods {
                     }
                 }
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($value ?? ''), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($value), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j')) {                    
+                    $viscosity = $value;
+                }
+
+                if (empty($viscosity) && str_contains(mb_strtolower($value), 'вязкость')) {                    
                     $viscosity = $value;
                 }
 
@@ -628,7 +632,7 @@ class Goods {
                     $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($value ?? ''), 'dot') && !str_contains($name, 'линейка')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($value), 'dot') && !str_contains($name, 'линейка')) {                    
                     $viscosity = $value;
                 }
 
