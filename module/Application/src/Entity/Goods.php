@@ -632,13 +632,13 @@ class Goods {
 
                 // Поиск емкости
                 if (empty($volumeAh) && str_contains($name, '[Ач]') && !empty($value)) {                  
-                    $volume = $value . 'Ач';
+                    $volumeAh = $value . 'Ач';
                     
                 }
                 
                 // Поиск тока
                 if (empty($volumeA) && str_contains($name, '[А]') && !empty($value)) {                  
-                    $volume = $value . 'А';
+                    $volumeA = $value . 'А';
                     
                 }
 
