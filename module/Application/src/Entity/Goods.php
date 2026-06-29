@@ -683,7 +683,7 @@ class Goods {
                 $params[] = 'конц.';
             }
 
-//            var_dump($params); exit;
+            var_dump($params); exit;
             
             $paramsString = implode(' ', $params);
             if (!empty(trim($paramsString))){
