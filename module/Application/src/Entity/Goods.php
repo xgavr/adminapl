@@ -582,6 +582,7 @@ class Goods {
         $volumeA = null;
         $weight = null;
         $model = null;
+        $polarity = null;
         $isConcentrate = false;
         $baseName = null;
             
@@ -602,6 +603,11 @@ class Goods {
             foreach ($attributes as $attr) {
                 $name = mb_strtolower(trim($attr['name'] ?? ''));
                 $value = trim($attr['value'] ?? '');
+                
+                // Проверка на концентрат
+                if (str_contains($name, 'концентрат')) {
+                    $isConcentrate = true;
+                }                
                 
                 if (empty($value)){
                     continue;
@@ -652,14 +658,14 @@ class Goods {
                     $weight = $value . 'г';
                 }
 
-                // Проверка на концентрат
-                if (str_contains($name, 'концентрат')) {
-                    $isConcentrate = true;
-                }
-                
-                // Проверка на концентрат
+                // Проверка на линейка/модель
                 if (str_contains($name, 'линейка') && empty($model)) {
                     $model = $value . ' ';
+                }
+                
+                // Проверка на полярность
+                if (str_contains($name, 'полярность') && !str_contains(mb_strtolower($baseName), 'полярность')) {
+                    $polarity = mb_strtolower($value) . ' полярность ';
                 }
             }
             
@@ -695,7 +701,7 @@ class Goods {
             $code = $this->getCode();
             
             //характеристики после базового имени, но перед брендом (лучше видно)
-            return "{$baseName}{$paramsString}{$brand}{$model}{$code}";
+            return "{$baseName}{$paramsString}{$brand}{$model}{$polarity}{$code}";
         } 
         
         return $this->getNameFasade();    
