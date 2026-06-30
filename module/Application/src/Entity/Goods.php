@@ -687,7 +687,7 @@ class Goods {
             if ($volumeA) {
                 $params[] = $volumeA;
             }
-            if ($weight) {
+            if ($weight && empty($volume)) {
                 $params[] = $weight;
             }
             if ($isConcentrate) {
