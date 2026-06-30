@@ -637,7 +637,7 @@ class Goods {
                 }
 
                 // Поиск объема
-                if (empty($volume) && (str_contains($name, 'объем') || str_contains($name, 'объём')) && (str_contains($name, '[л]') || str_contains($name, '[л.]'))) {                  
+                if (empty($volume) && empty($weight) && (str_contains($name, 'объем') || str_contains($name, 'объём')) && (str_contains($name, '[л]') || str_contains($name, '[л.]'))) {                  
                     $volume = $value . 'л';                    
                 }
 
@@ -687,7 +687,7 @@ class Goods {
             if ($volumeA) {
                 $params[] = $volumeA;
             }
-            if ($weight && empty($volume)) {
+            if ($weight) {
                 $params[] = $weight;
             }
             if ($isConcentrate) {
