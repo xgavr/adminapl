@@ -1460,7 +1460,7 @@ class GoodsManager
             $attr = [
                 'propertyShortName' => $row['name'],
                 'propertyName' => $name,
-                'propertyUnitName' => $row['unit'],
+                'propertyUnitName' => $row['unit'] ?? '',
                 'propertyType' => $row['type'],
                 'propertyId' => $attributeTdId,
                 'valueId' => $valueTdId,
