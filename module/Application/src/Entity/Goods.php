@@ -612,6 +612,8 @@ class Goods {
                 if (empty($value)){
                     continue;
                 }
+                
+                $isModelName = str_contains($name, 'линейка') || str_contains($name, 'модель');
 
                 // Поиск вязкости
                 if (str_contains($name, 'sae')) {
@@ -622,15 +624,15 @@ class Goods {
                     $viscosity = $value;
                 }                
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($value), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j') && !str_contains($name, 'линейка')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($value), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j') && !$isModelName) {                    
                     $viscosity = $value;
                 }
 
-                if (str_contains($name, 'dot') && !str_contains($name, 'линейка')) {
+                if (str_contains($name, 'dot') && !$isModelName) {
                     $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($value), 'dot') && !str_contains($name, 'линейка')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($value), 'dot') && !$isModelName) {                    
                     $viscosity = $value;
                 }
 
@@ -661,7 +663,7 @@ class Goods {
                 }
 
                 // Проверка на линейка/модель
-                if (str_contains($name, 'линейка') && empty($model)) {
+                if ($isModelName && empty($model)) {
                     $model = $value . ' ';
                 }
                 
