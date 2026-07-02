@@ -580,6 +580,7 @@ class Goods {
         $volume = null;
         $volumeAh = null;
         $volumeA = null;
+        $base = null; //цоколь
         $weight = null;
         $model = null;
         $polarity = null;
@@ -636,6 +637,11 @@ class Goods {
                     $viscosity = $value;
                 }
 
+                //цоколь
+                if (empty($base) && str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
+                    $base = $value;
+                }
+
                 // Поиск объема
                 if (empty($volume) && empty($weight) && (str_contains($name, 'объем') || str_contains($name, 'объём')) && (str_contains($name, '[л]') || str_contains($name, '[л.]'))) {                  
                     $volume = $value . 'л';                    
@@ -677,6 +683,9 @@ class Goods {
             $params = [];
             if ($viscosity) {
                 $params[] = $viscosity;
+            }
+            if ($base) {
+                $params[] = $base;
             }
             if ($volume) {
                 $params[] = $volume;
@@ -2099,13 +2108,28 @@ class Goods {
     }
     
     /**
-     * Возвращает что это АКБ
+     * Возвращает что это мочевина
      * @return str|bool
      */
     public function inAdBlueCategory()
     {
         foreach ($this->getCategories() as $groupSite) {
             if ($groupSite->getCode() == '310-446') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Возвращает что это лампы
+     * @return str|bool
+     */
+    public function inLampCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '115-194-211-212') {
                 return true;
             }
         }
