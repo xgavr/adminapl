@@ -2099,6 +2099,21 @@ class Goods {
     }
     
     /**
+     * Возвращает что это АКБ
+     * @return str|bool
+     */
+    public function inAdBlueCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '310-446') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Возвращает что это категории для поиска машин по атрибутам
      * @return str|bool
      */
@@ -2109,6 +2124,7 @@ class Goods {
                 || $this->inMotorOilCategory() 
                 || $this->inTransOilCategory()
                 || $this->inAkbCategory()
+                || $this->inAdBlueCategory()
                 ;
     }
     
