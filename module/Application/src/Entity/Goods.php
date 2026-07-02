@@ -2149,6 +2149,7 @@ class Goods {
                 || $this->inTransOilCategory()
                 || $this->inAkbCategory()
                 || $this->inAdBlueCategory()
+                || $this->inLampCategory()
                 ;
     }
     
