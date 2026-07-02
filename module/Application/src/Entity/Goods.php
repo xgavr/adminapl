@@ -584,6 +584,8 @@ class Goods {
         $weight = null;
         $model = null;
         $polarity = null;
+        $volt = null;
+        $watt = null;
         $isConcentrate = false;
         $baseName = null;
             
@@ -659,6 +661,18 @@ class Goods {
                     
                 }
 
+                // Поиск вольт
+                if (empty($volt) && str_contains($name, 'напряжение [в]')) {                  
+                    $volt = $value . 'V ';
+                    
+                }
+
+                // Поиск ват
+                if (empty($watt) && str_contains($name, 'мощность [вт]')) {                  
+                    $watt = $value . 'W ';
+                    
+                }
+
                 // Поиск веса (для антифриза-концентрата)
                 if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]')) {                    
                     $weight = $value . 'кг';
@@ -714,7 +728,7 @@ class Goods {
             $code = $this->getCode();
             
             //характеристики после базового имени, но перед брендом (лучше видно)
-            return "{$baseName}{$paramsString}{$brand}{$model}{$polarity}{$code}";
+            return "{$baseName}{$paramsString}{$brand}{$model}{$polarity}{$volt}{$watt}{$code}";
         } 
         
         return $this->getNameFasade();    
