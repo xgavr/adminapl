@@ -580,7 +580,7 @@ class Goods {
         $volume = null;
         $volumeAh = null;
         $volumeA = null;
-        $base = null; //цоколь
+        $base = []; //цоколь
         $weight = null;
         $model = null;
         $polarity = null;
@@ -640,13 +640,13 @@ class Goods {
                 }
 
                 //цоколь
-                if (empty($base) && str_contains(mb_strtolower($name), 'цокол') && !$isModelName) {                    
-                    $base = $value;
+                if (str_contains(mb_strtolower($name), 'цокол') && !$isModelName) {                    
+                    $base[] = $value;
                 }
                 
                 //цоколь
-                if (empty($base) && str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
-                    $base = $value;
+                if (str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
+                    $base[] = $value;
                 }
 
                 // Поиск объема
@@ -703,8 +703,8 @@ class Goods {
             if ($viscosity) {
                 $params[] = $viscosity;
             }
-            if ($base) {
-                $params[] = $base;
+            if (!empty($base)) {
+                $params[] = implode(' ', $base);
             }
             if ($volume) {
                 $params[] = $volume;
