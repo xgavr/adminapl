@@ -667,13 +667,13 @@ class Goods {
                 }
 
                 // Поиск вольт
-                if (empty($volt) && str_contains($name, 'напряжение [в]')) {                  
+                if (empty($volt) && (str_contains($name, 'напряжение [в]') || str_contains($name, 'напряжение [v]'))) {                  
                     $volt = $value . 'V ';
                     
                 }
 
                 // Поиск ват
-                if (empty($watt) && str_contains($name, 'мощность [вт]')) {                  
+                if (empty($watt) && (str_contains($name, 'мощность [вт]') || str_contains($name, 'мощность [w]'))) {                  
                     $watt = $value . 'W ';
                     
                 }
