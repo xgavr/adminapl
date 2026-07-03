@@ -640,6 +640,11 @@ class Goods {
                 }
 
                 //цоколь
+                if (empty($base) && str_contains(mb_strtolower($name), 'цоколь') && !$isModelName) {                    
+                    $base = $value;
+                }
+                
+                //цоколь
                 if (empty($base) && str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
                     $base = $value;
                 }
