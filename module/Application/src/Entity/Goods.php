@@ -683,7 +683,7 @@ class Goods {
                     $weight = $value . 'кг';
                 }
                 
-                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[г]')) {                    
+                if (empty($base) && empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[г]')) {                    
                     $weight = $value . 'г';
                 }
 
