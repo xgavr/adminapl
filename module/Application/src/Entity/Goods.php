@@ -640,7 +640,7 @@ class Goods {
                 }
 
                 //цоколь
-                if (empty($base) && str_contains(mb_strtolower($name), 'цоколь') && !$isModelName) {                    
+                if (empty($base) && str_contains(mb_strtolower($name), 'цокол') && !$isModelName) {                    
                     $base = $value;
                 }
                 
