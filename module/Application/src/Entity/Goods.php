@@ -679,7 +679,7 @@ class Goods {
                 }
 
                 // Поиск веса (для антифриза-концентрата)
-                if (empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]')) {                    
+                if (empty($base) && empty($volume) && empty($weight) && str_contains($name, 'вес') && str_contains($name, '[кг]')) {                    
                     $weight = $value . 'кг';
                 }
                 
