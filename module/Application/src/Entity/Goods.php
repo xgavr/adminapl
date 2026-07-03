@@ -645,6 +645,11 @@ class Goods {
                 }
                 
                 //цоколь
+                if (str_contains(mb_strtolower($name), 'патрон') && !$isModelName) {                    
+                    $base[] = $value;
+                }
+                
+                //цоколь
                 if (str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
                     $base[] = $value;
                 }
