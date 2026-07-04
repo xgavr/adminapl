@@ -642,17 +642,22 @@ class Goods {
 
                 //цоколь
                 if (str_contains(mb_strtolower($name), 'цокол') && !$isModelName) {                    
-                    $base[] = $value;
+                    $base[$value] = $value;
                 }
                 
                 //цоколь
                 if (str_contains(mb_strtolower($name), 'патрон') && !$isModelName) {                    
-                    $base[] = $value;
+                    $base[$value] = $value;
                 }
                 
                 //цоколь
                 if (str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
-                    $base[] = $value;
+                    $base[$value] = $value;
+                }
+
+                //цоколь
+                if (str_contains(mb_strtolower($name), 'типоразмер') && !$isModelName) {                    
+                    $base[$value] = $value;
                 }
 
                 // Поиск объема
