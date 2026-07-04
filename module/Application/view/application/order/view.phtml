@@ -20,7 +20,8 @@ $tag = md5(time());
                 <div>
                     <a href="/client/view/<?= $order->getContact()->getClient()->getId()?>" target="_blank">
                         <?= $this->escapeHtml(($order->getContact()->getName()) ? $order->getContact()->getName():'Nan'); ?>
-                    </a>    
+                    </a>
+                    <sup><?= $order->getContact()->getClient()->getPricecol()?></sup>
                 </div>
                 <div class="text-muted"><h6>
                     <a href="#" class="order-legal" modal-url="/order/order-legal-form/<?= $order->getId()?>">
