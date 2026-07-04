@@ -586,6 +586,7 @@ class Goods {
         $polarity = null;
         $volt = null;
         $watt = null;
+        $tK = null;
         $isConcentrate = false;
         $baseName = null;
             
@@ -673,13 +674,19 @@ class Goods {
 
                 // Поиск вольт
                 if (empty($volt) && (str_contains($name, 'напряжение [в]') || str_contains($name, 'напряжение [v]'))) {                  
-                    $volt = $value . 'V ';
+                    $volt = $value;
                     
                 }
 
                 // Поиск ват
                 if (empty($watt) && (str_contains($name, 'мощность [вт]') || str_contains($name, 'мощность [w]'))) {                  
-                    $watt = $value . 'W ';
+                    $watt = $value;
+                    
+                }
+
+                // Поиск температуры
+                if (empty($tK) && (str_contains($name, 'температура [к]') || str_contains($name, 'температура [k]'))) {                  
+                    $tK = $value;
                     
                 }
 
@@ -694,12 +701,12 @@ class Goods {
 
                 // Проверка на линейка/модель
                 if ($isModelName && empty($model)) {
-                    $model = $value . ' ';
+                    $model = $value;
                 }
                 
                 // Проверка на полярность
                 if (str_contains($name, 'полярность') && !str_contains(mb_strtolower($baseName), 'полярность')) {
-                    $polarity = mb_strtolower($value) . ' полярность ';
+                    $polarity = mb_strtolower($value) . ' полярность';
                 }
             }
             
@@ -734,11 +741,38 @@ class Goods {
                 $paramsString .= ' ';
             }
             
+            // Формируем задние параметры
+            $backParams = [];
+            if ($model) {
+                $backParams[] = $model;
+            }
+            
+            if ($polarity) {
+                $backParams[] = $polarity;
+            }
+            
+            if ($volt) {
+                $backParams[] = $volt;
+            }
+            
+            if ($watt) {
+                $backParams[] = $watt;
+            }
+            
+            if ($tK) {
+                $backParams[] = $tK;
+            }
+            
+            $backParamsString = implode(' ', $backParams);
+            if (!empty(trim($backParamsString))){
+                $backParamsString .= ' ';
+            }
+            
             $brand = $this->getProducer()->getName() . ' ';
             $code = $this->getCode();
             
             //характеристики после базового имени, но перед брендом (лучше видно)
-            return "{$baseName}{$paramsString}{$brand}{$model}{$polarity}{$volt}{$watt}{$code}";
+            return "{$baseName}{$paramsString}{$brand}{$backParamsString}{$code}";
         } 
         
         return $this->getNameFasade();    
