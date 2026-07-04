@@ -674,19 +674,19 @@ class Goods {
 
                 // Поиск вольт
                 if (empty($volt) && (str_contains($name, 'напряжение [в]') || str_contains($name, 'напряжение [v]'))) {                  
-                    $volt = $value;
+                    $volt = $value.'V';
                     
                 }
 
                 // Поиск ват
                 if (empty($watt) && (str_contains($name, 'мощность [вт]') || str_contains($name, 'мощность [w]'))) {                  
-                    $watt = $value;
+                    $watt = $value.'W';
                     
                 }
 
                 // Поиск температуры
                 if (empty($tK) && (str_contains($name, 'температура [к]') || str_contains($name, 'температура [k]'))) {                  
-                    $tK = $value;
+                    $tK = $value.'K';
                     
                 }
 
