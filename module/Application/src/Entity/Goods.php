@@ -686,7 +686,7 @@ class Goods {
 
                 // Поиск температуры
                 if (empty($tK) && (str_contains($name, 'температура [к]') || str_contains($name, 'температура [k]'))) {                  
-                    $tK = preg_replace('/\s+/', '', $value).'K';
+                    $tK = str_replace(' ', '', $value).'K';
                     
                 }
 
