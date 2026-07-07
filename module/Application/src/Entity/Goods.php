@@ -607,6 +607,7 @@ class Goods {
             foreach ($attributes as $attr) {
                 $name = mb_strtolower(trim($attr['name'] ?? ''));
                 $value = trim($attr['value'] ?? '');
+                $lValue = mb_strtolower($value);
                 
                 // Проверка на концентрат
                 if (str_contains($name, 'концентрат')) {
@@ -620,15 +621,15 @@ class Goods {
                 $isModelName = str_contains($name, 'линейка') || str_contains($name, 'модель');
 
                 // Поиск вязкости
-                if (str_contains($name, 'sae')) {
+                if (str_contains($name, 'sae') && !str_contains($lValue, 'sae j')) {
                     $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($name), 'вязкост') && !str_contains(mb_strtolower($name), 'вязкость при') && !str_contains(mb_strtolower($name), 'вязкость (при')) {                    
+                if (empty($viscosity) && str_contains($name, 'вязкост') && !str_contains($name, 'вязкость при') && !str_contains($name, 'вязкость (при')) {                    
                     $viscosity = $value;
                 }                
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($value), 'sae') && !str_contains(mb_strtolower($value ?? ''), 'sae j') && !$isModelName) {                    
+                if (empty($viscosity) && str_contains($lValue, 'sae') && !str_contains($lValue, 'sae j') && !$isModelName) {                    
                     $viscosity = $value;
                 }
 
@@ -636,27 +637,27 @@ class Goods {
                     $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($value), 'dot') && !$isModelName) {                    
+                if (empty($viscosity) && str_contains($lValue, 'dot') && !$isModelName) {                    
                     $viscosity = $value;
                 }
 
                 //цоколь
-                if (str_contains(mb_strtolower($name), 'цокол') && !$isModelName) {                    
+                if (str_contains($name, 'цокол') && !$isModelName) {                    
                     $base[$value] = $value;
                 }
                 
                 //цоколь
-                if (str_contains(mb_strtolower($name), 'патрон') && !$isModelName) {                    
+                if (str_contains($name, 'патрон') && !$isModelName) {                    
                     $base[$value] = $value;
                 }
                 
                 //цоколь
-                if (str_contains(mb_strtolower($name), 'тип ламп') && !$isModelName) {                    
+                if (str_contains($name, 'тип ламп') && !$isModelName) {                    
                     $base[$value] = $value;
                 }
 
                 //цоколь
-                if (str_contains(mb_strtolower($name), 'типоразмер') && !$isModelName) {                    
+                if (str_contains($name, 'типоразмер') && !$isModelName) {                    
                     $base[$value] = $value;
                 }
 
