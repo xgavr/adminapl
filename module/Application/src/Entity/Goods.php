@@ -624,7 +624,7 @@ class Goods {
                     $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && str_contains(mb_strtolower($name), 'вязкост') && !str_contains(mb_strtolower($name), 'вязкость при')) {                    
+                if (empty($viscosity) && str_contains(mb_strtolower($name), 'вязкост') && !str_contains(mb_strtolower($name), 'вязкость при') && !str_contains(mb_strtolower($name), 'вязкость (при')) {                    
                     $viscosity = $value;
                 }                
                 
