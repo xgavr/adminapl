@@ -625,7 +625,7 @@ class Goods {
                     $viscosity = $value;
                 }
                 
-                if (empty($viscosity) && str_contains($name, 'вязкост') && !str_contains($name, 'вязкость при') && !str_contains($name, 'вязкость (при')) {                    
+                if (empty($viscosity) && str_contains($name, 'вязкост') && str_contains($lValue, 'sae') && !str_contains($name, 'вязкость при') && !str_contains($name, 'вязкость (при')) {                    
                     $viscosity = $value;
                 }                
                 
@@ -662,7 +662,10 @@ class Goods {
                 }
 
                 // Поиск объема
-                if (empty($volume) && empty($weight) && (str_contains($name, 'объем') || str_contains($name, 'объём')) && (str_contains($name, '[л]') || str_contains($name, '[л.]'))) {                  
+                if (empty($volume) && empty($weight) 
+                        && !str_contains($name, 'упак')
+                        && (str_contains($name, 'объем') || str_contains($name, 'объём'))
+                        && (str_contains($name, '[л]') || str_contains($name, '[л.]'))) {                  
                     $volume = $value . 'л';                    
                 }
 
