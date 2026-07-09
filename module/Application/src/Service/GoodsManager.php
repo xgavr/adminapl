@@ -1432,7 +1432,8 @@ class GoodsManager
         
         foreach ($json as $row){
             
-            $attrName = $row['name'];
+            $attrName = $attrNameUnit = $row['name'];
+            
             if (!empty($row['unit'])){
                 $attrNameUnit = $row['name'].' ['.$row['unit'].']';
             }
