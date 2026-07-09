@@ -1432,8 +1432,18 @@ class GoodsManager
         
         foreach ($json as $row){
             
+            $attrName = $row['name'];
+            if (!empty($row['unit'])){
+                $attrNameUnit = $row['name'].' ['.$row['unit'].']';
+            }
+            
             $attribute = $this->entityManager->getRepository(Attribute::class)
-                    ->findOneBy(['name' => $row['name']]);
+                    ->findOneBy(['name' => $attrNameUnit]);
+            
+            if (empty($attribute)){
+                $attribute = $this->entityManager->getRepository(Attribute::class)
+                        ->findOneBy(['name' => $attrName]);
+            }
 
             if (empty($attribute)){
                 $attributeTdId = $this->entityManager->getRepository(Attribute::class)
