@@ -2016,6 +2016,9 @@ class GoodsRepository extends EntityRepository
                         ;
                 } elseif ($params['categoryId'] == -2) {
                    $queryBuilder->andWhere('gs.code is null');         
+                } elseif ($params['categoryId'] == -1) {
+                   $queryBuilder->andWhere('gs.code is null');         
+                   $queryBuilder->andWhere('tg.groupSite is not null');         
                 }    
             }
             if (!empty($params['withImage'])){
@@ -2172,7 +2175,9 @@ class GoodsRepository extends EntityRepository
                         ;
                 } elseif ($params['categoryId'] == -2) {
                    $queryBuilder->andWhere('gs.code is null');         
-                }    
+                } elseif ($params['categoryId'] == -1) {
+                   $queryBuilder->andWhere('gs.code is null');         
+                   $queryBuilder->andWhere('tg.groupSite is not null');                  }    
             }
             if (!empty($params['withImage'])){
                 if ($params['withImage'] == 1){
