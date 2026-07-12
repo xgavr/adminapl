@@ -910,6 +910,15 @@ class NameController extends AbstractActionController
             'message' => $deleted.' удалено!',
         ]);          
     }    
+    
+    public function updateGoodCategoryFromTokenGroupAction()
+    {
+        $this->nameManager->updateTokenGroupCategories();
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }      
 
     public function tokenGroupAction()
     {
