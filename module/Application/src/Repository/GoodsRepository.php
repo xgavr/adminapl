@@ -2009,6 +2009,11 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('emptyName', '') 
                     ;
             }
+            if (!empty($params['tokenGroupId'])){
+                $queryBuilder->andWhere('tg.id = :tokenGroupId')
+                    ->setParameter('tokenGroupId', $params['tokenGroupId'])    
+                    ;
+            }
             if (!empty($params['categoryId'])){
                 if ($params['categoryId'] > 0){
                     $queryBuilder->andWhere('gs.id = :category')
@@ -2168,6 +2173,11 @@ class GoodsRepository extends EntityRepository
                         ->setParameter('emptyName', '') 
                     ;
             }
+            if (!empty($params['tokenGroupId'])){
+                $queryBuilder->andWhere('tg.id = :tokenGroupId')
+                    ->setParameter('tokenGroupId', $params['tokenGroupId'])    
+                    ;
+            }            
             if (!empty($params['categoryId'])){
                 if ($params['categoryId'] > 0){
                     $queryBuilder->andWhere('gs.id = :category')
@@ -2267,6 +2277,23 @@ class GoodsRepository extends EntityRepository
 //        var_dump($queryBuilder->getQuery()->getSql()); exit;
         return $queryBuilder->getQuery()->getOneOrNullResult();            
     }    
+    
+    
+    /**
+     * Найти товары без категорий у которых в группе наименований есть категория
+     * 
+     * @param TokenGroup $tokenGroup
+     */
+    public function findGoodsWithoutGroupSite()
+    {
+        $query = $this->catalog([
+            'categoryId' => -1,
+        ]);
+        
+        $query->setMaxResults(10);
+        
+        return $query->getResult();                
+    }
     
     /**
      * Найти прайсы товара
