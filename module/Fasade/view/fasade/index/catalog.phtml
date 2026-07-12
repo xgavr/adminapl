@@ -19,11 +19,17 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">
-                <div class="form-group">
+<!--                <div class="form-group">
                     <button class="btn btn-default good-modal-show" type="button" 
                             modal-url="/goods/edit-form" 
                             data-toggle='tooltip' data-original-title="Добавить товар">
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>    -->
+                <div class="form-group">
+                    <button class="btn btn-default update-good-category" type="button" 
+                            data-original-title="Обновить категории в товарах">
+                        <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
                     </button>
                 </div>    
                 <div class="form-group">
@@ -160,7 +166,8 @@ $this->pageBreadcrumbs()->setItems([
         
         $(document).on('editable-save.bs.table', '#table', function (e, field, row, old, $el) {
 //            console.log(row);
-        });                
+        });   
+        
         $(document).on('click', '.good-modal-show', function (e) {
             var url = $(e.currentTarget).attr('modal-url');
             showFormDialog({
@@ -169,6 +176,19 @@ $this->pageBreadcrumbs()->setItems([
     //            width: '500px'
             });
         });  
+        
+        $(document).on('click', '.update-good-category', function (e) {
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });            
+            var url = '/name/update-good-category-from-token-group';
+            $.get( url, function( data ) {
+                dialog.modal('hide');
+                refreshTable();
+            });
+        });  
+        
         $("[data-toggle='tooltip']").tooltip();
         
         $ok.click(function () {
