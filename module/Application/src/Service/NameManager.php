@@ -1534,6 +1534,37 @@ class NameManager
     }
     
     /**
+     * Обновить категории в товарах групп (в группе категория есть, а в товаре нет)
+     */
+    public function updateTokenGroupCategories()
+    {
+        
+        set_time_limit(900);
+        $startTime = time();
+        
+        $dataGoods = $this->entityManager->getRepository(Goods::class)
+                ->findGoodsWithoutGroupSite();
+        
+        foreach ($dataGoods as $rowGood){                                      
+           
+            $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                    ->find($rowGood['tokenGroupId']);
+            $groupSite = $tokenGroup->getGroupSite();
+            
+            if ($groupSite){
+                $this->entityManager->getRepository(Goods::class)
+                        ->addGoodCategory($rowGood['id'], $groupSite);
+            }
+                                                                       
+            if (time() > $startTime + 840){
+                return;
+            }             
+        }
+        
+        return;
+    }
+    
+    /**
      * Обновление количества товара у всех групп наименований
      */
     public function updateAllTokenGroupGoodCount()
