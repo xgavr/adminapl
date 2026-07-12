@@ -2290,7 +2290,7 @@ class GoodsRepository extends EntityRepository
             'categoryId' => -1,
         ]);
         
-        $query->setMaxResults(10);
+        $query->setMaxResults(1000);
         
         return $query->getResult();                
     }
