@@ -1402,6 +1402,28 @@ class GoodsManager
     }
     
     /**
+     * Обновить категорияю товара, если ее нет
+     * @param Goods $good
+     */
+    public function updateCategoryFromTokenGroup($good)
+    {
+        if (empty($good->getTokenGroup())){
+            return;
+        }
+        
+        $tokenGroup = $good->getTokenGroup();
+        
+        $groupSite = $tokenGroup->getGroupSite();        
+            
+        if ($groupSite){
+            $this->entityManager->getRepository(Goods::class)
+                    ->addGoodCategory($good->getId(), $groupSite);
+        } 
+        
+        return;
+    }
+    
+    /**
      * Загрузить строку json с атрибутами
      *  [{name: xxxx, 'value': 'xxxx', 'unit': 'xxxx'}]
      *  value = str | {key: ['spec1', spec2, ...]}
@@ -1411,6 +1433,8 @@ class GoodsManager
      */
     public function fromJsonToAttributes($good, $jsonStr)
     {
+        
+        $this->updateCategoryFromTokenGroup($good);
         
         $attrCount = $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->count(['good' => $good->getId()]);
@@ -1482,8 +1506,7 @@ class GoodsManager
             
             $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->addGoodAttributeValue($good, $attr);                   
-        }
-        
+        }                
 
         $good->setFasadeEx(Goods::FASADE_EX_NEW); 
         $this->entityManager->persist($good);
