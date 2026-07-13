@@ -610,7 +610,7 @@ class Goods {
                 $lValue = mb_strtolower($value);
                 
                 // Проверка на концентрат
-                if (str_contains($name, 'концентрат')) {
+                if ((str_contains($name, 'концентрат') || str_contains($lValue, 'концентрат')) && !str_contains($baseName, 'концентрат')) {
                     $isConcentrate = true;
                 }                
                 
