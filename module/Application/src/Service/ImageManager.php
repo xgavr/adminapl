@@ -214,6 +214,7 @@ class ImageManager {
             switch ($extension) {
                 case 'jpeg':
                 case 'jfif':
+                case 'avif':
                 case 'jpg':
                     $image = imagecreatefromjpeg($source);
                     break;
