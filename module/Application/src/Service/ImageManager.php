@@ -220,6 +220,9 @@ class ImageManager {
                     break;
                 case 'png':
                     $image = imagecreatefrompng($source);
+                    if (empty($image)){
+                        return $source;
+                    }
                     imagepalettetotruecolor($image);
                     imagealphablending($image, true);
                     imagesavealpha($image, true);
