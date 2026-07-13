@@ -49,7 +49,7 @@
             </sup>
         </h4>    
         <h5><?= $goods->getNameShort() ?> <sup style="font-size:50%;"><?= Goods::getAvailableHtmlList()[$availableFilter->filter($goods)]; ?></sup></h5>       
-        <h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Поиск в гугле</a> <a href="https://www.google.com/search?q=<?= $search2?>" target="_blank">Поиск в гугле 2</a></h5>
+        <h5><a href="https://www.google.com/search?q=<?= urlencode($search)?>" target="_blank">Поиск в гугле</a> <a href="https://www.google.com/search?q=<?= urlencode($search2)?>" target="_blank">Поиск в гугле 2</a></h5>
         <h5>
             Цена: <?= $goods->getPrice(); ?>
             <button value="/apl/good-apl-id/<?= $goods->getId()?>" class="btn btn-default btn-xs refresh-table-button"
@@ -1018,7 +1018,7 @@
         
             bootbox.prompt({
                 title: 'Вставьте промпт в ИИ и введите ответ в формате json',
-                message: '<h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Промпт для ИИ</a>:</h5><p>' + message + '</p>',
+                message: '<h5><a href="https://www.google.com/search?q=<?= urlencode($search)?>" target="_blank">Промпт для ИИ</a>:</h5><p>' + message + '</p>',
                 inputType: 'textarea',
                 value: '',    
                 rows: 20, 
@@ -1051,7 +1051,7 @@
         
             bootbox.prompt({
                 title: 'Вставьте промпт в ИИ и введите ответ в формате json',
-                message: '<h5><a href="https://www.google.com/search?q=<?= $search?>" target="_blank">Промпт для ИИ</a>:</h5><p>' + message.slice(0, 205) + ' (скопировано в буфер обмена)...</p>',
+                message: '<h5><a href="https://www.google.com/search?q=<?= urlencode($search)?>" target="_blank">Промпт для ИИ</a>:</h5><p>' + message.slice(0, 205) + ' (скопировано в буфер обмена)...</p>',
                 inputType: 'textarea',
                 value: '',    
                 rows: 15, 
