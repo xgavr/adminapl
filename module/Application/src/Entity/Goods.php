@@ -627,7 +627,9 @@ class Goods {
                 
                 if (empty($viscosity) && str_contains($name, 'вязкост') 
 //                        && str_contains($lValue, 'sae') 
-                        && !str_contains($name, 'вязкость при') && !str_contains($name, 'вязкость (при')) {                    
+                        && !str_contains($name, ' при')
+                        && !str_contains($name, 'индекс ')
+                        ) {                    
                     $viscosity = $value;
                 }                
                 
