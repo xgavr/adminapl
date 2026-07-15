@@ -236,7 +236,7 @@ class GoodsManager
         if ($articleCount){
             return false;
         }
-        if ($good->getCars()->count()){
+        if ($good->getCheckCar() !== Goods::CHECK_CAR_OE && $good->getCars()->count()){
             return false;
         }
         
