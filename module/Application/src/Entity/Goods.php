@@ -2209,6 +2209,21 @@ class Goods {
     }
     
     /**
+     * Возвращает что это лампы
+     * @return str|bool
+     */
+    public function inWaterCategory()
+    {
+        foreach ($this->getCategories() as $groupSite) {
+            if ($groupSite->getCode() == '310-368') {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
      * Возвращает что это категории для поиска машин по атрибутам
      * @return str|bool
      */
@@ -2221,6 +2236,7 @@ class Goods {
                 || $this->inAkbCategory()
                 || $this->inAdBlueCategory()
                 || $this->inLampCategory()
+                || $this->inWaterCategory()
                 ;
     }
     
