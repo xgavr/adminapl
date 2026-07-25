@@ -614,7 +614,7 @@ class RegisterManager
                     }
                     usleep(100);                    
                 } else {
-                    throw new \Exception('Документ не проведен!');
+                    throw new \Exception("<a href='{$register->getDoc()}' target='_blank'>Документ</a> не проведен!");
                 }
             } else{
                 break;
