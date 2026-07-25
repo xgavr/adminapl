@@ -567,7 +567,6 @@ class RegisterManager
                 $foldDoc = $this->entityManager->getRepository(FoldDoc::class)
                     ->find($register->getDocId());
                 if ($foldDoc){
-//                    $this->zpManager->repostPersonalRevise($personalRevise);
                     $flag = true;
                 }
                 break;
