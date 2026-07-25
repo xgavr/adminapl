@@ -34,6 +34,7 @@ use Application\Entity\Oem;
 use Stock\Entity\Reserve;
 use Application\Filter\ArticleCode;
 use GoodMap\Entity\FoldBalance;
+use GoodMap\Entity\FoldDoc;
 use Application\Entity\GoodAttributeValue;
 
 /**
@@ -279,8 +280,14 @@ class GoodsManager
             return false;
         }
         $otCount = $this->entityManager->getRepository(OtGood::class)
-                ->count(['good' => $good->getId()]);
+                ->count(['good' => $good->getId()]);        
         if ($otCount){
+            return false;
+        }
+                
+        $foldCount = $this->entityManager->getRepository(FoldDoc::class)
+                ->count(['good' => $good->getId()]);        
+        if ($foldCount){
             return false;
         }
                 
