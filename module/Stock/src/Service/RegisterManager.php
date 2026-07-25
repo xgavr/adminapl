@@ -686,6 +686,10 @@ class RegisterManager
         
         //movements в закрытых периодах
         $this->entityManager->getConnection()->update('movement', ['good_id' => $newGood->getId()], ['good_id' => $good->getId()]);
+        
+        //хранение
+        $this->entityManager->getConnection()->update('fold_doc', ['good_id' => $newGood->getId()], ['good_id' => $good->getId()]);
+        $this->entityManager->getConnection()->update('fold_balance', ['good_id' => $newGood->getId()], ['good_id' => $good->getId()]);
                
         return;
     }
