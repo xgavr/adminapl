@@ -40,13 +40,13 @@ class OemForm extends Form
                 
         // Добавляем поле "oeNumber"
         $this->add([           
-            'type'  => 'text',
+            'type'  => 'textarea',
             'name' => 'oeNumber',
             'attributes' => [
                 'id' => 'oeNumber'
             ],
             'options' => [
-                'label' => 'Оригинальный номер',
+                'label' => 'Оригинальные номера (один номер в строке)',
             ],
         ]);
         
