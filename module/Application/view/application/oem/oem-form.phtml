@@ -5,6 +5,7 @@ $form = $this->form;
 $form->get('oeNumber')->setAttributes([
     'class'=>'form-control', 
     'autofocus' => 'autofocus', // Добавляем фокус
+    'rows' => 10,
     ]);
 
 $form->get('brandName')->setAttributes([
@@ -54,12 +55,7 @@ $form->prepare();
 
                         <div class="form-group">
                             <?= $this->formLabel($form->get('oeNumber')); ?>
-                            <div>
-                                <div class="btn-group" style="width: 100%">
-                                    <?= $this->formElement($form->get('oeNumber')); ?>
-                                    <span class="glyphicon glyphicon-remove-circle inputclear inputclear_oe_number"></span>
-                                </div>                                    
-                            </div>                            
+                            <?= $this->formElement($form->get('oeNumber')); ?>                           
                             <?= $this->formElementErrors($form->get('oeNumber')); ?>                  
                         </div>
 
@@ -110,10 +106,24 @@ $form->prepare();
         var brandName = $('#brandName').val();
         setOemBrandCookie(brandName);
         
+        // 1. Получаем массив строк из textarea (убираем пустые строки)
+        var lines = $('#oem-form textarea[name="oeNumber"]')
+            .val()
+            .split(/\r?\n/)
+            .filter(line => line.trim() !== '');
+
+        // 2. Сериализуем форму в строку
+        var formData = $('#oem-form').serialize();
+
+        // 3. Добавляем массив строк к строке запроса формы
+        lines.forEach(function(line) {
+            formData += '&oeNumbers[]=' + encodeURIComponent(line);
+        });        
+        
         $.ajax({
             type: 'POST',
             url: '/oem/oem-form/<?= $good->getId() ?>?oem=<?= ($oem) ? $oem->getId():'';?>',
-            data: $('#oem-form').serialize()
+            data: formData
         })
             .done(function (data) {
                 if (data == 'ok'){
