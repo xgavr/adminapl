@@ -299,15 +299,23 @@ class OemController extends AbstractActionController
             
             $data = $this->params()->fromPost();
             $form->setData($data);
+            
+//            var_dump($data); exit;
 
             if ($form->isValid()) {
 
-                if ($oem){
-                    $data['status'] = $oem->getStatus();
-                    $this->oemManager->updateOem($oem, $data);                    
-                } else {
-                    $this->oemManager->addOem($good, $data);
-                }    
+                
+                if (is_array($data['oeNumbers'])){
+                    foreach($data['oeNumbers'] as $oeNumber){
+                        $data['oeNumber'] = $oeNumber;
+                        if ($oem){
+                            $data['status'] = $oem->getStatus();
+                            $this->oemManager->updateOem($oem, $data); 
+                        } else {
+                           $this->oemManager->addOem($good, $data);
+                        }     
+                   }                         
+                }                                                                              
                         
                 return new JsonModel(
                    ['ok']
