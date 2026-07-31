@@ -675,7 +675,11 @@ class Goods {
                 }
 
                 // Поиск емкости
-                if (empty($volumeAh) && (str_contains($name, '[ач]') || str_contains($name, '[ah]') || str_contains($name, '[а·ч]'))) {                  
+                if (empty($volumeAh) && (str_contains($name, '[ач]') 
+                        || str_contains($name, '[ah]') 
+                        || str_contains($name, '[а·ч]')
+                        || str_contains($name, '[а/ч]')
+                    )) {                  
                     $volumeAh = $value . 'Ач';
                     
                 }
