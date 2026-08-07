@@ -197,92 +197,6 @@ class MarkManager
         
     }
     
-    private function signToken2() {
-        $result = $this->cache->getItem('markirovka_token_1');
-
-        if (empty($result)) {
-            // --- ШАГ 1: Получаем случайную строку (данные для подписи) от ЧЗ ---
-            $urlCertKey = "https://markirovka.crpt.ru/api/v3/true-api/auth/key"; // В зависимости от контура v3/true-api/auth/key или v3/auth/cert/key
-            $curl = curl_init($urlCertKey);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
-
-            $respCert = curl_exec($curl);
-            curl_close($curl);
-
-            $certData = json_decode($respCert, true);
-
-            if (empty($certData['data']) || empty($certData['uuid'])) {
-                throw new \Exception("Не удалось получить данные для подписи от Честного Знака");
-            }
-
-            $serverDataToSign = $certData['data']; // Строка, которую нужно подписать
-            $uuid = $certData['uuid'];
-
-            // --- ШАГ 2: Программное подписание строки через КриптоПро (cryptcp) ---
-            // Замените НАШ_ОТПЕЧАТАК_СЕРТИФИКАТА на отпечаток вашей новой подписи (SHA-1) из КриптоПро CSP
-            $certThumbprint = $this->sha1_key; 
-
-            // Временные файлы для работы с консольной утилитой cryptcp
-            $inputFile = sys_get_temp_dir() . '/cz_data.txt';
-            $outputFile = sys_get_temp_dir() . '/cz_data.txt.sgn';
-
-            // Декодируем входящую строку из base64 и пишем в файл
-            file_put_contents($inputFile, base64_decode($serverDataToSign));
-
-            if (file_exists($outputFile)) { unlink($outputFile); }
-
-            // Вызов утилиты cryptcp для создания отсоединенной (-detached) подписи в кодировке base64 (-base64)
-            $command = "cryptcp -sign -detached -base64 -thumbprint " . escapeshellarg($certThumbprint) . " " . escapeshellarg($inputFile) . " " . escapeshellarg($outputFile) . " 2>&1";
-            exec($command, $output, $returnVar);
-
-            if ($returnVar !== 0) {
-                throw new \Exception("Ошибка подписания через cryptcp: " . implode("\n", $output));
-            }
-
-            // Читаем полученную подпись, удаляя лишние переносы строк
-            $signatureBase64 = str_replace(["\r", "\n"], "", file_get_contents($outputFile));
-
-            // Чистим временные файлы
-            unlink($inputFile);
-            unlink($outputFile);
-
-            // --- ШАГ 3: Отправка подписанного токена в Честный Знак ---
-            $urlSignIn = "https://crpt.ru";
-
-            // Формируем payload, как в вашем примере, но динамически
-            $postData = json_encode([
-                "uuid" => $uuid,
-                "data" => $signatureBase64,
-                "unitedToken" => true
-            ]);
-
-            $curl = curl_init($urlSignIn);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, [
-                "Accept: application/json",
-                "Content-Type: application/json",
-            ]);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
-
-            $resp = curl_exec($curl);
-            curl_close($curl);
-
-            $response = json_decode($resp, true);
-
-            if (empty($response['uuidToken'])) {
-                throw new \Exception("Ошибка авторизации simpleSignIn: " . var_export($response, true));
-            }
-
-            // Возвращаем uuidToken и кэшируем его
-            $result = $response['uuidToken'];
-            $this->cache->setItem('markirovka_token_1', $result);
-        }
-
-        return $result;
-    }
-    
     
     /**
      * 
@@ -290,7 +204,7 @@ class MarkManager
      */
     public function signQr($qrCodes)
     {
-        $uuidToken = $this->signToken2();
+        $uuidToken = $this->signToken();
         
         var_dump($uuidToken); exit;
         
