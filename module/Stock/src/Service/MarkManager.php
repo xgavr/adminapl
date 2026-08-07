@@ -237,7 +237,7 @@ class MarkManager
             exec($command, $output, $returnVar);
 
             if ($returnVar !== 0) {
-                throw new Exception("Ошибка подписания через cryptcp: " . implode("\n", $output));
+                throw new \Exception("Ошибка подписания через cryptcp: " . implode("\n", $output));
             }
 
             // Читаем полученную подпись, удаляя лишние переносы строк
@@ -272,7 +272,7 @@ class MarkManager
             $response = json_decode($resp, true);
 
             if (empty($response['uuidToken'])) {
-                throw new Exception("Ошибка авторизации simpleSignIn: " . var_export($response, true));
+                throw new \Exception("Ошибка авторизации simpleSignIn: " . var_export($response, true));
             }
 
             // Возвращаем uuidToken и кэшируем его
