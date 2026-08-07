@@ -206,7 +206,7 @@ class MarkManager
     {
         $uuidToken = $this->signToken();
         
-        var_dump($uuidToken); exit;
+//        var_dump($uuidToken); exit;
         
         if (is_string($qrCodes)){
             $qrCodes = [$qrCodes];
