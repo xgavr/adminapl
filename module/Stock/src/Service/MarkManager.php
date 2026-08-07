@@ -202,7 +202,7 @@ class MarkManager
 
         if (empty($result)) {
             // --- ШАГ 1: Получаем случайную строку (данные для подписи) от ЧЗ ---
-            $urlCertKey = "https://crpt.ru"; // В зависимости от контура v3/true-api/auth/key или v3/auth/cert/key
+            $urlCertKey = "https://markirovka.crpt.ru/api/v3/true-api/auth/key"; // В зависимости от контура v3/true-api/auth/key или v3/auth/cert/key
             $curl = curl_init($urlCertKey);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($curl, CURLOPT_HTTPHEADER, ["Accept: application/json"]);
@@ -213,7 +213,7 @@ class MarkManager
             $certData = json_decode($respCert, true);
 
             if (empty($certData['data']) || empty($certData['uuid'])) {
-                throw new Exception("Не удалось получить данные для подписи от Честного Знака");
+                throw new \Exception("Не удалось получить данные для подписи от Честного Знака");
             }
 
             $serverDataToSign = $certData['data']; // Строка, которую нужно подписать
