@@ -231,7 +231,7 @@ class MarkManager
         
         if (is_array($result)){
             foreach ($result as $value){
-                //var_dump($value['cisInfo']['cis'], $value['cisInfo']['status']); //exit;
+                var_dump($value['cisInfo']['cis'], $value['cisInfo']['status']); //exit;
                                                 
                 if (!empty($value['cisInfo']['cis'])){
                     $mark = $this->entityManager->getRepository(Mark::class)
