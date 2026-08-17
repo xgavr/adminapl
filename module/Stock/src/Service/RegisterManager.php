@@ -682,7 +682,11 @@ class RegisterManager
             }    
         }
         
-        $this->changeGood($good, $newGood);
+        try{
+            $this->changeGood($good, $newGood);
+        } catch (\Throwable $e){
+            
+        }    
         
         //movements в закрытых периодах
         $this->entityManager->getConnection()->update('movement', ['good_id' => $newGood->getId()], ['good_id' => $good->getId()]);
