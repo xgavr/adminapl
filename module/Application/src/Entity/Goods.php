@@ -2193,6 +2193,9 @@ class Goods {
             if ($groupSite->getCode() == '310-463-446') {
                 return true;
             }
+            if ($groupSite->getCode() == '310-463-466') { //Промывки
+                return true;
+            }
         }
         
         return false;
