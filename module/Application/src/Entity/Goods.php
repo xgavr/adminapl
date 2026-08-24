@@ -2190,7 +2190,7 @@ class Goods {
     public function inAdBlueCategory()
     {
         foreach ($this->getCategories() as $groupSite) {
-            if ($groupSite->getCode() == '310-446') {
+            if ($groupSite->getCode() == '310-463-446') {
                 return true;
             }
         }
