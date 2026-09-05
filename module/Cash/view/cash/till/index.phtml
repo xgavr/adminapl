@@ -53,6 +53,7 @@
                 <div class="form-group">
                     <select id="cashSelect" style="width: 200px" class="form-control refresh-table" name="cash">
                         <option value="0">все</option>
+                        <option value="9721194461">Карты и QR</option>
                         <?php foreach ($cashes as $cash):?>
                             <option value="<?= $cash->getId()?>"><?= $cash->getName()?></option>
                         <?php endforeach;?>
