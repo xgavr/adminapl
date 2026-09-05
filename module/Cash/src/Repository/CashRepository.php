@@ -194,10 +194,16 @@ class CashRepository extends EntityRepository
         if (is_array($params)){
             if (!empty($params['cashId'])){
                 if (is_numeric($params['cashId'])){
-                    $queryBuilder->andWhere('ct.cash = ?3')
-                        ->setParameter('3', $params['cashId'])
-                            ;
-                }    
+                    if ($params['cashId'] < 1000){
+                        $queryBuilder->andWhere('ct.cash = ?3')
+                            ->setParameter('3', $params['cashId'])
+                                ;
+                    } else {
+                        $queryBuilder->andWhere('cdc.bankInn = ?3')
+                            ->setParameter('3', $params['cashId'])
+                                ;                        
+                    }
+                }   
             }            
             if (!empty($params['office'])){
                 if (is_numeric($params['office'])){
