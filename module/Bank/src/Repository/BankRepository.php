@@ -104,8 +104,10 @@ class BankRepository extends EntityRepository
                                 ->setParameter('kind', $params['kind'])
                                 ;
                     } else {
-                        $queryBuilder->andWhere('s.counterpartyInn = :kind')
-                                ->setParameter('kind', $params['kind'])
+                        $orX = $queryBuilder->expr()->orX();
+                        $orX->add($queryBuilder->expr()->eq('s.kind', Statement::KIND_IN_CART));
+                        $orX->add($queryBuilder->expr()->eq('s.kind', Statement::KIND_IN_QR_CODE));
+                        $queryBuilder->andWhere($orX);                        
                                 ;                        
                     }    
                 }    
