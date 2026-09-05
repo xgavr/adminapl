@@ -99,9 +99,15 @@ class BankRepository extends EntityRepository
             }
             if (!empty($params['kind'])){
                 if (is_numeric($params['kind'])){
-                    $queryBuilder->andWhere('s.kind = :kind')
-                            ->setParameter('kind', $params['kind'])
-                            ;
+                    if ($params['kind'] < 1000){
+                        $queryBuilder->andWhere('s.kind = :kind')
+                                ->setParameter('kind', $params['kind'])
+                                ;
+                    } else {
+                        $queryBuilder->andWhere('s.counterpartyInn = :kind')
+                                ->setParameter('kind', $params['kind'])
+                                ;                        
+                    }    
                 }    
             }
             if (isset($params['count'])){
