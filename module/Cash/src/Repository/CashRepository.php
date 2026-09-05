@@ -199,7 +199,7 @@ class CashRepository extends EntityRepository
                             ->setParameter('3', $params['cashId'])
                                 ;
                     } else {
-                        $queryBuilder->andWhere('cdc.bankInn = ?3')
+                        $queryBuilder->andWhere('c.bankInn = ?3')
                             ->setParameter('3', $params['cashId'])
                                 ;                        
                     }
