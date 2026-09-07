@@ -77,6 +77,7 @@ if (isset($unknownProducerQuery)){
                             <input name="search" style="width: 200px" class="form-control enter-search" onfocus="this.select();" type="text" placeholder="Поиск">
                         </div>
                         <button id="goodsOk" type="submit" class="btn btn-default">OK</button>                        
+                        <button id="goodsRemove" class="btn btn-warning"><span class="glyphicon glyphicon-trash"></span></button>                        
                     </div>
                 </div>
                 <table id="goodsTable" 
@@ -87,9 +88,9 @@ if (isset($unknownProducerQuery)){
                     data-page-list="[5, 10, 20, 50]"
                     data-toolbar="#goodsToolbar"
                     data-show-refresh="true"
-                    data-show-toggle="true"
                     data-query-params="goodsQueryParams"
                     data-response-handler="responseHandler"
+                    data-classes = "table table-bordered table-hover table-condensed"                    
                     >
                     <thead>
                         <tr>
@@ -220,6 +221,18 @@ if (isset($unknownProducerQuery)){
         goodsOk.click(function () {
             goodsTable.bootstrapTable('refresh');
         });
+        
+        $(document).on('click', '#goodsRemove', function (e) {
+            var url = '/producer/delete-producer-goods/<?= $producer->getId()?>';
+            var dialog = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
+                closeButton: true
+            });
+            $.get( url, function(data){
+                refreshTable();
+                dialog.modal('hide');
+            });
+        });        
     });
     
     function tabQueryParams(tab, params) {
