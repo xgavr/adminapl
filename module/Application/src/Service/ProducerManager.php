@@ -128,6 +128,25 @@ class ProducerManager
         $this->entityManager->flush($producer);
         
         return true;
+    }  
+    
+    /**
+     * Удаление товаров производителя
+     * 
+     * @param Producer $producer
+     * @return boolean
+     */
+    public function removeProducerGoods($producer) 
+    {   
+        $goods = $this->entityManager->getRepository(Goods::class)
+                ->findBy(['producer' => $producer->getId()]);
+  
+
+        foreach ($goods as $good){
+            $this->goodsManager->removeGood($good);
+        }
+        
+        return;
     }    
     
     /**
