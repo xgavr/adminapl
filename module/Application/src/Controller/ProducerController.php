@@ -334,6 +334,32 @@ class ProducerController extends AbstractActionController
         ]);          
     }
     
+    public function deleteProducerGoodsAction()
+    {
+        $producerId = (int)$this->params()->fromRoute('id', -1);
+        
+        // Validate input parameter
+        if ($producerId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        // Find the producer by ID
+        $producer = $this->entityManager->getRepository(Producer::class)
+                ->find($producerId);
+        
+        if ($producer == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        $this->producerManager->removeProducerGoods($producer);
+                
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
     public function updateProducersGoodCountAction()
     {
         $this->producerManager->updateProducersGoodCount();
