@@ -193,11 +193,11 @@ class ImageManager {
      * @param type $quality качество
      * @return boolean
      */
-    function convertToWebpSamePath($source, $quality = 65) {
+    function convertToWebpSamePath($source, $quality = 85) {
         // 1. Генерируем новый путь с расширением .webp
         $pathInfo = pathinfo($source);
         $destination = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.webp';
-        
+
         $image = $result = null;
 
         // 2. Определяем расширение оригинала
@@ -207,14 +207,24 @@ class ImageManager {
             $extension = strtolower($pathInfo['extension']);
         }
 
-//        var_dump($source, $destination, $extension); exit;
-        
+        // === ЛОГИКА ДИНАМИЧЕСКОГО КАЧЕСТВА ===
+        if (file_exists($source)) {
+            $fileSizeInMb = filesize($source) / 1024 / 1024; // Размер в МБ
+
+            if ($fileSizeInMb > 5) {
+                $quality = 60; // Для огромных файлов (>5 МБ) сильно снижаем
+            } elseif ($fileSizeInMb > 2) {
+                $quality = 70; // Для средних файлов (2-5 МБ)
+            } elseif ($fileSizeInMb > 0.8) {
+                $quality = 78; // Для файлов от 800 КБ до 2 МБ
+            } // Если файл меньше 800 КБ, оставляем дефолтные 85
+        }
+
         // 3. Создаем ресурс изображения
-        try{
+        try {
             switch ($extension) {
                 case 'jpeg':
                 case 'jfif':
-//                case 'avif':
                 case 'jpg':
                     $image = imagecreatefromjpeg($source);
                     break;
@@ -234,30 +244,31 @@ class ImageManager {
             return $source;
         }    
 
-//        var_dump($source, $destination, $quality); exit;
-        
         if ($image){
-            
-            //Указываем новые размеры
-//            $newWidth = 500;
-//            $newHeight = 500;
-//
-//            //Изменяем размер
-//            $resizedImage = imagescale($image, $newWidth, $newHeight);
+
+            // === РЕКОМЕНДАЦИЯ ДЛЯ ОКНА 500х500 ===
+            // Если оригинал огромный, сжимаем его по ширине/высоте до 1000px (под Retina)
+            $maxDimension = 1000;
+            $width = imagesx($image);
+            $height = imagesy($image);
+
+            if ($width > $maxDimension || $height > $maxDimension) {
+                $image = imagescale($image, $maxDimension, -1, IMG_BILINEAR_FIXED);
+            }
 
             // 4. Сохраняем в ту же папку        
             $result = imagewebp($image, $destination, $quality);
             imagedestroy($image);
-//            imagedestroy($resizedImage);
         }
-        
+
         if ($result){
             unlink($source);
             return $destination;
         }
 
-        return $source; // Возвращает путь к новому файлу или false
-    } 
+        return $source;
+    }
+
     
     /**
      * Обновить похожесть
