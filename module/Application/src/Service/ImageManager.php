@@ -237,9 +237,18 @@ class ImageManager {
 //        var_dump($source, $destination, $quality); exit;
         
         if ($image){
+            
+            //Указываем новые размеры
+            $newWidth = 500;
+            $newHeight = 500;
+
+            //Изменяем размер
+            $resizedImage = imagescale($image, $newWidth, $newHeight);
+
             // 4. Сохраняем в ту же папку        
-            $result = imagewebp($image, $destination, $quality);
+            $result = imagewebp($resizedImage, $destination, $quality);
             imagedestroy($image);
+            imagedestroy($resizedImage);
         }
         
         if ($result){
