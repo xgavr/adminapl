@@ -193,7 +193,7 @@ class ImageManager {
      * @param type $quality качество
      * @return boolean
      */
-    function convertToWebpSamePath($source, $quality = 85) {
+    function convertToWebpSamePath($source, $quality = 65) {
         // 1. Генерируем новый путь с расширением .webp
         $pathInfo = pathinfo($source);
         $destination = $pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.webp';
@@ -239,16 +239,16 @@ class ImageManager {
         if ($image){
             
             //Указываем новые размеры
-            $newWidth = 500;
-            $newHeight = 500;
-
-            //Изменяем размер
-            $resizedImage = imagescale($image, $newWidth, $newHeight);
+//            $newWidth = 500;
+//            $newHeight = 500;
+//
+//            //Изменяем размер
+//            $resizedImage = imagescale($image, $newWidth, $newHeight);
 
             // 4. Сохраняем в ту же папку        
-            $result = imagewebp($resizedImage, $destination, $quality);
+            $result = imagewebp($image, $destination, $quality);
             imagedestroy($image);
-            imagedestroy($resizedImage);
+//            imagedestroy($resizedImage);
         }
         
         if ($result){
