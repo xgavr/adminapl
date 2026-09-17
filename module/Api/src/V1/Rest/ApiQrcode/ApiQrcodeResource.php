@@ -188,18 +188,18 @@ class ApiQrcodeResource extends AbstractResourceListener
                         }                    
                     } 
                     
-//                    if (!empty($prepaymets['prepayment_50'])){
-//                        $qrCodeP50 = $this->sbpManager->registerQrCode([
-//                            'orderAplId' => $params->order,
-//                            'amount' => $toFloat->filter($prepaymets['prepayment_50']),
-//                            'prepay' => true,
-//                        ]);
-//                        
-//                        if ($qrCodeP50){
-////                             $result['p50'] = $qrCodeP50->toMsg();
-////                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
-//                        }                    
-//                    }    
+                    if (!empty($prepaymets['prepayment_50'])){
+                        $qrCodeP50 = $this->sbpManager->registerQrCode([
+                            'orderAplId' => $params->order,
+                            'amount' => $toFloat->filter($prepaymets['prepayment_50']),
+                            'prepay' => true,
+                        ]);
+                        
+                        if ($qrCodeP50){
+                             $result['p50'] = $qrCodeP50->toMsg();
+                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
+                        }                    
+                    }    
                                         
                     return [
                         'qrcode' => $result,
