@@ -99,7 +99,9 @@ class ApiQrcodeResource extends AbstractResourceListener
                         }                    
                     }    
                                         
-                    return $result;
+                    return [
+                        'qrcode' => $result,
+                    ];
                 }
             }
         }
