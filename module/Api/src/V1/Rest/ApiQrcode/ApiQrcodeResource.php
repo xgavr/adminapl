@@ -71,6 +71,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                     
                     //Добавить предоплаты
                     $prepaymets = $this->getPrepaymentAmounts($data->amount);
+                    var_dump($prepaymets);
                     
                     if (!empty($prepaymets['prepayment_20'])){
                         $qrCodeP20 = $this->sbpManager->registerQrCode([
@@ -97,8 +98,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                              $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
                         }                    
                     }    
-                    
-                    
+                                        
                     return $result;
                 }
             }
