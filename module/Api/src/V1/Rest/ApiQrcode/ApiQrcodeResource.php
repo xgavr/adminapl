@@ -172,7 +172,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                     $result['payloadShort'] = $clickFilter->filter($result['payload']);
                     
                     //Добавить предоплаты
-//                    $prepaymets = $this->getPrepaymentAmounts($params->amount);
+                    $prepaymets = $this->getPrepaymentAmounts($params->amount);
 ////                    var_dump($prepaymets); exit;
 //                    
 //                    if (!empty($prepaymets['prepayment_20'])){
