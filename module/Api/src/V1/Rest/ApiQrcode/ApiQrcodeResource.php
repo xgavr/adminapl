@@ -171,7 +171,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                     
                     //Добавить предоплаты
                     $prepaymets = $this->getPrepaymentAmounts($params->amount);
-//                    var_dump($prepaymets); exit;
+                    var_dump($prepaymets); exit;
                     
                     if (!empty($prepaymets['prepayment_20'])){
                         $qrCodeP20 = $this->sbpManager->registerQrCode([
