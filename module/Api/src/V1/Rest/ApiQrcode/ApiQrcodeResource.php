@@ -183,8 +183,8 @@ class ApiQrcodeResource extends AbstractResourceListener
                         ]);
                         
                         if ($qrCodeP20){
-                             $result['p20'] = $qrCodeP20->toMsg();
-                             $result['p20']['payloadShort'] = $clickFilter->filter($result['p20']['payload']);
+//                             $result['p20'] = $qrCodeP20->toMsg();
+//                             $result['p20']['payloadShort'] = $clickFilter->filter($result['p20']['payload']);
                         }                    
                     } 
                     
@@ -196,8 +196,8 @@ class ApiQrcodeResource extends AbstractResourceListener
                         ]);
                         
                         if ($qrCodeP50){
-                             $result['p50'] = $qrCodeP50->toMsg();
-                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
+//                             $result['p50'] = $qrCodeP50->toMsg();
+//                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
                         }                    
                     }    
                                         
