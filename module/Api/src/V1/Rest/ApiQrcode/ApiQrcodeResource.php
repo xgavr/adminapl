@@ -119,9 +119,12 @@ class ApiQrcodeResource extends AbstractResourceListener
         if (is_object($params)){
             if (!empty($params->order) && !empty($params->amount)){
                 $toFloat = new ToFloat();
+                
+                $amount = round($params->amount/100, 2);
+                
                 $qrCode = $this->sbpManager->registerQrCode([
                     'orderAplId' => $params->order,
-                    'amount' => $toFloat->filter(round($params->amount/100, 2)),
+                    'amount' => $toFloat->filter($amount),
                 ]);
                 
 //                if ($qrCode){
@@ -139,7 +142,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                     $result['payloadShort'] = $clickFilter->filter($result['payload']);
                     
                     //Добавить предоплаты
-                    $prepaymets = $this->getPrepaymentAmounts($params->amount);
+                    $prepaymets = $this->getPrepaymentAmounts($amount);
 ////                    var_dump($prepaymets); exit;
 //                    
                     if (!empty($prepaymets['prepayment_20'])){
