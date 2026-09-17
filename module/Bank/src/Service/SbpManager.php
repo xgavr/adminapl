@@ -93,6 +93,11 @@ class SbpManager
     {        
         $amount = round($data['amount']*100);
         
+        $payText = 'Оплата заказа';
+        if (!empty($data['prepay'])){
+            $payText = 'Предоплата по заказу';
+        }
+        
         if (empty($amount)){
             return;
         }
@@ -118,7 +123,7 @@ class SbpManager
                 'Data' => [
                     "amount" => $amount,
                     "currency" => "RUB",
-                    "paymentPurpose" => "Оплата заказа №{$data['orderAplId']}",
+                    "paymentPurpose" => "$payText №{$data['orderAplId']}",
                     "qrcType" => QrCode::getQrcTypeList()[QrCode::QR_Dynamic],
                     "imageParams" => [
                         "width" => 200,
