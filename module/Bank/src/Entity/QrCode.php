@@ -675,6 +675,7 @@ class QrCode {
             'payload' => $this->getPayload(),
             'payloadLink' => $this->getPayloadLink(),
             'title' => $this->getTitle(),
+            'amount' => $this->getAmountAsRub(),
         ];
     }
 }
