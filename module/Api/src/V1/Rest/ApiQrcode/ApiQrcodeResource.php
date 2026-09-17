@@ -21,6 +21,33 @@ class ApiQrcodeResource extends AbstractResourceListener
        $this->sbpManager = $sbpManager;       
     }
     
+    private function getPrepaymentAmounts($total) {
+        // 1. Рассчитываем чистые проценты
+        $prepayment20 = $total * 0.20;
+        $prepayment50 = $total * 0.50;
+
+        // 2. Определяем шаг округления в зависимости от размера заказа
+        if ($total < 10000) {
+            $roundTo = 100; // Округляем до 100 руб. для заказов меньше 10 000 руб.
+        } else {
+            $roundTo = 1000; // Округляем до 1000 руб. для крупных заказов
+        }
+
+        // 3. Округляем в ближайшую сторону (round). 
+        // Если нужно строго в большую сторону, замените round() на ceil()
+        $final20 = round($prepayment20 / $roundTo) * $roundTo;
+        $final50 = round($prepayment50 / $roundTo) * $roundTo;
+
+        // Защита от нулевых сумм (если после округления получился 0, ставим минимальный шаг)
+        if ($final20 < $roundTo && $prepayment20 > 0) $final20 = $roundTo;
+        if ($final50 < $roundTo && $prepayment50 > 0) $final50 = $roundTo;
+
+        return [
+            'prepayment_20' => $final20,
+            'prepayment_50' => $final50
+        ];
+    }
+    
     /**
      * Create a resource
      *
@@ -41,6 +68,37 @@ class ApiQrcodeResource extends AbstractResourceListener
                     $clickFilter = new ClickFilter();
                     $result = $qrCode->toMsg();
                     $result['payloadShort'] = $clickFilter->filter($result['payload']);
+                    
+                    //Добавить предоплаты
+                    $prepaymets = $this->getPrepaymentAmounts($data->amount);
+                    
+                    if (!empty($prepaymets['prepayment_20'])){
+                        $qrCodeP20 = $this->sbpManager->registerQrCode([
+                            'orderAplId' => $data->order,
+                            'amount' => $toFloat->filter($prepaymets['prepayment_20']),
+                            'prepay' => true,
+                        ]);
+                        
+                        if ($qrCodeP20){
+                             $result['p20'] = $qrCodeP20->toMsg();
+                             $result['p20']['payloadShort'] = $clickFilter->filter($result['p20']['payload']);
+                        }                    
+                    } 
+                    
+                    if (!empty($prepaymets['prepayment_50'])){
+                        $qrCodeP50 = $this->sbpManager->registerQrCode([
+                            'orderAplId' => $data->order,
+                            'amount' => $toFloat->filter($prepaymets['prepayment_50']),
+                            'prepay' => true,
+                        ]);
+                        
+                        if ($qrCodeP50){
+                             $result['p50'] = $qrCodeP50->toMsg();
+                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
+                        }                    
+                    }    
+                    
+                    
                     return $result;
                 }
             }
