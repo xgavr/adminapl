@@ -310,7 +310,7 @@ class QrCode {
     
     public function getTitle()
     {
-        return 'Оплата '.$this->getAmount().'Р по заказу №'.$this->getOrderAplId();
+        return 'Оплата '.$this->getAmountAsRub().'Р по заказу №'.$this->getOrderAplId();
     }
 
     public function getSourceName() {
