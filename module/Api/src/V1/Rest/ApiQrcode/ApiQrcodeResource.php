@@ -68,40 +68,7 @@ class ApiQrcodeResource extends AbstractResourceListener
                     $clickFilter = new ClickFilter();
                     $result = $qrCode->toMsg();
                     $result['payloadShort'] = $clickFilter->filter($result['payload']);
-                    
-                    //Добавить предоплаты
-                    $prepaymets = $this->getPrepaymentAmounts($data->amount);
-//                    var_dump($prepaymets); exit;
-                    
-                    if (!empty($prepaymets['prepayment_20'])){
-                        $qrCodeP20 = $this->sbpManager->registerQrCode([
-                            'orderAplId' => $data->order,
-                            'amount' => $toFloat->filter($prepaymets['prepayment_20']),
-                            'prepay' => true,
-                        ]);
-                        
-                        if ($qrCodeP20){
-//                             $result['p20'] = $qrCodeP20->toMsg();
-//                             $result['p20']['payloadShort'] = $clickFilter->filter($result['p20']['payload']);
-                        }                    
-                    } 
-                    
-                    if (!empty($prepaymets['prepayment_50'])){
-                        $qrCodeP50 = $this->sbpManager->registerQrCode([
-                            'orderAplId' => $data->order,
-                            'amount' => $toFloat->filter($prepaymets['prepayment_50']),
-                            'prepay' => true,
-                        ]);
-                        
-                        if ($qrCodeP50){
-//                             $result['p50'] = $qrCodeP50->toMsg();
-//                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
-                        }                    
-                    }    
-                                        
-                    return [
-                        'qrcode' => $result,
-                    ];
+                    return $result;
                 }
             }
         }
