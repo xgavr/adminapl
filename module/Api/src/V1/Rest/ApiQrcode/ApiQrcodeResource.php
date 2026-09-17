@@ -157,21 +157,21 @@ class ApiQrcodeResource extends AbstractResourceListener
                     'amount' => $toFloat->filter($params->amount),
                 ]);
                 
-                if ($qrCode){
-                    $clickFilter = new ClickFilter();
-                    $result = $qrCode->toMsg();
-                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
-                    return [
-                        'qrcode' => $result,
-                    ];
-                }
-                
 //                if ($qrCode){
 //                    $clickFilter = new ClickFilter();
 //                    $result = $qrCode->toMsg();
 //                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
-//                    
-//                    //Добавить предоплаты
+//                    return [
+//                        'qrcode' => $result,
+//                    ];
+//                }
+                
+                if ($qrCode){
+                    $clickFilter = new ClickFilter();
+                    $result = $qrCode->toMsg();
+                    $result['payloadShort'] = $clickFilter->filter($result['payload']);
+                    
+                    //Добавить предоплаты
 //                    $prepaymets = $this->getPrepaymentAmounts($params->amount);
 ////                    var_dump($prepaymets); exit;
 //                    
@@ -187,7 +187,7 @@ class ApiQrcodeResource extends AbstractResourceListener
 ////                             $result['p20']['payloadShort'] = $clickFilter->filter($result['p20']['payload']);
 //                        }                    
 //                    } 
-//                    
+                    
 //                    if (!empty($prepaymets['prepayment_50'])){
 //                        $qrCodeP50 = $this->sbpManager->registerQrCode([
 //                            'orderAplId' => $params->order,
@@ -200,9 +200,11 @@ class ApiQrcodeResource extends AbstractResourceListener
 ////                             $result['p50']['payloadShort'] = $clickFilter->filter($result['p50']['payload']);
 //                        }                    
 //                    }    
-//                                        
-//                    return $result;
-//                }                
+                                        
+                    return [
+                        'qrcode' => $result,
+                    ];
+                }                
             }
         }
         return new ApiProblem(405, 'The GET method has not been defined for collections');
