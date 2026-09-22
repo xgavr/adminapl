@@ -2224,6 +2224,25 @@ class GoodsController extends AbstractActionController
         return new JsonModel([
             'ok'
         ]);           
+    }  
+    
+    public function specToOemAction()
+    {
+        $goodId = $this->params()->fromRoute('id', -1);
+        
+        $good = $this->entityManager->getRepository(Goods::class)
+                ->find($goodId); 
+        
+        if ($good == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }            
+        
+        $this->goodsManager->specAttributesToOem($good);
+        
+        return new JsonModel([
+            'ok'
+        ]);           
     }     
     
     public function goodFromJsonAction()
