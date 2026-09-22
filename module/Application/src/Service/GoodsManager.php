@@ -1430,6 +1430,55 @@ class GoodsManager
         return;
     }
     
+    
+    /**
+     * Подготавливает текст спецификации перед обработкой в ArticleCode.
+     * Заменяет спецсимволы (+, /, .) на буквенные эквиваленты, чтобы избежать коллизий.
+     *
+     * @param string $specification
+     * @return string
+     */
+    private function prepareSpecificationForOem(string $specification): string
+    {
+        // 1. Приводим к нижнему регистру для удобства замены
+        $value = mb_strtolower($specification, 'utf-8');
+
+        // 2. Карта замен спецсимволов
+        $replacements = [
+            '++' => 'plusplus', // G12++ -> g12plusplus
+            '+'  => 'plus',     // G12+  -> g12plus
+            '/'  => 'and',      // A3/B4 -> a3andb4 (или можно заменять на пустую строку, если склейка устраивает)
+            '.'  => 'dot',      // 505.01 -> 505dot01 (защищает от превращения 5.1 и 51 в один код)
+        ];
+
+        // Применяем замены
+        $value = str_replace(array_keys($replacements), array_values($replacements), $value);
+
+        return $value;
+    }    
+    
+    /**
+     * Добавить в номера спецификации масел и т.п.
+     * 
+     * @param Goods $good
+     */
+    public function specAttributesToOem($good)
+    {
+        if ($good->inSpecAttrCategory()){
+            $goodAttributeValues = $this->entityManager->getRepository(GoodAttributeValue::class)
+                    ->findBy(['good' => $good->getId()]); 
+            foreach ($goodAttributeValues as $goodAttributeValue){
+                if ($goodAttributeValue->getAttribute()->getValueType() == 'A'){
+                    $value = $this->prepareSpecificationForOem($goodAttributeValue->getValue());
+                    $this->entityManager->getRepository(Oem::class)
+                            ->addSpecAsOe($good->getId(), $value);                    
+                }
+            }
+        }
+        
+        return;
+    }
+    
     /**
      * Загрузить строку json с атрибутами
      *  [{name: xxxx, 'value': 'xxxx', 'unit': 'xxxx'}]
@@ -1512,7 +1561,8 @@ class GoodsManager
 //            var_dump($attr);
             
             $this->entityManager->getRepository(GoodAttributeValue::class)
-                    ->addGoodAttributeValue($good, $attr);                   
+                    ->addGoodAttributeValue($good, $attr);
+                        
         }                
 
         $good->setFasadeEx(Goods::FASADE_EX_NEW); 
