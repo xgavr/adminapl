@@ -1468,9 +1468,9 @@ class GoodsManager
             $goodAttributeValues = $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->findBy(['good' => $good->getId()]); 
             foreach ($goodAttributeValues as $goodAttributeValue){
-                var_dump($goodAttributeValue->getAttribute()->getValueType());
+//                var_dump($goodAttributeValue->getAttribute()->getValueType());
                 if ($goodAttributeValue->getAttribute()->getValueType() == 'A'){
-                    $value = $this->prepareSpecificationForOem($goodAttributeValue->getValue());
+                    $value = $this->prepareSpecificationForOem($goodAttributeValue->getAttributeValue());
                     $this->entityManager->getRepository(Oem::class)
                             ->addSpecAsOe($good->getId(), $value);                    
                 }
