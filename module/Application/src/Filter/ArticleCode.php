@@ -43,7 +43,7 @@ class ArticleCode extends AbstractFilter
     {
         $result = mb_strtoupper(preg_replace("/[^a-zA-ZА-Яа-я0-9]/u","", $value), 'utf-8');
         
-        if (mb_strlen($result, 'utf-8') > 24){
+        if (mb_strlen($result, 'utf-8') > 127){
             $result = OemRaw::LONG_CODE;
         }        
         
