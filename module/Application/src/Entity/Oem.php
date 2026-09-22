@@ -33,6 +33,7 @@ class Oem {
     const SOURCE_EXT_SOURCE = 9; //Внешние источники
     const SOURCE_EAN = 10; //штрихкод
     const SOURCE_INTR = 11; // интернет
+    const SOURCE_SPEC = 12; // спецификация масла и т.п.
     
     const RATING_UPDATED      = 1; // Рейтинг обновлен.
     const RATING_FOR_UPDATE   = 2; // Рейтинг не обновлен.
@@ -341,6 +342,7 @@ class Oem {
             self::SOURCE_MY_CODE => 'Свой артикул',
             self::SOURCE_IID => 'Номер у поставщика',
             self::SOURCE_EAN => 'Штрихкод',
+            self::SOURCE_SPEC => 'Спецификация',
         ];
     }    
     
