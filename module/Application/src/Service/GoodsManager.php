@@ -1470,7 +1470,7 @@ class GoodsManager
             foreach ($goodAttributeValues as $goodAttributeValue){
 //                var_dump($goodAttributeValue->getAttribute()->getValueType());
                 if ($goodAttributeValue->getAttribute()->getValueType() == 'A'){
-                    $value = $this->prepareSpecificationForOem($goodAttributeValue->getAttributeValue());
+                    $value = $this->prepareSpecificationForOem($goodAttributeValue->getAttributeValue()->getValue());
                     $this->entityManager->getRepository(Oem::class)
                             ->addSpecAsOe($good->getId(), $value);                    
                 }
