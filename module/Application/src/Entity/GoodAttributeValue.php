@@ -10,6 +10,7 @@ namespace Application\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Application\Entity\Attribute;
 
 /**
  * Description of Make
@@ -154,6 +155,10 @@ class GoodAttributeValue {
         $good->addAttributeValue($this);        
     }     
     
+    /**
+     * 
+     * @return Attribute
+     */
     public function getAttribute() 
     {
         return $this->attribute;
