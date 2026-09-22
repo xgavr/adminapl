@@ -242,6 +242,25 @@ class OemRepository  extends EntityRepository{
         }    
         
         return;
+    } 
+    
+    /**
+     * Добавить спецификацию в таблицу номеров
+     * 
+     * @param integer $goodId
+     * @param string $spec
+     */
+    public function addSpecAsOe($goodId, $spec)
+    {
+        $oem = $this->addOemToGood($goodId, [
+            'oeNumber' => $spec, 
+          ], Oem::SOURCE_SPEC);
+        
+        if ($oem){    
+            $this->getEntityManager()->detach($oem);
+        }    
+        
+        return;
     }    
     
     /**
