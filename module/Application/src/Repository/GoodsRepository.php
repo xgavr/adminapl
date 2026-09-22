@@ -2997,6 +2997,7 @@ class GoodsRepository extends EntityRepository
                         Oem::SOURCE_MY_CODE,
                         Oem::SOURCE_SUP,
                         Oem::SOURCE_TD,
+                        Oem::SOURCE_SPEC,
                     ]))
                   ;
 
