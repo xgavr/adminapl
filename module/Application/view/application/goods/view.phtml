@@ -347,6 +347,10 @@
                                 title="Загрузить номера из Json" data-table="oemTable">
                             <span class="glyphicon glyphicon-import" >Json</span>
                         </button>                             
+                        <button value="/goods/spec-to-oem/<?= $goods->getId()?>" class="btn btn-default spec-to-oem"
+                                title="Загрузить номера из аттрибутов" data-table="oemTable">
+                            <span class="glyphicon glyphicon-import" >Attr</span>
+                        </button>                             
 <!--                        <button value="/goods/laximo-find-oem/<?= $goods->getId()?>" class="btn btn-default refresh-table-button"
                                 title="Загрузить номера из ТекДока" data-table="oemTable">
                             <span class="glyphicon glyphicon-import" >Laximo</span>
@@ -1033,6 +1037,16 @@
                     };    
                 }
             });          
+        });
+        
+        $('.spec-to-oem').click(function (){
+            $.getJSON('/goods/spec-to-oem/<?= $goods->getId()?>', function( data ) {
+//                console.log(data);
+                if (data.result == 'ok'){
+                    $('#oemTable').bootstrapTable('refresh');
+                }
+            });    
+            return;           
         });
         
         $('.attributes-from-json').click(function (e){
