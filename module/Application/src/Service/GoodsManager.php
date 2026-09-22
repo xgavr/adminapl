@@ -1566,6 +1566,8 @@ class GoodsManager
                         
         }                
 
+        $this->specAttributesToOem($good);
+        
         $good->setFasadeEx(Goods::FASADE_EX_NEW); 
         $this->entityManager->persist($good);
         $this->entityManager->flush();        
