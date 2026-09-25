@@ -183,8 +183,22 @@ class OemRepository  extends EntityRepository{
                             ['id' => $oem->getId()]);
                     
                     $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+                } elseif ($source == Oem::SOURCE_SPEC && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_SPEC){
+                    //заменить источник если новый источник кросс и старый источник не текдок, не ручной
+                    $this->getEntityManager()->getConnection()->update('oem', 
+                            [
+                                'oe' => $oe, 
+                                'oe_number' => $oems['oeNumber'],
+                                'brand_name' => $brandName,
+                                'status' => Oem::STATUS_ACTIVE,                            
+                                'source' => Oem::SOURCE_INTR,
+                                'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
+                            ], 
+                            ['id' => $oem->getId()]);
                     
-                } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_CROSS){
+                    $this->getEntityManager()->getConnection()->update('goods', ['fasade_ex' => Goods::FASADE_EX_NEW], ['id' => $goodId]);
+                    
+                } elseif ($source == Oem::SOURCE_CROSS && $oem->getSource() != Oem::SOURCE_TD && $oem->getSource() != Oem::SOURCE_MAN && $oem->getSource() != Oem::SOURCE_INTR && $oem->getSource() != Oem::SOURCE_SPEC && $oem->getSource() != Oem::SOURCE_CROSS){
                     //заменить источник если новый источник кросс и старый источник не текдок, не ручной
                     $this->getEntityManager()->getConnection()->update('oem', 
                             [
