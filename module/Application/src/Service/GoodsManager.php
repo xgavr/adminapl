@@ -482,7 +482,7 @@ class GoodsManager
                 $this->externalManager->addOemsToGood($good['goodId'], $good['code'], $good['genericGroupTdId'], $tokenGroupId);
                 
                 //обновление спецификаций
-//                $this->specAttributesToOem($good);
+                $this->specAttributesToOem($good['goodId']);
             }
             
             if (time() >= $finishTime){
@@ -1467,6 +1467,11 @@ class GoodsManager
      */
     public function specAttributesToOem($good)
     {
+        if (is_numeric($good)){
+            $good = $this->entityManager->getRepository(Goods::class)
+                    ->find($good);
+        }
+        
         if ($good->inSpecAttrCategory()){
             $goodAttributeValues = $this->entityManager->getRepository(GoodAttributeValue::class)
                     ->findBy(['good' => $good->getId()]); 
