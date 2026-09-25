@@ -191,7 +191,7 @@ class OemRepository  extends EntityRepository{
                                 'oe_number' => $oems['oeNumber'],
                                 'brand_name' => $brandName,
                                 'status' => Oem::STATUS_ACTIVE,                            
-                                'source' => Oem::SOURCE_INTR,
+                                'source' => Oem::SOURCE_SPEC,
                                 'update_rating' => empty($oems['updateRating']) ? $oem->getUpdateRating():$oems['updateRating'],
                             ], 
                             ['id' => $oem->getId()]);
