@@ -482,7 +482,7 @@ class GoodsManager
                 $this->externalManager->addOemsToGood($good['goodId'], $good['code'], $good['genericGroupTdId'], $tokenGroupId);
                 
                 //обновление спецификаций
-                $this->specAttributesToOem($good);
+//                $this->specAttributesToOem($good);
             }
             
             if (time() >= $finishTime){
