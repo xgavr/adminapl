@@ -1042,9 +1042,9 @@
         $('.spec-to-oem').click(function (){
             $.getJSON('/goods/spec-to-oem/<?= $goods->getId()?>', function( data ) {
 //                console.log(data);
-                if (data.result == 'ok'){
+//                if (data.result == 'ok'){
                     $('#oemTable').bootstrapTable('refresh');
-                }
+//                }
             });    
             return;           
         });
