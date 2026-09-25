@@ -1479,8 +1479,10 @@ class GoodsManager
 //                var_dump($goodAttributeValue->getAttribute()->getValueType());
                 if ($goodAttributeValue->getAttribute()->getValueType() == 'A'){
                     $value = $this->prepareSpecificationForOem($goodAttributeValue->getAttributeValue()->getValue());
-                    $this->entityManager->getRepository(Oem::class)
-                            ->addSpecAsOe($good->getId(), $value);                    
+                    if (strlen($value) > 2){
+                        $this->entityManager->getRepository(Oem::class)
+                                ->addSpecAsOe($good->getId(), $value);                    
+                    }    
                 }
             }
         }
