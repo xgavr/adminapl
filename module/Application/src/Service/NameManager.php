@@ -1307,18 +1307,34 @@ class NameManager
     public function selectBestTokenGroupForTitles($groupTitles)
     {
         $result = null;
+        $resultTokensCount = 0;
         foreach ($groupTitles as $title){
             if ($title['tokenGroupTitle']){
+                
+                $titleTokensCount = count(explode('_', $title['tokenGroupTitle']));
+                
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->findOneByIds($title['tokenGroupTitleMd5']); 
                 if ($tokenGroup){
                     if (!$result){
                         if ($tokenGroup->getGoodCount() > TokenGroup::MIN_GOODCOUNT){
+                            $resultTokensCount = $titleTokensCount;
                             $result = $tokenGroup;
                         }
                     } else {
-                        if ($tokenGroup->getGoodCount() > $result->getGoodCount()){
+                        //Выбираем где больше товаров
+//                        if ($tokenGroup->getGoodCount() > $result->getGoodCount()){
+//                            $result = $tokenGroup;
+//                        }
+                        
+                        //Выбираем где больше токенов
+                        if ($titleTokensCount > $resultTokensCount){
+                            $resultTokensCount = $titleTokensCount;
                             $result = $tokenGroup;
+                        } elseif($titleTokensCount === $resultTokensCount){
+                            if ($tokenGroup->getGoodCount() > $result->getGoodCount()){
+                                $result = $tokenGroup;
+                            }                        
                         }
                     }    
                 }    
