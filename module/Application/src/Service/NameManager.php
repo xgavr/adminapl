@@ -1363,13 +1363,22 @@ class NameManager
 
         $tokenGroup = null;
         
-        var_dump($groupTitles); exit;
-        
         if (is_array($groupTitles)){
             if (count($groupTitles)){
-                $groupTitle0 = $groupTitles[0];
                 
-//                var_dump($groupTitle0['titleCount'], $groupTitle0['tokenGroupTitle'], count($groupTitles));
+                $groupTitle0 = $groupTitles[0];
+                $titleTokenCount0 = count(explode('_', $groupTitle0['tokenGroupTitle']));
+                
+                //выбор названия, где больше токенов
+                foreach ($groupTitles as $groupTitle){
+                    $titleTokenCount = count(explode('_', $groupTitle['tokenGroupTitle']));
+                    if ($titleTokenCount > $titleTokenCount0){
+                        $titleTokenCount0 = $titleTokenCount;
+                        $groupTitle0 = $groupTitle;
+                    }
+                }                                
+                
+                var_dump($groupTitle0['titleCount'], $groupTitle0['tokenGroupTitle'], count($groupTitles));
                 
                 if (($groupTitle0['titleCount'] > 1 && $groupTitle0['tokenGroupTitle']) 
                         || ($groupTitle0['titleCount'] == 1 && count($groupTitles) == 1)){
