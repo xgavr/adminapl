@@ -23,7 +23,7 @@ use Fasade\Entity\GroupSite;
 class TokenGroup {
     
     const FREQUENCY_MIN   = 5000; // минимальная чатота токена
-    const MIN_GOODCOUNT = 10; // минимальное количество товаров в группе
+    const MIN_GOODCOUNT = 1; // минимальное количество товаров в группе
 
     /**
      * @ORM\Id
