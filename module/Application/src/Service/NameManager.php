@@ -1378,7 +1378,7 @@ class NameManager
                     }
                 }                                
                 
-                var_dump($groupTitle0['titleCount'], $groupTitle0['tokenGroupTitle'], count($groupTitles));
+                var_dump($groupTitle0); exit;
                 
                 if (($groupTitle0['titleCount'] > 1 && $groupTitle0['tokenGroupTitle']) 
                         || ($groupTitle0['titleCount'] == 1 && count($groupTitles) == 1)){
