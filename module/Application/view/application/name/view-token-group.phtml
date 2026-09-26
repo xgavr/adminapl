@@ -65,16 +65,18 @@ $this->pageBreadcrumbs()->setItems([
         <div class="tab-content" id="featureTabContent">
             <div class="tab-pane fade" role="tabpanel" id="goods" aria-labelledby="goods-tab">
                 <div id="toolbar">
-                    <select style="" class="form-control" id='groupSelect'>
-                        <option value="">Все группы ТД</option>
-                        <?php foreach ($tdGroups as $tdGroup):?>
-                            <option value="<?= $tdGroup[0]->getId()?>"><?= $tdGroup[0]->getName()?></option>
-                        <?php endforeach;?>
-                    </select>
-                    <button class="form-control btn btn-default btn-xs update-token-group"
-                            title="Обновить группы наименований в товарах группы">
-                        <span class="glyphicon glyphicon-refresh">ТГТ</span>
-                    </button>                    
+                    <div class="form-inline" role="form">
+                        <select style="" class="form-control" id='groupSelect'>
+                            <option value="">Все группы ТД</option>
+                            <?php foreach ($tdGroups as $tdGroup):?>
+                                <option value="<?= $tdGroup[0]->getId()?>"><?= $tdGroup[0]->getName()?></option>
+                            <?php endforeach;?>
+                        </select>
+                        <button class="btn btn-default btn-xs update-token-group"
+                                title="Обновить группы наименований в товарах группы">
+                            <span class="glyphicon glyphicon-refresh">ТГТ</span>
+                        </button>                         
+                    </div>                   
                 </div>    
                 <table id="goodTable" 
                     data-toggle="table" 
