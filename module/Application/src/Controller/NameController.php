@@ -1328,6 +1328,31 @@ class NameController extends AbstractActionController
         ]);          
     }
     
+    public function updateTokenGroupInGoodsAction()
+    {
+        $tokenGroupId = (int)$this->params()->fromRoute('id', -1);
+        if ($tokenGroupId<0) {
+            $this->getResponse()->setStatusCode(404);
+            return;
+        }
+        
+        $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
+                ->find($tokenGroupId);
+        
+        if ($tokenGroup == null) {
+            $this->getResponse()->setStatusCode(404);
+            return;                        
+        }        
+
+        foreach ($tokenGroup->getGoods() as $good){
+            $this->nameManager->addGroupTokenFromGood($good->getId());
+        }
+        
+        return new JsonModel([
+            'result' => 'ok-reload',
+        ]);          
+    }
+    
     public function tokenGroupTokenAction()
     {
         ini_set('memory_limit', '4096M');
