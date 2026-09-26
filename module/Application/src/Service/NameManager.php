@@ -1346,6 +1346,9 @@ class NameManager
                 }    
             }    
         }
+        
+         var_dump($result);
+        
         return $result;
     }
     
