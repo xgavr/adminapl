@@ -1316,8 +1316,12 @@ class NameManager
 //                var_dump($title, $titleTokensCount);
                 
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
-                            ->findOneByIds($title['tokenGroupTitleMd5']); 
+                            ->findOneByIds($title['tokenGroupTitleMd5']);                
+                
                 if ($tokenGroup){
+                     
+                    var_dump($title, $tokenGroup->getId());
+                     
                     if (!$result){
                         if ($tokenGroup->getGoodCount() > TokenGroup::MIN_GOODCOUNT){
                             $resultTokensCount = $titleTokensCount;
