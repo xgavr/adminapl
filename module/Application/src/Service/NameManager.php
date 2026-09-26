@@ -1313,6 +1313,8 @@ class NameManager
                 
                 $titleTokensCount = count(explode('_', $title['tokenGroupTitle']));
                 
+                var_dump($title, $titleTokensCount);
+                
                 $tokenGroup = $this->entityManager->getRepository(TokenGroup::class)
                             ->findOneByIds($title['tokenGroupTitleMd5']); 
                 if ($tokenGroup){
