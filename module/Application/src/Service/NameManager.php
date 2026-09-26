@@ -1359,7 +1359,7 @@ class NameManager
 
         $tokenGroup = null;
         
-//        var_dump($groupTitles);
+        var_dump($groupTitles);
         
         if (is_array($groupTitles)){
             if (count($groupTitles)){
