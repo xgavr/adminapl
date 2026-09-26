@@ -1320,7 +1320,7 @@ class NameManager
                 
                 if ($tokenGroup){
                      
-                    var_dump($title, $tokenGroup->getId());
+//                    var_dump($title, $tokenGroup->getId());
                      
                     if (!$result){
                         if ($tokenGroup->getGoodCount() > TokenGroup::MIN_GOODCOUNT){
@@ -1363,7 +1363,7 @@ class NameManager
 
         $tokenGroup = null;
         
-//        var_dump($groupTitles);
+        var_dump($groupTitles); exit;
         
         if (is_array($groupTitles)){
             if (count($groupTitles)){
