@@ -228,6 +228,9 @@ class ImageManager {
                 case 'jpg':
                     $image = imagecreatefromjpeg($source);
                     break;
+                case 'bmp':
+                    $image = imagecreatefrombmp($source);
+                    break;
                 case 'png':
                     $image = imagecreatefrompng($source);
                     if (empty($image)){
