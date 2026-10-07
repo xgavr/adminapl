@@ -161,7 +161,7 @@ class MarkManager
     private function signToken()
     {
         $result = $this->cache->getItem('markirovka_token');
-//        var_dump($result); exit;
+        var_dump($result); exit;
         if (empty($result)){
             $url = "https://markirovka.crpt.ru/api/v3/true-api/auth/simpleSignIn";
 
