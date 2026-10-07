@@ -179,7 +179,7 @@ class MarkManager
 
             $data = $this->jwt_public_key;
             
-            var_dump($data); exit;
+//            var_dump($data); exit;
 
             curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
 
@@ -188,6 +188,7 @@ class MarkManager
             curl_close($curl);
             $response = json_decode($resp, true);
 
+            var_dump($response); exit;
             // Возвращаем uuidToken
             $result = $response['uuidToken'];
             $this->cache->setItem('markirovka_token', $result);
