@@ -188,7 +188,7 @@ class MarkManager
             curl_close($curl);
             $response = json_decode($resp, true);
 
-//            var_dump($response); exit;
+            var_dump($response); exit;
             // Возвращаем uuidToken
             $result = $response['uuidToken'];
             $this->cache->setItem('markirovka_token', $result);
