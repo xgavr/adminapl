@@ -291,7 +291,7 @@ return [
             ],
             Controller\MarkController::class => [
                 ['actions' => '*', 'allow' => '@'],
-                ['actions' => 'temp-token', 'allow' => '*'],
+                ['actions' => ['tempToken'], 'allow' => '*'],                
             ],
         ],
     ],    
