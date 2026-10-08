@@ -162,36 +162,42 @@ class MarkManager
     {
         $result = $this->cache->getItem('markirovka_token');
 //        var_dump($result); exit;
+        
         if (empty($result)){
-            $url = "https://markirovka.crpt.ru/api/v3/true-api/auth/simpleSignIn";
-
-            $curl = curl_init($url);
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-            $headers = array(
-                    "Accept: application/json",
-
-                    "Content-Type: application/json",
-            );
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-            $data = $this->jwt_public_key;
             
-//            var_dump($data); exit;
-
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-            $resp = curl_exec($curl);
-
-            curl_close($curl);
-            $response = json_decode($resp, true);
-
-            var_dump($response); exit;
-            // Возвращаем uuidToken
-            $result = $response['uuidToken'];
-            $this->cache->setItem('markirovka_token', $result);
+            $data = $this->jwt_public_key;
+            var_dump($data); exit;
+            $result = $data['token'];
+            
+//            $url = "https://markirovka.crpt.ru/api/v3/true-api/auth/simpleSignIn";
+//
+//            $curl = curl_init($url);
+//            curl_setopt($curl, CURLOPT_URL, $url);
+//            curl_setopt($curl, CURLOPT_POST, true);
+//            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+//
+//            $headers = array(
+//                    "Accept: application/json",
+//
+//                    "Content-Type: application/json",
+//            );
+//            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+//
+//            $data = $this->jwt_public_key;
+//            
+////            var_dump($data); exit;
+//
+//            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+//
+//            $resp = curl_exec($curl);
+//
+//            curl_close($curl);
+//            $response = json_decode($resp, true);
+//
+//            var_dump($response); exit;
+//            // Возвращаем uuidToken
+//            $result = $response['uuidToken'];
+//            $this->cache->setItem('markirovka_token', $result);
         } 
         
         return $result;
@@ -207,7 +213,7 @@ class MarkManager
     {
         $uuidToken = $this->signToken();
         
-//        var_dump($uuidToken); exit;
+        var_dump($uuidToken); exit;
         
         if (is_string($qrCodes)){
             $qrCodes = [$qrCodes];
