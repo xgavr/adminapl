@@ -141,6 +141,19 @@ class MarkController extends AbstractActionController
         return new JsonModel(
            $result
         );           
+    }
+    
+    public function tempTokenAction()
+    {
+
+        
+        $result = $this->markManager->temporaryToken();
+        
+//        var_dump($result);
+ 
+        return new JsonModel(
+           $result
+        );           
     }        
     
     public function markStatusesAction()
