@@ -154,6 +154,11 @@ class MarkManager
         return;
     }
     
+    public function temporaryToken()
+    {
+        return $this->signToken();
+    }
+    
     /**
      * 
      * @return токен ЧЗ
