@@ -146,14 +146,19 @@ class MarkController extends AbstractActionController
     public function tempTokenAction()
     {
 
-        
         $result = $this->markManager->temporaryToken();
-        
-//        var_dump($result);
- 
-        echo $result;
-        
-        exit;
+
+        /** @var \Laminas\Http\PhpEnvironment\Response $response */
+        $response = $this->getResponse();
+
+        // Устанавливаем чистый текстовый тип контента (опционально, но правильно)
+        $response->getHeaders()->addHeaderLine('Content-Type', 'text/plain; charset=utf-8');
+
+        // Устанавливаем само тело ответа
+        $response->setContent($result);
+
+        // Возвращаем объект ответа фреймворку вместо exit
+        return $response;
     }        
     
     public function markStatusesAction()
