@@ -151,9 +151,9 @@ class MarkController extends AbstractActionController
         
 //        var_dump($result);
  
-        return new JsonModel(
-           $result
-        );           
+        echo $result;
+        
+        exit;
     }        
     
     public function markStatusesAction()
