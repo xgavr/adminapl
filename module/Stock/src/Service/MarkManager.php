@@ -166,8 +166,10 @@ class MarkManager
         if (empty($result)){
             
             $data = $this->jwt_public_key;
-            var_dump($data); exit;
-            $result = $data['token'];
+            
+            $response = json_decode($data, true);
+            
+            $result = $response['token'];
             
 //            $url = "https://markirovka.crpt.ru/api/v3/true-api/auth/simpleSignIn";
 //
