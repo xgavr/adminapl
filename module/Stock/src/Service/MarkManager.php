@@ -215,7 +215,7 @@ class MarkManager
     {
         $uuidToken = $this->signToken();
         
-        var_dump($uuidToken); exit;
+//        var_dump($uuidToken); exit;
         
         if (is_string($qrCodes)){
             $qrCodes = [$qrCodes];
@@ -250,7 +250,7 @@ class MarkManager
             var_dump($e->getMessage());
         }
         
-//        var_dump($result); exit;
+        var_dump($result); exit;
         
         if (is_array($result)){
             foreach ($result as $value){
