@@ -290,8 +290,8 @@ return [
                 ['actions' => '*', 'allow' => '@'],
             ],
             Controller\MarkController::class => [
-                ['actions' => '*', 'allow' => '@'],
-                ['actions' => ['tempToken'], 'allow' => '*'],                
+                ['actions' => ['tempToken'], 'allow' => '*'],                  
+                ['actions' => '*', 'allow' => '@'],              
             ],
         ],
     ],    
