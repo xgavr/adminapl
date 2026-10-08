@@ -250,7 +250,7 @@ class MarkManager
             var_dump($e->getMessage());
         }
         
-        var_dump($result); exit;
+//        var_dump($result); exit;
         
         if (is_array($result)){
             foreach ($result as $value){
