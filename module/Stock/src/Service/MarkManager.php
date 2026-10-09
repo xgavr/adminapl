@@ -247,7 +247,7 @@ class MarkManager
         $resp = curl_exec($curl);
         curl_close($curl);
         
-//        var_dump($resp);
+        var_dump($resp);
         
         try{
             $result = json_decode($resp, \Laminas\Json\Json::TYPE_ARRAY);
