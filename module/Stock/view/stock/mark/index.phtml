@@ -122,6 +122,10 @@ $this->pageBreadcrumbs()->setItems([
         $.get( "/mark/mark-status/"+row.id, function(data){
             $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
             dialog.modal('hide');
+            
+            if (data.error_message){
+                bootbox.alert(data.error_message);
+            }
         });        
     }    
     
