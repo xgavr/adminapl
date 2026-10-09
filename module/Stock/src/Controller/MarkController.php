@@ -131,6 +131,12 @@ class MarkController extends AbstractActionController
         
         $data = $this->markManager->signQr($mark->getMark31());
         
+        if (!empty($data['error_message'])){
+            return new JsonModel(
+               $data
+            );            
+        }
+        
         $query = $this->entityManager->getRepository(Mark::class)
                 ->queryAllMark(['markId' => $mark->getId()]);
         
