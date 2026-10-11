@@ -54,6 +54,11 @@ class MarkManager
     private $sha1_key;    
     
     /**
+     * @var string
+     */
+    private $base_url;    
+    
+    /**
      * Constructs the service.
      */
     public function __construct($entityManager, $logManager, $adminManager, $cache) 
@@ -72,7 +77,9 @@ class MarkManager
         $this->sha1_key = '';
         if (file_exists($this->token_dir.self::SHA1_KEY)){
             $this->sha1_key = file_get_contents($this->token_dir.self::SHA1_KEY);
-        }        
+        }    
+        
+        $this->base_url = 'https://markirovka.crpt.ru/api/v3/true-api/';
         
     }
     
@@ -291,6 +298,18 @@ class MarkManager
         
         //echo $resp;
         return $result;        
+    }
+    
+    public function authKey()
+    {
+        $url = $this->base_url . 'auth/key';
+        
+        $resp = file_get_contents($url);
+        
+        $response = json_decode($resp, true);
+        
+        return $response;
+        
     }
     
 }
