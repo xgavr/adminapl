@@ -179,7 +179,9 @@ $this->pageBreadcrumbs()->setItems([
                         label: "1. UUID",
                         className: 'btn-warning',
                         callback: function(){
-                            authKey(dialog);
+                            $.get( "/mark/auth-key/", function(data){
+                                dialog.find('.dialog-body').html(data);
+                            }); 
                             return false;
                         }
                     },                    
