@@ -18,7 +18,7 @@ $this->pageBreadcrumbs()->setItems([
         <div id="toolbar">
             <div class="form-inline" role="form">  
                 <button id="tokenStatus" class="btn btn-info mark-token-status" type="button" title="Статус токена" disabled>
-                    <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>                 
                 <button class="btn btn-info mark-statuses" type="button" title="Проверить коды в ЧЗ">
                     <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
@@ -161,6 +161,37 @@ $this->pageBreadcrumbs()->setItems([
                     bootbox.alert(data.error_message);
                 }                
             }); 
+        });
+        
+        function authKey(){
+            $.get( "/mark/auth-key/", function(data){
+                
+            });        
+        }
+        
+        $(".mark-token-status").click(function(){
+            let dialog = bootbox.dialog({
+                title: 'Получить токен доступа к маркировке',
+                message: "",
+                size: 'large',
+                buttons: {
+                    auth: {
+                        label: "UUID",
+                        className: 'btn-warning',
+                        callback: function(){
+                            authKey();
+                            return false;
+                        }
+                    },                    
+                    ok: {
+                        label: "Закрыть",
+                        className: 'btn-info',
+                        callback: function(){
+                            console.log('Custom OK clicked');
+                        }
+                    }
+                }
+            });
         });
         
         $(document).on('change', '.refresh-table', function (e) {
