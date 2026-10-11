@@ -17,7 +17,7 @@ $this->pageBreadcrumbs()->setItems([
     <div class="col-md-12">
         <div id="toolbar">
             <div class="form-inline" role="form">  
-                <button id="tokenStatus" class="btn btn-info mark-token-status" type="button" title="Статус токена" disabled>
+                <button id="tokenStatus" class="btn btn-info mark-token-status" type="button" title="Статус токена">
                     <span class="glyphicon glyphicon-certificate" aria-hidden="true"></span>
                 </button>                 
                 <button class="btn btn-info mark-statuses" type="button" title="Проверить коды в ЧЗ">
@@ -163,23 +163,76 @@ $this->pageBreadcrumbs()->setItems([
             }); 
         });
         
+        var _markUuid = null;
+        var _markData = null;
+        
+        function setUuid(uuid){
+            _markUuid = uuid;
+        }
+        
+        function getUuid(){
+            return _markUuid;
+        }
+        
+        function setMarkData(data){
+            _markData = data;
+        }
+        
+        function getMarkData(){
+            return _markData;
+        }
+        
         function authKey(dialog){
             $.get( "/mark/auth-key/", function(data){
-                dialog.find('.bootbox-body').html(data);
+                
+                if (data.error_message){
+                    dialog.find('.dialog-body').html(data.error_message);
+                } else {                                  
+                    setUuid(data.uuid);
+                    setMarkData(data.data);                
+                    dialog.find('.dialog-body').html('2. Подпишите строку: ' + getMarkData());
+                }    
             });        
         }
         
-        $(".mark-token-status").click(function(){
+        function signData(dialog){
+//            const store = await cadesplugin.CreateObjectAsync("CAdESCOM.CPStore");
+//            await store.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, "My", cadesplugin.CAPICOM_STORE_OPEN_READ_ONLY);
+//            const certs = await store.Certificates;
+//            const count = await certs.Count;
+//            let targetCert = null;
+//
+//            for (let i = 1; i <= count; i++) {
+//                const cert = await certs.Item(i);
+//                const thumb = await cert.Thumbprint;
+//                if (thumb.toLowerCase() === selectedThumbprint.toLowerCase()) {
+//                    targetCert = cert;
+//                    break;
+//                }
+//            }
+//
+//            if (!targetCert) throw new Error("Сертификат не найден в хранилище");      
+        }
+        
+        function signTokenDialog(){
             let dialog = bootbox.dialog({
                 title: 'Получить токен доступа к маркировке',
-                message: "1. Нажмите кнопку UUID",
+                message: '<p class="dialog-body">1. Нажмите кнопку UUID</p>',
                 size: 'large',
                 buttons: {
                     auth: {
-                        label: "1. UUID",
+                        label: "1. Получить строку",
                         className: 'btn-warning',
                         callback: function(){
                             authKey(dialog);
+                            return false;
+                        }
+                    },                    
+                    sign: {
+                        label: "2. Подписать строку",
+                        className: 'btn-warning',
+                        callback: function(){
+                            signData(dialog);
                             return false;
                         }
                     },                    
@@ -191,8 +244,80 @@ $this->pageBreadcrumbs()->setItems([
                         }
                     }
                 }
-            });
-        });
+            });            
+        }
+            
+        document.getElementById('tokenStatus').addEventListener('click', async () => {
+            
+            var statusDiv = bootbox.dialog({
+                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Загрузка сертификатов...</p>',
+                closeButton: true
+            });            
+
+            try {
+                // Ждем готовности плагина КриптоПро
+                await cadesplugin;
+
+                // Открываем хранилище "Личные" (My)
+                const store = await cadesplugin.CreateObjectAsync("CAdESCOM.CPStore");
+                await store.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, "My", cadesplugin.CAPICOM_STORE_OPEN_READ_ONLY);
+
+                // Получаем коллекцию действующих сертификатов
+                const certs = await store.Certificates;
+                const count = await certs.Count;
+
+                const select = document.getElementById('certs');
+                select.innerHTML = '';
+                certsList = [];
+
+                if (count === 0) {
+//                    statusDiv.innerText = "В хранилище 'Личные' не найдено сертификатов!";
+                    statusDiv.find('.text-center').html("В хранилище 'Личные' не найдено сертификатов!");
+                    return;
+                }
+
+                // Проходимся по сертификатам и добавляем их в выпадающий список
+                for (let i = 1; i <= count; i++) {
+                    const cert = await certs.Item(i);
+                    const isValid = await cert.IsValid();
+                    const validResult = await isValid.Result;
+
+                    // Фильтруем только валидные сертификаты
+                    if (validResult) {
+                        const subjectName = await cert.SubjectName;
+                        const thumbprint = await cert.Thumbprint;
+                        const fromDate = await cert.ValidFromDate;
+
+                        // Вытаскиваем CN (Имя/Организацию) для красивого отображения
+                        const cnMatch = subjectName.match(/CN=([^,]+)/);
+                        const displayName = cnMatch ? cnMatch[1] : subjectName;
+
+                        const option = document.createElement('option');
+                        option.value = thumbprint;
+                        option.text = `${displayName} (До: ${new Date(fromDate).toLocaleDateString()})`;
+                        select.appendChild(option);
+
+                        certsList.push(cert);
+                    }
+                }
+
+                await store.Close();
+
+                if (certsList.length > 0) {
+                    document.getElementById('certBlock').style.display = 'block';
+//                    statusDiv.innerText = "Сертификаты успешно загружены!";
+                    statusDiv.find('.text-center').html("Сертификаты успешно загружены!");
+                } else {
+//                    statusDiv.innerText = "Не найдено валидных (просроченных или поврежденных) сертификатов.";
+                    statusDiv.find('.text-center').html("Не найдено валидных (просроченных или поврежденных) сертификатов.");
+                }                                
+
+            } catch (err) {
+                statusDiv.innerText = "Ошибка работы с КриптоПро!";
+//                document.getElementById('output').innerText = err.message;
+                statusDiv.find('.text-center').html(err.message);
+            }
+        });            
         
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
