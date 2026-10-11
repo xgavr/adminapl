@@ -313,9 +313,9 @@ $this->pageBreadcrumbs()->setItems([
                 }                                
 
             } catch (err) {
-                statusDiv.innerText = "Ошибка работы с КриптоПро!";
+//                statusDiv.innerText = "Ошибка работы с КриптоПро!";
 //                document.getElementById('output').innerText = err.message;
-                statusDiv.find('.text-center').html(err.message);
+                statusDiv.find('.text-center').html("Ошибка работы с КриптоПро!: " + err.message);
             }
         });            
         
