@@ -165,7 +165,7 @@ $this->pageBreadcrumbs()->setItems([
         
         function authKey(dialog){
             $.get( "/mark/auth-key/", function(data){
-                dialog.find('.dialog-body').html(data);
+                dialog.find('.bootbox-body').html(data);
             });        
         }
         
@@ -179,9 +179,7 @@ $this->pageBreadcrumbs()->setItems([
                         label: "1. UUID",
                         className: 'btn-warning',
                         callback: function(){
-                            $.get( "/mark/auth-key/", function(data){
-                                dialog.find('.dialog-body').html(data);
-                            }); 
+                            authKey(dialog);
                             return false;
                         }
                     },                    
