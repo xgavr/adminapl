@@ -172,6 +172,17 @@ class MarkController extends AbstractActionController
         return new JsonModel(
            $result
         );           
+    }  
+    
+    
+    public function authKeyAction()
+    {
+        
+        $result = $this->markManager->authKey();
+                
+        return new JsonModel(
+           $result
+        );           
     }        
     
     
