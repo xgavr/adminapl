@@ -16,7 +16,10 @@ $this->pageBreadcrumbs()->setItems([
 <div class="row">
     <div class="col-md-12">
         <div id="toolbar">
-            <div class="form-inline" role="form">               
+            <div class="form-inline" role="form">  
+                <button id="tokenStatus" class="btn btn-info mark-token-status" type="button" title="Статус токена" disabled>
+                    <span class="glyphicon glyphicon-signal" aria-hidden="true"></span>
+                </button>                 
                 <button class="btn btn-info mark-statuses" type="button" title="Проверить коды в ЧЗ">
                     <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
                 </button> 
@@ -118,12 +121,14 @@ $this->pageBreadcrumbs()->setItems([
         var dialog = bootbox.dialog({
             message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
             closeButton: true
-        });        
-        $.get( "/mark/mark-status/"+row.id, function(data){
+        }); 
+        $("#tokenStatus").prop('disabled', true);
+        $.get( "/mark/mark-status/"+row.id, function(data){            
             $table.bootstrapTable('updateByUniqueId', {id: row.id, row: data});
             dialog.modal('hide');
             
             if (data.error_message){
+                $("#tokenStatus").prop('disabled', false);
                 bootbox.alert(data.error_message);
             }
         });        
@@ -143,10 +148,18 @@ $this->pageBreadcrumbs()->setItems([
             var dialog = bootbox.dialog({
                 message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Подождите, пока мы что-нибудь сделаем ...</p>',
                 closeButton: true
-            });            
+            });       
+            
+            $("#tokenStatus").prop('disabled', true);
+            
             $.get( "/mark/mark-statuses/", function(data){
                 refreshTable();
                 dialog.modal('hide');
+                
+                if (data.error_message){
+                    $("#tokenStatus").prop('disabled', false);
+                    bootbox.alert(data.error_message);
+                }                
             }); 
         });
         
