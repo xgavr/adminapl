@@ -312,5 +312,61 @@ class MarkManager
         
     }
     
+    /**
+     * 
+     * @param array $data
+     * @return json
+     */
+    public function signKey($data)
+    {
+        $url = $this->base_url . 'auth/simpleSignIn';
+        
+        $postData = json_encode($data);
+        
+//        var_dump($postData); exit;
+        
+        if ($data){
+            
+            $curl = curl_init($url);
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_POST, true);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+            $headers = array(
+                    "Accept: application/json",
+
+                    "Content-Type: application/json",
+            );
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+            curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
+
+            $resp = curl_exec($curl);
+
+            curl_close($curl);
+            
+            return $resp;
+        }    
+                
+        return;        
+    }
+    
+    /**
+     * 
+     * @param string $data
+     * @return json
+     */
+    public function saveToken($data)
+    {                
+        
+//        var_dump($data); exit;
+        
+//        if (file_exists($this->token_dir.self::JWT_PUBLIC_KEY)){
+        $result = $this->jwt_public_key = file_put_contents($this->token_dir.self::JWT_PUBLIC_KEY, $data);
+//        }
+        
+        return $result;
+        
+    }       
 }
 
