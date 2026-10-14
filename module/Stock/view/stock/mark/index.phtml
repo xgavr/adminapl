@@ -208,8 +208,9 @@ $this->pageBreadcrumbs()->setItems([
 //                console.log("Ответ сервера:", data);
 
                 // Если нужно записать полученный токен обратно в textarea:
-                 dialog.find('#bootbox-prompt-textarea').val(data.token);
-                 
+                dialog.find('#bootbox-prompt-textarea').val(data.token);
+                dialog.find('.dialog-body').html('4. Сохранить токен'); 
+                
             }, "json"); // Укажите "json", если сервер возвращает JSON-ответ
 
             return false; // Не закрываем диалог автоматически, пока ждем ответ        
@@ -223,7 +224,10 @@ $this->pageBreadcrumbs()->setItems([
             $.post("/mark/save-token/", { data: token}, function(data){
                 // Тут обрабатываем ответ от сервера (например, выводим токен)
                 console.log("Ответ сервера:", data);
-
+                dialog.find('#bootbox-prompt-textarea').val('');
+                dialog.find('.dialog-body').html('Токен записан'); 
+                dialog.hide();
+                bootbox.alert({ message: "Токен успешно сохранен!", size: "small" });
                 // Если нужно записать полученный токен обратно в textarea:
 //                 dialog.find('#bootbox-prompt-textarea').val(data.token);
                  
@@ -390,6 +394,7 @@ $this->pageBreadcrumbs()->setItems([
 
                 // Записываем в основную textarea
                 dialog.find('#bootbox-prompt-textarea').val(formattedPem);
+                dialog.find('.dialog-body').html('3. Пoлучить токен');
 
                 bootbox.alert({ message: "Строка успешно подписана выбранным сертификатом!", size: "small" });
                 await oStore.Close();
