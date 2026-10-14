@@ -274,30 +274,22 @@ $this->pageBreadcrumbs()->setItems([
             });
         }        
         
-        // Основная функция подписания, вызываемая из Bootbox-диалога
         async function signMarkingData(dialog) {
-            // 1. Сперва проверяем плагин. Если проверка не прошла — прерываем выполнение
+            // 1. Проверяем плагин
             let isPluginReady = await checkCadesPlugin();
             if (!isPluginReady) return;
 
             try {
-                // 2. Получаем исходную строку аутентификации от Честного Знака
+                // 2. Проверяем исходную строку
                 let dataToSign = getMarkData(); 
                 if (!dataToSign) {
                     bootbox.alert("Ошибка: Строка для подписания пуста или еще не получена в Шаге 1.");
                     return;
                 }
 
-                // Переводим строку в Base64 (плагин КриптоПро требует именно Base64 для бинарной точности ГОСТ)
                 let dataInBase64 = btoa(unescape(encodeURIComponent(dataToSign)));
 
-                // Отображаем индикатор загрузки, пока пользователь выбирает сертификат / идет подпись
-                let loadingDialog = bootbox.dialog({ 
-                    message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Инициализация хранилища сертификатов...</div>', 
-                    closeButton: false 
-                });
-
-                // 3. Открываем хранилище "Личные" сертификаты пользователя
+                // Открываем хранилище "Личные" сертификаты пользователя
                 let oStore = await cadesplugin.CreateObjectAsync("CAdESCOM.Store");
                 await oStore.Open(
                     cadesplugin.CAPICOM_CURRENT_USER_STORE, 
@@ -312,56 +304,98 @@ $this->pageBreadcrumbs()->setItems([
                 let count = await oValidCertificates.Count;
 
                 if (count === 0) {
-                    loadingDialog.modal('hide');
-                    bootbox.alert("В хранилище 'Личные' (My) не найдено действующих сертификатов КЭП.");
+                    bootbox.alert("В хранилище 'Личные' не найдено действующих сертификатов КЭП.");
                     await oStore.Close();
                     return;
                 }
 
-                // Выбираем самый первый подходящий сертификат (для автоматизации)
-                let oCertificate = await oValidCertificates.Item(1); 
+                // 3. Собираем массив сертификатов для выпадающего списка
+                let certOptions = [];
+                for (let i = 1; i <= count; i++) {
+                    let cert = await oValidCertificates.Item(i);
 
-                // 4. Настраиваем объект подписания (Signer)
+                    // Получаем понятное имя (Субъект) и серийный номер/отпечаток для идентификации
+                    let subjectName = await cert.SubjectName;
+                    let validTo = new Date(await cert.ValidToDate).toLocaleDateString("ru-RU");
+                    let thumbprint = await cert.Thumbprint; // Уникальный отпечаток ключа
+
+                    // Пытаемся вытащить человеческое имя владельца (CN=...) из общей строки SubjectName
+                    let cnMatch = subjectName.match(/CN=([^,]+)/);
+                    let displayName = cnMatch ? cnMatch[1] : subjectName;
+
+                    certOptions.push({
+                        text: `${displayName} (Действителен до: ${validTo})`,
+                        value: thumbprint // Записываем отпечаток как ID варианта
+                    });
+                }
+
+                // 4. Показываем окно выбора, если сертификатов больше одного
+                let selectedThumbprint = '';
+                if (certOptions.length === 1) {
+                    selectedThumbprint = certOptions[0].value;
+                } else {
+                    // Закрываем хранилище на время ожидания выбора пользователя (или держим открытым)
+                    selectedThumbprint = await new Promise((resolve) => {
+                        bootbox.prompt({
+                            title: "Выберите сертификат для подписания:",
+                            inputType: 'select',
+                            inputOptions: certOptions,
+                            buttons: {
+                                confirm: { label: 'Выбрать', className: 'btn-success' },
+                                cancel: { label: 'Отмена', className: 'btn-danger' }
+                            },
+                            callback: function (result) {
+                                resolve(result); // Возвращает выбранный отпечаток или null при отмене
+                            }
+                        });
+                    });
+                }
+
+                // Если пользователь закрыл окно выбора или нажал Отмена
+                if (!selectedThumbprint) {
+                    await oStore.Close();
+                    return; 
+                }
+
+                // 5. Ищем конкретный выбранный сертификат по его отпечатку (Thumbprint)
+                let oFinalCerts = await oValidCertificates.Find(cadesplugin.CAPICOM_CERTIFICATE_FIND_SHA1_HASH, selectedThumbprint);
+                let oCertificate = await oFinalCerts.Item(1);
+
+                // 6. Инициализируем подписание выбранным ключом
+                let loadingDialog = bootbox.dialog({ 
+                    message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Подписание строки. Подтвердите действие в окне КриптоПро...</div>', 
+                    closeButton: false 
+                });
+
                 let oSigner = await cadesplugin.CreateObjectAsync("CAdESCOM.CPSigner");
                 await oSigner.propset_Certificate(oCertificate);
-                // Включаем всю цепочку сертификатов (требование Честного Знака для CADES_BES)
-                await oSigner.propset_Options(cadesplugin.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN);
 
-                // 5. Создаем объект подписи
+                // Включаем цепочку сертификатов и добавляем флаг игнорирования ошибок корня ( | 1 ) на случай недоверенных УЦ
+                await oSigner.propset_Options(cadesplugin.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN | 1);
+
                 let oSignedData = await cadesplugin.CreateObjectAsync("CAdESCOM.CadesSignedData");
                 await oSignedData.propset_ContentEncoding(cadesplugin.CADESCOM_BASE64_TO_BINARY);
                 await oSignedData.propset_Content(dataInBase64);
-
-                // Изменяем текст в лоадере перед вызовом самого окна КриптоПро
-                loadingDialog.find('.modal-body').html('<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Подписание строки. Подтвердите действие в окне КриптоПро...</div>');
 
                 // Формируем ПРИСОЕДИНЕННУЮ подпись (isDetached = false)
                 let isDetached = false; 
                 let signature = await oSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES, isDetached);
 
-                // Закрываем лоадер, подпись готова
                 loadingDialog.modal('hide'); 
 
-                // 6. Форматируем результат в PEM-формат (имитация certutil -encode)
+                // 7. Форматируем результат в PEM (имитация certutil)
                 let formattedPem = "-----BEGIN CERTIFICATE-----\n" + 
                                    signature.match(/.{1,64}/g).join("\n") + 
                                    "\n-----END CERTIFICATE-----";
 
-                // 7. Помещаем готовую закодированную подпись в вашу textarea основного диалога
+                // Записываем в основную textarea
                 dialog.find('#bootbox-prompt-textarea').val(formattedPem);
 
-                // Информируем пользователя об успехе
-                bootbox.alert({
-                    message: "Строка успешно подписана! Данные в текстовом поле обновлены.",
-                    size: "small"
-                });
-
-                // Закрываем хранилище
+                bootbox.alert({ message: "Строка успешно подписана выбранным сертификатом!", size: "small" });
                 await oStore.Close();
 
             } catch (err) {
-                // В случае ошибки (например, пользователь нажал "Отмена" в окне ввода пин-кода контейнера)
-                bootbox.hideAll(); // Закрываем все открытые окна (включая лоадер)
+                bootbox.hideAll();
                 bootbox.alert("Ошибка при подписании: " + (err.message || cadesplugin.getLastError(err)));
             }
         }
