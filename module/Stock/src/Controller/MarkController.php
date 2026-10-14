@@ -40,6 +40,14 @@ class MarkController extends AbstractActionController
            
         ]);  
     }
+    
+    public function cadesAction()
+    {
+ 
+        return new ViewModel([
+           
+        ]);  
+    }
         
     public function contentAction()
     {
@@ -183,7 +191,45 @@ class MarkController extends AbstractActionController
         return new JsonModel(
            $result
         );           
-    }        
+    }
     
+    public function tokenDataAction()
+    {
+        $post = $this->params()->fromPost();
+        
+//        var_dump($post); exit;
+        if (!empty($post['data'])){
+            
+            $clean_string = preg_replace('/^-+.*-+$/m', '', $post['data']);
+
+            $post['data'] = preg_replace('/\s+/', '', $clean_string);             
+            
+        }
+        
+//        var_dump($post); exit;
+        
+        $result = $this->markManager->signKey($post);
+                        
+        return new JsonModel([
+            'token' => $result,
+        ]);           
+    }
     
+    public function saveTokenAction()
+    {
+        $post = $this->params()->fromPost();
+        
+//        var_dump($post); exit;
+        if (!empty($post['data'])){
+            $data = $post['data'];
+        }
+        
+        if (!empty($data)){        
+            $result = $this->markManager->saveToken($data);
+        }
+                        
+        return new JsonModel([
+            'token' => $result,
+        ]);           
+    }
 }
