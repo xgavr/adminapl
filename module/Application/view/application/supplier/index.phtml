@@ -221,7 +221,7 @@
     
     function activeFormatter(value, row){
         var url = '/supplier/request-as-text/'+value;
-        btn = '<button';
+        btn = '<nobr><button';
         btn += ' type="button"';
         btn += ' class="btn btn-default btn-xs"';
         btn += ' aria-label="Left Align"'; 
@@ -238,7 +238,7 @@
         btn += ' title="Контакты"'; 
         btn += ' onclick="requestAsText(\''+url+'\')">';
         btn += '<span class="glyphicon glyphicon-user" aria-hidden="true"></span>';
-        btn += '</button>';
+        btn += '</button></nobr>';
         return btn;
     }    
     
