@@ -97,7 +97,7 @@
                             !. Отсутствуют прайсы
                             <div class="clearfix"></div>
                         </div>
-                        <div class="panel-body panel-height" style="overflow-y: scroll;">
+                        <div class="panel-body panel-height" style="height: 200px; overflow-y: scroll;">
                             <div class="pull-left">
                                 <?php foreach($absentRaws as $absentRaw):?>
                                     <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $absentRaw[0]->getId()]) ?>"><?= $absentRaw[0]->getName()?></a><br/>                                
@@ -112,7 +112,7 @@
                             !. Отсутствуют описания полей прайса
                             <div class="clearfix"></div>
                         </div>
-                        <div class="panel-body panel-height" style="overflow-y: scroll;">
+                        <div class="panel-body panel-height" style="height: 200px; overflow-y: scroll;">
                             <div class="pull-left">
                                 <?php foreach($absentPriceDescriptions as $absentPriceDescription):?>
                                     <a href="<?= $this->url('supplier', ['action' => 'view', 'id' => $absentPriceDescription[0]->getId()]) ?>"><?= $absentPriceDescription[0]->getName()?></a><br/>                                
