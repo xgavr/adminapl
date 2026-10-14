@@ -85,9 +85,11 @@ $this->pageBreadcrumbs()->setItems([
             </thead>
         </table>
     </div>
-</div>    
+</div> 
 
 <?php echo $this->partial('/stock/index/stock-partial', []); ?>
+
+<script src="https://www.cryptopro.ru/sites/default/files/products/cades/cadesplugin_api.js"></script>
 
 <script type="text/javascript">
     var $table = $('#table'),
@@ -191,37 +193,191 @@ $this->pageBreadcrumbs()->setItems([
                     setUuid(data.uuid);
                     setMarkData(data.data);                
                     dialog.find('.dialog-body').html('2. Подпишите строку: ' + getMarkData());
+                    dialog.find('#bootbox-prompt-textarea').val('');
                 }    
             });        
         }
         
-        function signData(dialog){
-//            const store = await cadesplugin.CreateObjectAsync("CAdESCOM.CPStore");
-//            await store.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, "My", cadesplugin.CAPICOM_STORE_OPEN_READ_ONLY);
-//            const certs = await store.Certificates;
-//            const count = await certs.Count;
-//            let targetCert = null;
-//
-//            for (let i = 1; i <= count; i++) {
-//                const cert = await certs.Item(i);
-//                const thumb = await cert.Thumbprint;
-//                if (thumb.toLowerCase() === selectedThumbprint.toLowerCase()) {
-//                    targetCert = cert;
-//                    break;
-//                }
-//            }
-//
-//            if (!targetCert) throw new Error("Сертификат не найден в хранилище");      
+        function tokenData(dialog){
+            // 1. Получаем сырой текст из textarea вместе с PEM-заголовками
+            let rawKey = dialog.find('#bootbox-prompt-textarea').val();
+
+            // 2. Отправляем POST-запрос на сервер
+            $.post("/mark/token-data/", { data: rawKey, uuid: getUuid() }, function(data){
+                // Тут обрабатываем ответ от сервера (например, выводим токен)
+//                console.log("Ответ сервера:", data);
+
+                // Если нужно записать полученный токен обратно в textarea:
+                 dialog.find('#bootbox-prompt-textarea').val(data.token);
+                 
+            }, "json"); // Укажите "json", если сервер возвращает JSON-ответ
+
+            return false; // Не закрываем диалог автоматически, пока ждем ответ        
+        }
+        
+        function saveToken(dialog){
+            // 1. Получаем сырой текст из textarea вместе с PEM-заголовками
+            let token = dialog.find('#bootbox-prompt-textarea').val();
+
+            // 2. Отправляем POST-запрос на сервер
+            $.post("/mark/save-token/", { data: token}, function(data){
+                // Тут обрабатываем ответ от сервера (например, выводим токен)
+                console.log("Ответ сервера:", data);
+
+                // Если нужно записать полученный токен обратно в textarea:
+//                 dialog.find('#bootbox-prompt-textarea').val(data.token);
+                 
+            }, "json"); // Укажите "json", если сервер возвращает JSON-ответ
+
+            return false; // Не закрываем диалог автоматически, пока ждем ответ        
+        }
+        
+        // Функция для проверки, установлен и запущен ли плагин КриптоПро
+        function checkCadesPlugin() {
+            return new Promise((resolve) => {
+                // Проверяем, загрузился ли базовый скрипт API
+                if (typeof cadesplugin === 'undefined') {
+                    showPluginInstallAlert("Скрипт cadesplugin_api.js не загружен. Проверьте подключение к интернету или путь к файлу.");
+                    return resolve(false);
+                }
+
+                // Ждем инициализации самого плагина в браузере
+                cadesplugin.then(
+                    function () {
+                        // Плагин успешно загружен и готов к работе
+                        resolve(true);
+                    },
+                    function (error) {
+                        // Плагин или расширение не установлены/не запущены
+                        showPluginInstallAlert("КриптоПро ЭЦП Browser plug-in не обнаружен или не запущен в вашем браузере.");
+                        resolve(false);
+                    }
+                );
+            });
+        }  
+        
+        // Красивое окно со ссылками на скачивание
+        function showPluginInstallAlert(message) {
+            bootbox.alert({
+                title: "<span class='text-danger'><i class='fa fa-exclamation-triangle'></i> КриптоПро не настроен</span>",
+                message: `
+                    <p><strong>${message}</strong></p>
+                    <p>Для подписания строк маркировки на вашем компьютере должно быть установлено рабочее окружение КриптоПро:</p>
+                    <ol>
+                        <li>Убедитесь, что установлена программа <strong>КриптоПро CSP</strong> (версии 5.0 и выше).</li>
+                        <li>Скачайте и установите локальный модуль <a href="https://cryptopro.ru" target="_blank" class="alert-link">КриптоПро ЭЦП Browser plug-in</a>.</li>
+                        <li>Установите расширение для вашего браузера (например, <a href="https://google.com" target="_blank" class="alert-link">CryptoPro Extension для Chrome / Яндекс.Браузера</a>).</li>
+                        <li>Перезапустите браузер после установки.</li>
+                    </ol>
+                `,
+                size: "large"
+            });
+        }        
+        
+        // Основная функция подписания, вызываемая из Bootbox-диалога
+        async function signMarkingData(dialog) {
+            // 1. Сперва проверяем плагин. Если проверка не прошла — прерываем выполнение
+            let isPluginReady = await checkCadesPlugin();
+            if (!isPluginReady) return;
+
+            try {
+                // 2. Получаем исходную строку аутентификации от Честного Знака
+                let dataToSign = getMarkData(); 
+                if (!dataToSign) {
+                    bootbox.alert("Ошибка: Строка для подписания пуста или еще не получена в Шаге 1.");
+                    return;
+                }
+
+                // Переводим строку в Base64 (плагин КриптоПро требует именно Base64 для бинарной точности ГОСТ)
+                let dataInBase64 = btoa(unescape(encodeURIComponent(dataToSign)));
+
+                // Отображаем индикатор загрузки, пока пользователь выбирает сертификат / идет подпись
+                let loadingDialog = bootbox.dialog({ 
+                    message: '<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Инициализация хранилища сертификатов...</div>', 
+                    closeButton: false 
+                });
+
+                // 3. Открываем хранилище "Личные" сертификаты пользователя
+                let oStore = await cadesplugin.CreateObjectAsync("CAdESCOM.Store");
+                await oStore.Open(
+                    cadesplugin.CAPICOM_CURRENT_USER_STORE, 
+                    cadesplugin.CAPICOM_MY_STORE, 
+                    cadesplugin.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+                );
+
+                let oCertificates = await oStore.Certificates;
+
+                // Фильтруем только действующие сертификаты
+                let oValidCertificates = await oCertificates.Find(cadesplugin.CAPICOM_CERTIFICATE_FIND_TIME_VALID);
+                let count = await oValidCertificates.Count;
+
+                if (count === 0) {
+                    loadingDialog.modal('hide');
+                    bootbox.alert("В хранилище 'Личные' (My) не найдено действующих сертификатов КЭП.");
+                    await oStore.Close();
+                    return;
+                }
+
+                // Выбираем самый первый подходящий сертификат (для автоматизации)
+                let oCertificate = await oValidCertificates.Item(1); 
+
+                // 4. Настраиваем объект подписания (Signer)
+                let oSigner = await cadesplugin.CreateObjectAsync("CAdESCOM.CPSigner");
+                await oSigner.propset_Certificate(oCertificate);
+                // Включаем всю цепочку сертификатов (требование Честного Знака для CADES_BES)
+                await oSigner.propset_Options(cadesplugin.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN);
+
+                // 5. Создаем объект подписи
+                let oSignedData = await cadesplugin.CreateObjectAsync("CAdESCOM.CadesSignedData");
+                await oSignedData.propset_ContentEncoding(cadesplugin.CADESCOM_BASE64_TO_BINARY);
+                await oSignedData.propset_Content(dataInBase64);
+
+                // Изменяем текст в лоадере перед вызовом самого окна КриптоПро
+                loadingDialog.find('.modal-body').html('<div class="text-center"><i class="fa fa-spin fa-spinner"></i> Подписание строки. Подтвердите действие в окне КриптоПро...</div>');
+
+                // Формируем ПРИСОЕДИНЕННУЮ подпись (isDetached = false)
+                let isDetached = false; 
+                let signature = await oSignedData.SignCades(oSigner, cadesplugin.CADESCOM_CADES_BES, isDetached);
+
+                // Закрываем лоадер, подпись готова
+                loadingDialog.modal('hide'); 
+
+                // 6. Форматируем результат в PEM-формат (имитация certutil -encode)
+                let formattedPem = "-----BEGIN CERTIFICATE-----\n" + 
+                                   signature.match(/.{1,64}/g).join("\n") + 
+                                   "\n-----END CERTIFICATE-----";
+
+                // 7. Помещаем готовую закодированную подпись в вашу textarea основного диалога
+                dialog.find('#bootbox-prompt-textarea').val(formattedPem);
+
+                // Информируем пользователя об успехе
+                bootbox.alert({
+                    message: "Строка успешно подписана! Данные в текстовом поле обновлены.",
+                    size: "small"
+                });
+
+                // Закрываем хранилище
+                await oStore.Close();
+
+            } catch (err) {
+                // В случае ошибки (например, пользователь нажал "Отмена" в окне ввода пин-кода контейнера)
+                bootbox.hideAll(); // Закрываем все открытые окна (включая лоадер)
+                bootbox.alert("Ошибка при подписании: " + (err.message || cadesplugin.getLastError(err)));
+            }
         }
         
         function signTokenDialog(){
+            
             let dialog = bootbox.dialog({
                 title: 'Получить токен доступа к маркировке',
-                message: '<p class="dialog-body">1. Нажмите кнопку UUID</p>',
+                message: `<p class="dialog-body">1. Нажмите Получить строку и UUID</p>            
+                            <div class="form-group">
+                                <textarea id="bootbox-prompt-textarea" class="form-control" rows="15" style="resize: vertical;"></textarea>
+                            </div>`,               
                 size: 'large',
                 buttons: {
                     auth: {
-                        label: "1. Получить строку",
+                        label: "1. Получить строку и UUID",
                         className: 'btn-warning',
                         callback: function(){
                             authKey(dialog);
@@ -232,7 +388,23 @@ $this->pageBreadcrumbs()->setItems([
                         label: "2. Подписать строку",
                         className: 'btn-warning',
                         callback: function(){
-                            signData(dialog);
+                            signMarkingData(dialog);
+                            return false;
+                        }
+                    },                    
+                    token: {
+                        label: "3. Получить токен",
+                        className: 'btn-warning',
+                        callback: function(){
+                            tokenData(dialog);
+                            return false;
+                        }
+                    },                    
+                    save: {
+                        label: "4. Сохранить токен",
+                        className: 'btn-warning',
+                        callback: function(){
+                            saveToken(dialog);
                             return false;
                         }
                     },                    
@@ -243,82 +415,14 @@ $this->pageBreadcrumbs()->setItems([
                             console.log('Custom OK clicked');
                         }
                     }
-                }
+                },                      
             });            
         }
             
         document.getElementById('tokenStatus').addEventListener('click', async () => {
-            
-            var statusDiv = bootbox.dialog({
-                message: '<p class="text-center"><i class="fa fa-spin fa-spinner"></i>Загрузка сертификатов...</p>',
-                closeButton: true
-            });            
+            signTokenDialog();            
+        });
 
-            try {
-                // Ждем готовности плагина КриптоПро
-                await cadesplugin;
-
-                // Открываем хранилище "Личные" (My)
-                const store = await cadesplugin.CreateObjectAsync("CAdESCOM.CPStore");
-                await store.Open(cadesplugin.CAPICOM_CURRENT_USER_STORE, "My", cadesplugin.CAPICOM_STORE_OPEN_READ_ONLY);
-
-                // Получаем коллекцию действующих сертификатов
-                const certs = await store.Certificates;
-                const count = await certs.Count;
-
-                const select = document.getElementById('certs');
-                select.innerHTML = '';
-                certsList = [];
-
-                if (count === 0) {
-//                    statusDiv.innerText = "В хранилище 'Личные' не найдено сертификатов!";
-                    statusDiv.find('.text-center').html("В хранилище 'Личные' не найдено сертификатов!");
-                    return;
-                }
-
-                // Проходимся по сертификатам и добавляем их в выпадающий список
-                for (let i = 1; i <= count; i++) {
-                    const cert = await certs.Item(i);
-                    const isValid = await cert.IsValid();
-                    const validResult = await isValid.Result;
-
-                    // Фильтруем только валидные сертификаты
-                    if (validResult) {
-                        const subjectName = await cert.SubjectName;
-                        const thumbprint = await cert.Thumbprint;
-                        const fromDate = await cert.ValidFromDate;
-
-                        // Вытаскиваем CN (Имя/Организацию) для красивого отображения
-                        const cnMatch = subjectName.match(/CN=([^,]+)/);
-                        const displayName = cnMatch ? cnMatch[1] : subjectName;
-
-                        const option = document.createElement('option');
-                        option.value = thumbprint;
-                        option.text = `${displayName} (До: ${new Date(fromDate).toLocaleDateString()})`;
-                        select.appendChild(option);
-
-                        certsList.push(cert);
-                    }
-                }
-
-                await store.Close();
-
-                if (certsList.length > 0) {
-                    document.getElementById('certBlock').style.display = 'block';
-//                    statusDiv.innerText = "Сертификаты успешно загружены!";
-                    statusDiv.find('.text-center').html("Сертификаты успешно загружены!");
-                } else {
-//                    statusDiv.innerText = "Не найдено валидных (просроченных или поврежденных) сертификатов.";
-                    statusDiv.find('.text-center').html("Не найдено валидных (просроченных или поврежденных) сертификатов.");
-                }                                
-
-            } catch (err) {
-//                statusDiv.innerText = "Ошибка работы с КриптоПро!";
-//                document.getElementById('output').innerText = err.message;
-                statusDiv.find('.text-center').html("Ошибка работы с КриптоПро!: " + err.message);
-            }
-        });            
-        
         $(document).on('change', '.refresh-table', function (e) {
             refreshTable();
         });  
@@ -450,3 +554,10 @@ $this->pageBreadcrumbs()->setItems([
         return res;
     }    
 </script>
+<!--    <script language="javascript" src="/js/cades/es6-promise.min.js?v=319244"></script>
+    <script language="javascript" src="/js/cades/ie_eventlistner_polyfill.js?v=319244"></script>
+    <script language="javascript" src="/js/cades/Code.js?v=319244"></script>
+    <script language="javascript" src="/js/cades/lights.js?v=319244"></script>
+    <script language="javascript" src="/js/cades//cadesplugin_api.js?v=319244"></script>
+    <script language="javascript" src="/js/cades/load_extension.js?v=319244"></script>
+    <script language="javascript" src="/js/cades/highlight.js?v=319244">-->
