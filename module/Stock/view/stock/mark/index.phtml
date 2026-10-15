@@ -226,7 +226,7 @@ $this->pageBreadcrumbs()->setItems([
                 console.log("Ответ сервера:", data);
                 dialog.find('#bootbox-prompt-textarea').val('');
                 dialog.find('.dialog-body').html('Токен записан'); 
-                dialog.hide();
+                dialog.modal('hide');
                 bootbox.alert({ message: "Токен успешно сохранен!", size: "small" });
                 // Если нужно записать полученный токен обратно в textarea:
 //                 dialog.find('#bootbox-prompt-textarea').val(data.token);
