@@ -163,6 +163,7 @@ return [
                 ['actions' => '*', 'allow' => '*']
             ],
             Controller\SmsController::class => [
+                ['actions' => ['vfrcDfvId'], 'allow' => '*'], 
                 // Allow access to authenticated users.
                 ['actions' => '*', 'allow' => '@']
             ],
