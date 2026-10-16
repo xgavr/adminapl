@@ -42,6 +42,10 @@ $form->get('wamm_read')->setAttributes([
     'class'=>'form-control', 
     ]);
 
+$form->get('admin_phone')->setAttributes([
+    'class'=>'form-control', 
+    ]);
+
 //$form->get('wamm_url')->setAttributes([
 //    'class'=>'form-control', 
 //    ]);
@@ -226,6 +230,12 @@ $form->prepare();
             <?= $this->formLabel($form->get('turbo_passphrase')); ?>
             <?= $this->formElement($form->get('turbo_passphrase')); ?>
             <?= $this->formElementErrors($form->get('turbo_passphrase')); ?>                  
+        </div> 
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('admin_phone')); ?>
+            <?= $this->formElement($form->get('admin_phone')); ?>
+            <?= $this->formElementErrors($form->get('admin_phone')); ?>                  
         </div> 
         
         
