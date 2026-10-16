@@ -16,7 +16,6 @@ use Company\Entity\Office;
 use Company\Entity\Contract;
 use Company\Entity\Legal;
 
-
 /**
  * Description of PaymentManager
  *
@@ -42,11 +41,19 @@ class PaymentManager
      */
     private $logManager;
 
-    public function __construct($entityManager, $tochkaPyament, $logManager)
+    /**
+     * SmsManager manager
+     * @var \Admin\Service\SmsManager
+     */
+    private $smsManager;
+
+    public function __construct($entityManager, $tochkaPyament, $logManager,
+            $smsManager)
     {
         $this->entityManager = $entityManager;
         $this->tochkaPayment = $tochkaPyament;    
         $this->logManager = $logManager;        
+        $this->smsManager = $smsManager;        
     }
     
     /**
@@ -463,7 +470,9 @@ class PaymentManager
             if (time() > $startTime + 840){
                 break;
             }
-        }
+        }        
+                
+        $this->smsManager->wammToMax(['text' => 'Надо подписать платежки!!!']);
         
         return;
     }
