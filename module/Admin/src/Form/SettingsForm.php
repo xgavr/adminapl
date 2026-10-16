@@ -133,6 +133,17 @@ class SettingsForm extends Form
                 ]
             ],
         ]);
+        
+        $this->add([           
+            'type'  => 'text',
+            'name' => 'admin_phone',
+            'attributes' => [
+                'id' => 'admin_phone'
+            ],
+            'options' => [
+                'label' => 'Телефон админа для сообщений',
+            ],
+        ]);
 
         $this->add([           
             'type'  => 'text',
@@ -377,7 +388,7 @@ class SettingsForm extends Form
                 'id' => 'turbo_passphrase'
             ],
             'options' => [
-                'label' => 'Пароль шифрования (турбоссылка, пароли почты)',
+                'label' => 'Пароль шифрования (турбоссылка)',
             ],
         ]);
                 
