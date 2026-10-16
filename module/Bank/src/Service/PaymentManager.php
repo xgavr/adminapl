@@ -471,8 +471,10 @@ class PaymentManager
                 break;
             }
         }        
-                
-        $this->smsManager->maxWammMsgToAdmin(['text' => 'Надо подписать платежки!!!']);
+             
+        if (count($payments)){
+            $this->smsManager->maxWammMsgToAdmin(['text' => 'Надо подписать платежки!!!']);
+        }
         
         return;
     }
