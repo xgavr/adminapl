@@ -186,6 +186,27 @@ class SmsManager {
     }
     
     /**
+     * Отправка сообщений to admin
+     * @param array $options
+     */
+    public function maxWammMsgToAdmin($options)
+    {
+        $settings = $this->adminManager->getSettings();
+        $response = false;
+        if (self::WAMM_API && $settings['wamm_max_id'] && !empty($settings['admin_phone'])){
+            $response = file_get_contents(self::WAMM_API.'/msg_to/'.$settings['wamm_max_id'].'/?phone='.$settings['wamm_max_apl_id'].'&text='. urlencode($options['text']));
+        } 
+        if ($response){
+            $data = Json::decode($response, Json::TYPE_ARRAY);
+            if (!empty($data['err'])){
+                return $data['err'] == 0;
+            }
+        }
+        
+        return false;        
+    }
+    
+    /**
      * Отправка сообщений в группу Апл в Max
      * @param array $options
      */
