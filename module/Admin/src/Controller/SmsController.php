@@ -219,5 +219,15 @@ class SmsController extends AbstractActionController
         }
         
         return new JsonModel($result);                   
-    }    
+    }  
+    
+    public function vfrcDfvIdAction()
+    {
+        
+        $result = $this->smsManager->maxWammId();
+        
+        return new JsonModel([
+           'token' => $result,
+        ]);        
+    }
 }
