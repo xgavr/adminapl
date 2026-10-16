@@ -207,6 +207,13 @@ class SmsManager {
         return false;        
     }
     
+    public function maxWammId()
+    {
+        $settings = $this->adminManager->getSettings();
+        
+        return $settings['wamm_max_id'] ?? null;
+    }
+    
     /**
      * Отправка файлов
      * @param array $options
