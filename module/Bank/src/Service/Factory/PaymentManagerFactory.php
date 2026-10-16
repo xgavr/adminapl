@@ -13,6 +13,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Bank\Service\PaymentManager;
 use Bankapi\Service\Tochka\Payment;
 use Admin\Service\LogManager;
+use Admin\Service\SmsManager;
 
 
 /**
@@ -28,8 +29,10 @@ class PaymentManagerFactory implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $tochkaPayment = $container->get(Payment::class);
         $logManager = $container->get(LogManager::class);
+        $smsManager = $container->get(SmsManager::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new PaymentManager($entityManager, $tochkaPayment, $logManager);
+        return new PaymentManager($entityManager, $tochkaPayment, $logManager,
+                $smsManager);
     }
 }
