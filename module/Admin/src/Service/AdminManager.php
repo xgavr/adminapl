@@ -118,6 +118,7 @@ class AdminManager {
         $config->admin->wamm_max_id = $data['wamm_max_id'];
         $config->admin->wamm_max_apl_id = $data['wamm_max_apl_id'];
         $config->admin->wamm_read = $data['wamm_read'];
+        $config->admin->admin_phone = $data['admin_phone'];
                 
         $config->admin->dadata_api_key = $data['dadata_api_key'];
         $config->admin->dadata_standart_key = $data['dadata_standart_key'];
