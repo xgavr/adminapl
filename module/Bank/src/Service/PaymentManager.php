@@ -472,7 +472,7 @@ class PaymentManager
             }
         }        
                 
-        $this->smsManager->wammToMax(['text' => 'Надо подписать платежки!!!']);
+        $this->smsManager->maxWammMsgToAdmin(['text' => 'Надо подписать платежки!!!']);
         
         return;
     }
