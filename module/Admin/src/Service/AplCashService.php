@@ -461,6 +461,8 @@ class AplCashService {
                 'paymentId' => $cashDoc->getAplId(),
             ];
             
+            var_dump($url, $post);
+            
             $client = new Client();
             $client->setUri($url);
             $client->setMethod('POST');
