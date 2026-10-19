@@ -218,9 +218,9 @@
 
     function changeCheckStatus(row){
         if (row.cashDoc){
-            if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>){
+            if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?> || row.cashDoc.checkStatus === <?= CashDoc::CHECK_ACTIVE?>){
                 status = <?= CashDoc::CHECK_ACTIVE?>;
-                $.get( "/till/check-status/"+row.cashDoc.id+'?status='+status, function(data){
+                $.get( "/apl/uncheck-cash-doc-check/"+row.cashDoc.id+'?status='+status, function(data){
                     $table.bootstrapTable('refresh', {silent: true});
                 });        
             }
@@ -534,11 +534,11 @@
                     changeCheckStatus(row);
                 },
                 isShown: function(row) {
-                  return row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>;
+                  return row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>  || row.cashDoc.checkStatus === <?= CashDoc::CHECK_ACTIVE?>;
                 },
                 isEnabled: function(row) {
                     if (row.cashDoc){
-                        if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?>){
+                        if (row.cashDoc.checkStatus === <?= CashDoc::CHECK_FALL?> || row.cashDoc.checkStatus === <?= CashDoc::CHECK_ACTIVE?>){
                             return true;
                         }
                     }
