@@ -454,7 +454,7 @@ class AplCashService {
     public function uncheckPaymentCheck($cashDoc)
     {
         $result = true;
-        if (is_numeric($aplPaymentId)){
+        if ($cashDoc){
             $url = $this->aplApi().'uncheck-payment-check?api='.$this->aplApiKey();
 
             $post = [
