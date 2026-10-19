@@ -471,11 +471,11 @@ class AplCashService {
             $result = $ok = FALSE;
             try{
                 $response = $client->send();
-                var_dump($response->getBody()); exit;
+//                var_dump($response->getBody()); exit;
                 if ($response->isOk()) {
                     $result = $ok = TRUE;
                     
-//                    $this->entityManager->getConnection()->update('cash_doc', ['check_status' => CashDoc::CHECK_RETIRED], ['id' => $cashDoc->getId()]);
+                    $this->entityManager->getConnection()->update('cash_doc', ['check_status' => CashDoc::CHECK_RETIRED], ['id' => $cashDoc->getId()]);
                             
                 } else {
                     var_dump($response->getBody()); exit;
