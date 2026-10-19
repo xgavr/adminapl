@@ -849,7 +849,7 @@ class AplController extends AbstractActionController
             return;                        
         } 
         
-        $result = $this->aplCashService->uncheckPaymentCheck($cashDoc->getAplId());
+        $result = $this->aplCashService->uncheckPaymentCheck($cashDoc);
         //usleep(100);
         
 //        $query = $this->entityManager->getRepository(\Cash\Entity\CashDoc::class)
