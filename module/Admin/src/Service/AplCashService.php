@@ -447,6 +447,50 @@ class AplCashService {
     }
     
     /**
+     * Снять метку чек пробит в апл
+     * @param CashDoc $cashDoc
+     * @return boolean
+     */
+    public function uncheckPaymentCheck($cashDoc)
+    {
+        $result = true;
+        if (is_numeric($aplPaymentId)){
+            $url = $this->aplApi().'uncheck-payment-check?api='.$this->aplApiKey();
+
+            $post = [
+                'paymentId' => $cashDoc->getAplId(),
+            ];
+            
+            $client = new Client();
+            $client->setUri($url);
+            $client->setMethod('POST');
+            $client->setParameterPost($post);
+
+            $result = $ok = FALSE;
+            try{
+                $response = $client->send();
+//                var_dump($response->getBody()); exit;
+                if ($response->isOk()) {
+                    $result = $ok = TRUE;
+                    
+                    $this->entityManager->getConnection()->update('cach_doc', ['check_status' => CashDoc::CHECK_RETIRED], ['id' => $cashDoc->getId()]);
+                            
+                }
+            } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
+                $ok = true;
+            } catch (\Laminas\Http\Client\Adapter\Exception\TimeoutException $e){
+                $ok = true;
+            }    
+            
+            if ($ok){
+            }
+
+            unset($post);
+        }    
+        return $result;        
+    }
+    
+    /**
      * Загрузить платеж из Апл
      * @param int $start
      * @param bool $debug
