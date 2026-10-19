@@ -477,6 +477,8 @@ class AplCashService {
                     
                     $this->entityManager->getConnection()->update('cash_doc', ['check_status' => CashDoc::CHECK_RETIRED], ['id' => $cashDoc->getId()]);
                             
+                } else {
+                    var_dump($response->getBody()); exit;
                 }
             } catch (\Laminas\Http\Client\Adapter\Exception\RuntimeException $e){
                 $ok = true;
