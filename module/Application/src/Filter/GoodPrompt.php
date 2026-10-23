@@ -92,15 +92,17 @@ class GoodPrompt extends AbstractFilter
                 . "Характеристики с числовыми значениями добавляй в конец массива. "
                 . "Ничего не выдумывай!";
         
+        $headStr = 'Ты опытный специалист по автозапчастям. ';
+        
         if ($type == 'attr'){
-            return $resultAttr;
+            return $headStr . $resultAttr;
         }
         
         if ($type == 'oem'){
-            return $resultOem;
+            return $headStr . $resultOem;
         } 
         
-        $result = $resultAttr . ' и ' . $resultOem . ' Собери все в один объект JSON.';
+        $result = $headStr . $resultAttr . ' и ' . $resultOem . ' Собери все в один объект JSON.';
         
         return $result;
     }
