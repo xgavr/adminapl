@@ -65,6 +65,7 @@ class Statement {
     
     const KIND_OUT_SUPPLIER = 101; //оплата поставщику
     const KIND_OUT_BAYER = 102; //возврат покупателю
+    const KIND_OUT_BAYER_CART = 125; //возврат покупателю при оплате по карте
     const KIND_OUT_TAX = 103; //уплата налога
     const KIND_OUT_LOAN_RETURN = 104; //возврат займа
     const KIND_OUT_CREDIT_RETURN = 105; //возврат кредита
@@ -1018,6 +1019,7 @@ class Statement {
             self::KIND_OUT_CART_PAY => 'Оплата корпоративной картой',
             self::KIND_OUT_TAX => 'Уплата налога',
             self::KIND_OUT_BAYER => 'Возврат покупателю',
+            self::KIND_OUT_BAYER_CART => 'Возврат покупателю при оплате картой',
             self::KIND_OUT_LOAN_RETURN => 'Возврат займа контрагенту',
             self::KIND_OUT_CREDIT_RETURN => 'Возврат кредита банку',
             self::KIND_OUT_LOAN => 'Выдача займа контрагенту',
