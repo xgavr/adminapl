@@ -973,7 +973,7 @@
                     if (row.cashDoc){
                         cashDocId = row.cashDoc.id;
                     }    
-                    if (cashDocId || row.kind === <?= Statement::KIND_OUT_SUPPLIER?> || row.kind === <?= Statement::KIND_OUT_ZP_USER?>){
+                    if (cashDocId || row.kind === <?= Statement::KIND_OUT_SUPPLIER?> || row.kind === <?= Statement::KIND_IN_BAYER?> || row.kind === <?= Statement::KIND_OUT_ZP_USER?>){
                         
                         if (row.amount>0){
                             var url = '/till/edit-cash-in/'+cashDocId+'?statement='+row.id;
