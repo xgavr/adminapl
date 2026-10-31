@@ -526,7 +526,7 @@ class TillController extends AbstractActionController
         $checkPr = null;
         if ($order){
             $checkPr = $this->entityManager->getRepository(CashDoc::class)
-                    ->findOneBy(['cash' => $cashPr->getId(), 'order' => $order->getId()]);
+                    ->findOneBy(['cash' => $cashPr->getId(), 'order' => $order->getId(), 'status' => CashDoc::STATUS_ACTIVE]);
         }
         
         if ($order && $cashPr && empty($checkPr)){
