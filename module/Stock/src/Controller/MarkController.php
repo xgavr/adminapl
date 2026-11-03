@@ -215,9 +215,37 @@ class MarkController extends AbstractActionController
         ]);           
     }
     
+    public function tokenSignAndSaveAction()
+    {
+        $post = $this->params()->fromPost();
+        
+//        var_dump($post); exit;
+        if (!empty($post['data'])){
+            
+            $clean_string = preg_replace('/^-+.*-+$/m', '', $post['data']);
+
+            $post['data'] = preg_replace('/\s+/', '', $clean_string);             
+            
+        }
+        
+//        var_dump($post); exit;
+        
+        $result = $this->markManager->signKey($post);
+        
+        if (!empty($result['token'])){        
+            $result = $this->markManager->saveToken($result);
+        }        
+                        
+        return new JsonModel([
+            'token' => $result,
+        ]);           
+    }
+    
     public function saveTokenAction()
     {
         $post = $this->params()->fromPost();
+        
+        $result = null;
         
 //        var_dump($post); exit;
         if (!empty($post['data'])){
