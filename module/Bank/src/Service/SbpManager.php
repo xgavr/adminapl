@@ -508,10 +508,10 @@ class SbpManager
 
     /**
      * Обновить статусы qr кодов
-     * @param QrCode $qrCode
+     * @param QrCode $inputCode
      * @return array
      */
-    public function updatePaymentStatuses($qrCode = null)
+    public function updatePaymentStatuses($inputCode = null)
     {
         ini_set('memory_limit', '512M');
         set_time_limit(900);
@@ -526,21 +526,21 @@ class SbpManager
             
             $qrcIds = [];
 
-            if (empty($qrCode)){
+            if (empty($inputCode)){
                 $codes = $this->entityManager->getRepository(QrCode::class)
                         ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic], null, $limit, $start);
 
-                foreach ($codes as $qrCode){
-                    $qrcIds[] = $qrCode->getQrcId();
+                foreach ($codes as $code){
+                    $qrcIds[] = $code->getQrcId();
                 }
             } else {
-                $qrcIds[] = $qrCode->getQrcId();
+                $qrcIds[] = $inputCode->getQrcId();
             }    
 
             if (count($qrcIds)){
                 $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
 
-                var_dump($result);
+//                var_dump($result);
 
                 if (!empty($result['Data'])){
                     foreach ($result['Data']['paymentList'] as $payment){
@@ -562,6 +562,10 @@ class SbpManager
                     }
                 }
             } else {
+                break;
+            }
+            
+            if ($inputCode){
                 break;
             }
             
