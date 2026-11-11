@@ -516,49 +516,61 @@ class SbpManager
         ini_set('memory_limit', '512M');
         set_time_limit(900);
         $startTime = time();
-
-        $qrcIds = [];
+        
+        $limit = 50;
+        $start = 0;
+        
         $result = [];
 
-        if (empty($qrCode)){
-            $codes = $this->entityManager->getRepository(QrCode::class)
-                    ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic], null, 50);
+        while (true){
+            
+            $qrcIds = [];
 
-            foreach ($codes as $qrCode){
+            if (empty($qrCode)){
+                $codes = $this->entityManager->getRepository(QrCode::class)
+                        ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic], null, $limit, $start);
+
+                foreach ($codes as $qrCode){
+                    $qrcIds[] = $qrCode->getQrcId();
+                }
+            } else {
                 $qrcIds[] = $qrCode->getQrcId();
-            }
-        } else {
-            $qrcIds[] = $qrCode->getQrcId();
-        }    
-        
-        if (count($qrcIds)){
-            $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
-                    
-//            var_dump($result); exit;
-        
-            if (!empty($result['Data'])){
-                foreach ($result['Data']['paymentList'] as $payment){
-                    $qrCode = $this->entityManager->getRepository(QrCode::class)
-                            ->findOneBy(['qrcId' => $payment['qrcId']]);
-                    if ($qrCode){
-                        $qrCode = $this->updatePaymentStatus($qrCode, $payment);
-                        if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
-                            $paymentCount = $this->entityManager->getRepository(QrCodePayment::class)
-                                    ->count(['qrCode' => $qrCode->getId()]);
-                            if (empty($paymentCount)){
-                                $this->getPayment($qrCode);
-                            }                            
-                        }
-                        if ($qrCode->getStatus() == $qrCode::STATUS_RETIRED){
-                            $this->removeQrCode($qrCode);
-                        }
-                    }    
-                    if (time() > $startTime + 840){
-                        break;
+            }    
+
+            if (count($qrcIds)){
+                $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
+
+    //            var_dump($result); exit;
+
+                if (!empty($result['Data'])){
+                    foreach ($result['Data']['paymentList'] as $payment){
+                        $qrCode = $this->entityManager->getRepository(QrCode::class)
+                                ->findOneBy(['qrcId' => $payment['qrcId']]);
+                        if ($qrCode){
+                            $qrCode = $this->updatePaymentStatus($qrCode, $payment);
+                            if ($qrCode->getPaymentStatus() == QrCode::PAYMENT_ACCEPTED){
+                                $paymentCount = $this->entityManager->getRepository(QrCodePayment::class)
+                                        ->count(['qrCode' => $qrCode->getId()]);
+                                if (empty($paymentCount)){
+                                    $this->getPayment($qrCode);
+                                }                            
+                            }
+                            if ($qrCode->getStatus() == $qrCode::STATUS_RETIRED){
+                                $this->removeQrCode($qrCode);
+                            }
+                        }    
                     }
                 }
+            } else {
+                break;
             }
-        }
+            
+            $start += $limit - 1;
+            
+            if (time() > $startTime + 840){
+                break;
+            }            
+        }    
         
         return $result;
     }
