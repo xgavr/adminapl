@@ -565,7 +565,7 @@ class SbpManager
                 break;
             }
             
-            $start += $limit - 1;
+            $start += $limit;
             
             if (time() > $startTime + 140){
                 break;
