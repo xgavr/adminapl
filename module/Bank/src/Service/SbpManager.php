@@ -531,10 +531,11 @@ class SbpManager
             $qrcIds[] = $qrCode->getQrcId();
         }    
         
-        var_dump($qrcIds); exit;
-        
         if (count($qrcIds)){
             $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
+                    
+            var_dump($result); exit;
+        
             if (!empty($result['Data'])){
                 foreach ($result['Data']['paymentList'] as $payment){
                     $qrCode = $this->entityManager->getRepository(QrCode::class)
