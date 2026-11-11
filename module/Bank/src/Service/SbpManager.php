@@ -565,11 +565,11 @@ class SbpManager
                 break;
             }
             
-            $start += $limit;
+            $start = $start + $limit;
             
             usleep(100);
             
-            if (time() > $startTime + 140){
+            if (time() > $startTime + 60){
                 break;
             }            
         }    
