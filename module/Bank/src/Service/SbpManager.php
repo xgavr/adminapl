@@ -522,7 +522,7 @@ class SbpManager
 
         if (empty($qrCode)){
             $codes = $this->entityManager->getRepository(QrCode::class)
-                    ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic]);
+                    ->findBy(['status' => QrCode::STATUS_ACTIVE, 'qrcType' => QrCode::QR_Dynamic], null, 100);
 
             foreach ($codes as $qrCode){
                 $qrcIds[] = $qrCode->getQrcId();
