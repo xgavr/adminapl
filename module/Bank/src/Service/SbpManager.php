@@ -531,6 +531,8 @@ class SbpManager
             $qrcIds[] = $qrCode->getQrcId();
         }    
         
+        var_dump($qrcIds); exit;
+        
         if (count($qrcIds)){
             $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
             if (!empty($result['Data'])){
