@@ -567,6 +567,8 @@ class SbpManager
             
             $start += $limit;
             
+            usleep(100);
+            
             if (time() > $startTime + 140){
                 break;
             }            
