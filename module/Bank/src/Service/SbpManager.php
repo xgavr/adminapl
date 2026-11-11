@@ -540,7 +540,7 @@ class SbpManager
             if (count($qrcIds)){
                 $result = $this->sbpManager->getPaymentStatuses(implode(',', $qrcIds));
 
-    //            var_dump($result); exit;
+                var_dump($result);
 
                 if (!empty($result['Data'])){
                     foreach ($result['Data']['paymentList'] as $payment){
