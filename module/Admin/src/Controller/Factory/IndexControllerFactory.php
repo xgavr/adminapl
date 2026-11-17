@@ -18,6 +18,7 @@ use Admin\Service\AnnManager;
 use Admin\Service\AutoruManager;
 use Stock\Service\RegisterManager;
 use Admin\Service\JobManager;
+use Admin\Service\MaxNotifierService;
 
 
 /**
@@ -39,9 +40,11 @@ class IndexControllerFactory implements FactoryInterface {
         $autoruManager = $container->get(AutoruManager::class);
         $registerManager = $container->get(RegisterManager::class);
         $jobManager = $container->get(JobManager::class);
+        $maxManager = $container->get(MaxNotifierService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new IndexController($entityManager, $telegrammManager, $adminManager, $smsManager, 
-                $tamtamManager, $annManager, $autoruManager, $registerManager, $jobManager);
+        return new IndexController($entityManager, $telegrammManager, $adminManager, 
+                $smsManager, $tamtamManager, $annManager, $autoruManager, 
+                $registerManager, $jobManager, $maxManager);
     }
 }
