@@ -13,14 +13,15 @@ class MaxNotifierService
     private string $apiUrl;
     private string $token;
     private int $defaultChatId;
+    private int $adminChatId;
     private Client $httpClient;
 
-    public function __construct(string $apiUrl, string $token, int $defaultChatId, int $adminId, ?Client $httpClient = null)
+    public function __construct(string $apiUrl, string $token, int $defaultChatId, int $adminChatId, ?Client $httpClient = null)
     {
         $this->apiUrl = rtrim($apiUrl, '/');
         $this->token = $token;
         $this->defaultChatId = $defaultChatId;
-        $this->adminId = $adminId;
+        $this->adminChatId = $adminChatId;
         $this->httpClient = $httpClient ?? new Client();
     }
 
@@ -66,7 +67,7 @@ class MaxNotifierService
     
     public function sendToAdmin(string $text, string $format = 'html')
     {
-        $targetChatId = $this->adminId;
+        $targetChatId = $this->adminChatId;
         if ($targetChatId){
             return $this->sendToGroup($text, $format, $targetChatId);
         }
