@@ -93,13 +93,19 @@ class IndexController extends AbstractActionController
      * Job manager.
      * @var \Admin\Service\JobManager
      */
-    private $jobManager;    
+    private $jobManager;   
+    
+    /**
+     * MaxManager manager.
+     * @var \Admin\Service\MaxNotifierService
+     */
+    private $maxManager;    
     
     
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
     public function __construct($entityManager, $telegramManager, $adminManager, 
             $smsManager, $tamtamManager, $annManager, $autoruManager, $registerManager, 
-            $jobManager) 
+            $jobManager, $maxManager) 
     {
         $this->entityManager = $entityManager;
         $this->telegramManager = $telegramManager;        
@@ -110,6 +116,7 @@ class IndexController extends AbstractActionController
         $this->autoruManager = $autoruManager;
         $this->registerManager = $registerManager;
         $this->jobManager = $jobManager;
+        $this->maxManager = $maxManager;
     }   
     
     public function indexAction()
@@ -1190,6 +1197,30 @@ class IndexController extends AbstractActionController
                 $result = 'ok';
             }
         }    
+        return new JsonModel([
+            $result,
+        ]);        
+    }
+    
+    public function testMaxToAdminAction()
+    {
+
+        if ($this->maxManager->sendToAdmin('Привет Админ!')){
+            $result = 'ok';
+        }   
+        
+        return new JsonModel([
+            $result,
+        ]);        
+    }
+    
+    public function testMaxToGroupAction()
+    {
+
+        if ($this->maxManager->sendToGroup('Привет Апл!')){
+            $result = 'ok';
+        }   
+        
         return new JsonModel([
             $result,
         ]);        
