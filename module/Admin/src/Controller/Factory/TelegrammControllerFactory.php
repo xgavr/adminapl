@@ -11,6 +11,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Controller\TelegrammController;
 use Admin\Service\TelegrammManager;
+use Admin\Service\MaxNotifierService;
 
 
 /**
@@ -24,8 +25,9 @@ class TelegrammControllerFactory implements FactoryInterface {
                      $requestedName, array $options = null)
     {
         $telegrammManager = $container->get(TelegrammManager::class);
+        $maxManager = $container->get(MaxNotifierService::class);
         
         // Инстанцируем контроллер и внедряем зависимости.
-        return new TelegrammController($telegrammManager);
+        return new TelegrammController($telegrammManager, $maxManager);
     }
 }
