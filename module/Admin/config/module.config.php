@@ -204,6 +204,7 @@ return [
             Service\HelloManager::class => Service\Factory\HelloManagerFactory::class,
             Service\JobManager::class => Service\Factory\JobManagerFactory::class,
             Service\LogManager::class => Service\Factory\LogManagerFactory::class,
+            Service\MaxNotifierService::class => Service\Factory\MaxNotifierServiceFactory::class,
             Service\PostManager::class => Service\Factory\PostManagerFactory::class,
             Service\SettingManager::class => Service\Factory\SettingManagerFactory::class,
             Service\SmsManager::class => Service\Factory\SmsManagerFactory::class,
