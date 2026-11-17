@@ -19,10 +19,17 @@ class TelegrammController extends AbstractActionController
      */
     private $telegramManager;    
     
+    /**
+     * MaxManager manager.
+     * @var \Admin\Service\MaxNotifierService
+     */
+    private $maxManager;    
+    
     // Метод конструктора, используемый для внедрения зависимостей в контроллер.
-    public function __construct($telegramManager) 
+    public function __construct($telegramManager, $maxManager) 
     {
         $this->telegramManager = $telegramManager;        
+        $this->maxManager = $maxManager;        
     }   
     
     public function indexAction()
