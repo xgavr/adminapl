@@ -35,9 +35,16 @@ class MaxNotifierService
     public function sendToGroup(string $text, string $format = 'html', ?int $chatId = null): bool
     {
         $targetChatId = $chatId ?? $this->defaultChatId;
-        $endpoint = sprintf('%s/messages?chat_id=%d', $this->apiUrl, $targetChatId);
         
-        var_dump($endpoint); exit;
+        if ($targetChatId < 0){        
+            $paramId = 'chat_id';
+        } else {
+            $paramId = 'user_id';
+        }    
+            
+        $endpoint = sprintf('%s/messages?%s=%d', $this->apiUrl, $paramId, $targetChatId);
+        
+//        var_dump($endpoint); exit;
 
         $payload = json_encode([
             'text'   => $text,
