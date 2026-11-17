@@ -36,6 +36,8 @@ class MaxNotifierService
     {
         $targetChatId = $chatId ?? $this->defaultChatId;
         $endpoint = sprintf('%s/messages?chat_id=%d', $this->apiUrl, $targetChatId);
+        
+        var_dump($endpoint); exit;
 
         $payload = json_encode([
             'text'   => $text,
