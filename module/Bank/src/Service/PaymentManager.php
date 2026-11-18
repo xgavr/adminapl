@@ -47,13 +47,20 @@ class PaymentManager
      */
     private $smsManager;
 
+    /**
+     * MaxManager manager
+     * @var \Admin\Service\MaxNotifierService
+     */
+    private $maxManager;
+
     public function __construct($entityManager, $tochkaPyament, $logManager,
-            $smsManager)
+            $smsManager, $maxManager)
     {
         $this->entityManager = $entityManager;
         $this->tochkaPayment = $tochkaPyament;    
         $this->logManager = $logManager;        
         $this->smsManager = $smsManager;        
+        $this->maxManager = $maxManager;        
     }
     
     /**
@@ -473,7 +480,8 @@ class PaymentManager
         }        
              
         if (count($payments)){
-            $this->smsManager->maxWammMsgToAdmin(['text' => 'Надо подписать платежки!!!']);
+//            $this->smsManager->maxWammMsgToAdmin(['text' => 'Надо подписать платежки!!!']);
+            $this->maxManager->sendToAdmin('Надо подписать платежки!!!');
         }
         
         return;
