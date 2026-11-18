@@ -48,7 +48,14 @@ class TelegrammManager
      * 
      * @var \Admin\Service\SmsManager
      */
-    private $smsManager;   
+    private $smsManager;
+    
+    /**
+     * Менеджер sms
+     * 
+     * @var \Admin\Service\MaxNotifierService
+     */
+    private $maxManager;   
     
     protected function removeOldLog()
     {    
@@ -68,11 +75,12 @@ class TelegrammManager
         return;
     } 
     
-    public function __construct($entityManager, $adminManager, $smsManager)
+    public function __construct($entityManager, $adminManager, $smsManager, $maxManager)
     {
         $this->entityManager = $entityManager;
         $this->adminManager = $adminManager;
         $this->smsManager = $smsManager;
+        $this->maxManager = $maxManager;
 
         if (!is_dir($this::LOG_FOLDER)){
             mkdir($this::LOG_FOLDER);
@@ -297,7 +305,8 @@ class TelegrammManager
         file_put_contents(self::POSTPONE_MSG_FILE, \Laminas\Json\Json::encode($params).PHP_EOL, FILE_APPEND | LOCK_EX);
         
         //Послать в группу Апл в Мах
-        $this->smsManager->wammToMax($params);
+//        $this->smsManager->wammToMax($params);
+        $this->maxManager->sendToGroup($params['text']);
                 
         return;
     }
