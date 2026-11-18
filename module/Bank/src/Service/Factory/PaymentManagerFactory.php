@@ -14,6 +14,7 @@ use Bank\Service\PaymentManager;
 use Bankapi\Service\Tochka\Payment;
 use Admin\Service\LogManager;
 use Admin\Service\SmsManager;
+use Admin\Service\MaxNotifierService;
 
 
 /**
@@ -30,9 +31,10 @@ class PaymentManagerFactory implements FactoryInterface
         $tochkaPayment = $container->get(Payment::class);
         $logManager = $container->get(LogManager::class);
         $smsManager = $container->get(SmsManager::class);
+        $maxManager = $container->get(MaxNotifierService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
         return new PaymentManager($entityManager, $tochkaPayment, $logManager,
-                $smsManager);
+                $smsManager, $maxManager);
     }
 }
