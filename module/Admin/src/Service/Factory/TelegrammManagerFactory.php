@@ -13,6 +13,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Admin\Service\TelegrammManager;
 use Admin\Service\AdminManager;
 use Admin\Service\SmsManager;
+use Admin\Service\MaxNotifierService;
 
 /**
  * Description of ShopManagerFactory
@@ -28,8 +29,10 @@ class TelegrammManagerFactory  implements FactoryInterface
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $adminManager = $container->get(AdminManager::class);
         $smsManager = $container->get(SmsManager::class);
+        $maxManager = $container->get(MaxNotifierService::class);
         
         // Инстанцируем сервис и внедряем зависимости.
-        return new TelegrammManager($entityManager, $adminManager, $smsManager);
+        return new TelegrammManager($entityManager, $adminManager, $smsManager,
+                $maxManager);
     }
 }
